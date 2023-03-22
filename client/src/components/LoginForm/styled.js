@@ -10,7 +10,8 @@ export const Form = styled.form`
    background-color: #ffffff;
    display: flex;
    flex-direction: column;
-   align-items: centers;
+   align-items: center;
+   width: 100%;
 `;
 
 export const Title = styled.h1`

@@ -2,8 +2,6 @@ import User from "../models/userModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-// TODO: email уникальным сделать
-// TODO: записывать в токен тогда id?
 
 export const GetUsers = async(req, res) => {
    try {
@@ -81,10 +79,10 @@ const checkEmail = async(email) =>{
    return false;
 }
 
-// TODO: проверка на только латинские символы
 const checkPassword = (password) =>{
    let passwordFilter = /^(?=.*[0-9])[a-zA-Z0-9!@#$%^&*]{8,16}$/;
-   if(!passwordFilter.test(password)) return "Пароль должен быть от 8 до 16 символов и содержать хотя бы одну цифру";
+   if(!passwordFilter.test(password)) 
+      return "Пароль должен быть от 8 до 16 символов и содержать только латинские символы, а также хотя бы одну цифру";
 
    return false;
 }

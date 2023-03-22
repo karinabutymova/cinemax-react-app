@@ -8,7 +8,6 @@ import InputField from "../InputField";
 import PrimaryButton from "../PrimaryButton";
 
 // TODO: ссылка на Забыли пароль
-// TODO: изменить логику на авторизацю (это пробный функционал)
 
 const LoginForm = () =>{
    const [email, setEmail] = useState('');
@@ -46,14 +45,14 @@ const LoginForm = () =>{
             type="text"
             placeholder="Введите email"
             label="Email"
-            setEmail ={setEmail}
+            onChange ={setEmail}
             error={errors.no_email}
          />
          <InputField
             inputType="password"
             placeholder="Введите пароль"
             label="Пароль"
-            setPassword ={setPassword}
+            onChange ={setPassword}
             error={errors.wrong_password}
          />
          <PrimaryButton btnText="Войти" type="submit"/>

@@ -50,33 +50,33 @@ const SignForm = () =>{
             type="text"
             placeholder="Введите фамилию"
             label="Фамилия"
-            setLastName ={setLastName}
+            onChange ={setLastName}
          />
          <InputField
             type="text"
             placeholder="Введите имя"
             label="Имя"
-            setFirstName ={setFirstName}
+            onChange ={setFirstName}
          />
          <InputField
             type="text"
             placeholder="Введите email"
             label="Email"
-            setEmail ={setEmail}
+            onChange ={setEmail}
             error={errors.email_invalid}
          />
          <InputField
             inputType="password"
             placeholder="Введите пароль"
             label="Пароль"
-            setPassword ={setPassword}
+            onChange ={setPassword}
             error={errors.error_password}
          />
          <InputField
             inputType="password"
             placeholder="Повторите пароль"
             label="Подтвердите пароль"
-            setConfPassword ={setConfPassword}
+            onChange ={setConfPassword}
             error={errors.password_do_not_match}
          />
          <PrimaryButton btnText="Создать аккаунт" type="submit"/>

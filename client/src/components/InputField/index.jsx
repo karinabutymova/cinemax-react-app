@@ -14,12 +14,7 @@ const InputField = ({...props}) =>{
    const handleOnChange = (e) => {
       setTextInput(e.target.value);
 
-      // TODO: что то с этим надо решить
-      if(props.setLastName) props.setLastName(e.target.value);
-      if(props.setFirstName) props.setFirstName(e.target.value);
-      if(props.setEmail) props.setEmail(e.target.value);
-      if(props.setPassword) props.setPassword(e.target.value);
-      if(props.setConfPassword) props.setConfPassword(e.target.value);
+      props.onChange(e.target.value);
    }
 
    return(
