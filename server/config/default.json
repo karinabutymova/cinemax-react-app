@@ -1,0 +1,8 @@
+{
+   "serverPort" : 3001,
+   "dbUsername" : "root",
+   "dbPassword" : "",
+   "host" : "localhost",
+   "database" : "cinemax",
+   "dialect" : "mysql"
+}
