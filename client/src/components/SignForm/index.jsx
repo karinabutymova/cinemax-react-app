@@ -7,9 +7,6 @@ import GoogleIcon from '../../assets/images/LoginPage/googleIcon.png';
 import InputField from "../InputField";
 import PrimaryButton from "../PrimaryButton";
 
-// TODO: ссылка на Забыли пароль
-// TODO: изменить логику регистарции (это пробный функционал)
-
 const SignForm = () =>{
    const navigate = useNavigate();
    const [lastname, setLastName] = useState('');

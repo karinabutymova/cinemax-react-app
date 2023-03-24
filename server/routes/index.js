@@ -2,6 +2,7 @@ import express from "express";
 import { GetUsers, Register, Login, Logout } from "../controllers/Users.js";
 import { verifyToken } from "../middleware/VerifyToken.js";
 import { refreshToken } from "../controllers/RefreshToken.js";
+import { SendEmail, resetPassword, changePassword } from "../controllers/RessetPassword.js";
 
 
 const userRouter = express.Router();
@@ -11,5 +12,10 @@ userRouter.post('/users', Register);
 userRouter.post('/login', Login);
 userRouter.get('/token', refreshToken);
 userRouter.delete('/logout', Logout);
- 
-export default userRouter;
+
+const forgotPasswordRouter = express.Router();
+forgotPasswordRouter.post('/forgotPassword', SendEmail);
+forgotPasswordRouter.get('/resetPassword', resetPassword);
+forgotPasswordRouter.put('/changePassword', changePassword);
+
+export {userRouter, forgotPasswordRouter};

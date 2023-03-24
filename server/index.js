@@ -3,7 +3,7 @@ import config from "config";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import db from "./config/database.js";
-import userRouter from "./routes/index.js";
+import {userRouter, forgotPasswordRouter} from "./routes/index.js";
 import cors from "cors";
 
 dotenv.config();
@@ -24,6 +24,7 @@ const start = () =>{
      app.use(cookieParser());
      app.use(express.json());
      app.use(userRouter);
+     app.use(forgotPasswordRouter);
 
    
       app.listen(PORT, () => console.log('Server started on port', PORT));

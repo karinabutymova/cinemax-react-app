@@ -4,8 +4,6 @@ import { SignTitle } from './styled';
 
 import CinemaImg from '../../assets/images/LoginPage/cinemaAttribute.svg';
 
-// TODO: изменить путь ссылки
-
 const SignPage = () => {
 
  return (

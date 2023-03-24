@@ -4,7 +4,7 @@ import { } from "./styled";
 //TODO: страница 404
 const Page404 = () => {
     return (
-      <></>
+      <><h1>404</h1></>
     )
 }
 

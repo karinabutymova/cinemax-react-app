@@ -7,8 +7,6 @@ import GoogleIcon from '../../assets/images/LoginPage/googleIcon.png';
 import InputField from "../InputField";
 import PrimaryButton from "../PrimaryButton";
 
-// TODO: ссылка на Забыли пароль
-
 const LoginForm = () =>{
    const [email, setEmail] = useState('');
    const [password, setPassword] = useState('');
@@ -57,7 +55,7 @@ const LoginForm = () =>{
          />
          <PrimaryButton btnText="Войти" type="submit"/>
          <Line/>
-         <ForgorPasswordLink to="/">Забыли пароль?</ForgorPasswordLink>
+         <ForgorPasswordLink to="/forgotpassword">Забыли пароль?</ForgorPasswordLink>
       </Form>
    );
 

@@ -79,7 +79,7 @@ const checkEmail = async(email) =>{
    return false;
 }
 
-const checkPassword = (password) =>{
+export const checkPassword = (password) =>{
    let passwordFilter = /^(?=.*[0-9])[a-zA-Z0-9!@#$%^&*]{8,16}$/;
    if(!passwordFilter.test(password)) 
       return "Пароль должен быть от 8 до 16 символов и содержать только латинские символы, а также хотя бы одну цифру";
@@ -111,11 +111,11 @@ export const Login = async(req, res) => {
             id: userId
          }
       });
-
       res.cookie('refreshToken', refreshToken,{
          httpOnly: true,
          maxAge: 24 * 60 * 60 * 1000,
       });
+      res.json({accessToken});
    } catch (error) {
        res.status(404).json({no_email:"Пользователь не найден"});
    }

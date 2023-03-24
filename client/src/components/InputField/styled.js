@@ -35,7 +35,6 @@ export const Label = styled.label`
    }
 `;
 
-// TODO: разобраться с шириной инпута в мобильной версии
 export const TextInput = styled.input`
    width: 100%;
    height: 48px;
