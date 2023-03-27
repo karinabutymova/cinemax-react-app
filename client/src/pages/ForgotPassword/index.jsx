@@ -7,21 +7,22 @@ import { Form, FlexContainer, Title, SecondText, LogoText, FormLogoText, ForgorP
 import InputField from "../../components/InputField";
 import PrimaryButton from "../../components/PrimaryButton";
 
+// TODO : лоадер пока ждём ответа
 const ForgotPassword = () =>{
    const [email, setEmail] = useState('');
    const [errors, setErrors] = useState({});
-   // const navigate = useNavigate();
+   const navigate = useNavigate();
    
-
    const sendEmail = async (e) => {
       e.preventDefault();
       try {
          await axios.post('http://localhost:3001/forgotPassword', {
              email: email,
-         },
-         { withCredentials: true }
-         );
-         // navigate("/profile");
+         },{ withCredentials: true })
+         .then((response) => {
+            if(response.data.success) navigate("/emailsend");
+         });
+        
      } catch (error) {
          if (error.response) {
             setErrors(error.response.data);

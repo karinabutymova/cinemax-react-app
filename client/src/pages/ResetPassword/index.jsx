@@ -9,6 +9,7 @@ import PrimaryButton from "../../components/PrimaryButton";
 
 // TODO : (на будущее) Добавить popup о том что пароль обновлён
 // TODO : (на будущее) Ограничить количество обновления пароля на время
+// TODO : (на будущее) Лоадер (пока приходит ответ)
 
 const ResetPassword = () =>{
    const {token} = useParams();
@@ -17,27 +18,29 @@ const ResetPassword = () =>{
    const [errors, setErrors] = useState({});
    const navigate = useNavigate();
 
+   // TODO: попробовать useLayoutEffect 
    useEffect(() => {
+      const resetPassword = async () => {
+         try {
+            await axios.get('http://localhost:3001/resetPassword', {
+               params: {
+                  resetToken: token,
+               },
+            },
+            { withCredentials: true }) 
+   
+        } catch (error) {
+            if (error.response) {
+               console.log(error.response.data.token_error)
+               if(error.response.data.token_error)navigate("/404");
+            }
+        }
+     }
       resetPassword();
-      // Проверить
-      if(errors.token_error) navigate("/404");
+
    }, []);
    
-   const resetPassword = async () => {
-      try {
-         await axios.get('http://localhost:3001/resetPassword', {
-            params: {
-               resetToken: token,
-            },
-         },
-         { withCredentials: true }) 
-
-     } catch (error) {
-         if (error.response) {
-            setErrors(error.response.data);
-         }
-     }
-  }
+   
    const changePassword = async (e) => {
       e.preventDefault();
       try {

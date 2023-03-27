@@ -54,7 +54,7 @@ export const SendEmail = async(req, res) => {
          if (err) {
             console.error('there was an error: ', err);
          } else {
-            res.status(200).json('recovery email sent');
+            res.status(200).json({success: 'Сообщение отправлено'});
          }
       });
    } catch (error) {
@@ -107,7 +107,7 @@ export const changePassword = async(req, res) =>{
       const salt = await bcrypt.genSalt();
       const hashPassword = await bcrypt.hash(password, salt);
 
-      await User.update({password: hashPassword},{
+      await User.update({password: hashPassword, refresh_token: null},{
          where:{
             id: user.id
          }

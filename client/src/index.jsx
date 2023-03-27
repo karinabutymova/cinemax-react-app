@@ -6,12 +6,12 @@ import App from './pages/App';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
+root.render(   
    <React.StrictMode>
       <>
          <GridThemeProvider gridTheme={gridTheme}>
             <GlobalStyle />
-               <App />
+            <App />
          </GridThemeProvider> 
       </>
    </React.StrictMode>

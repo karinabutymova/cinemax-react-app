@@ -54,6 +54,7 @@ export const GlobalStyle = createGlobalStyle`
    margin: 0;
    padding: 0;
    box-sizing: border-box;
+   /* overflow: hidden; */
 
    font-family: 'Raleway';
 
@@ -62,21 +63,21 @@ export const GlobalStyle = createGlobalStyle`
 }
 `;
 
-// TODO: изменение сетки для разных устройств
 export const gridTheme = {
    gridColumns: 12,
    col: {
-      padding: 10,
+      padding: 16,
    },
+
    container: {
-      padding: 0,
+      padding: 16,
       maxWidth: {
          xxl: 1201,
          xl: 1200,
-         lg: 786,
-         md: 720,
-         sm: 540,
-         xs: 540
+         // lg: 786,
+         // md: 720,
+         // sm: 540,
+         // xs: 539
       },
    },
 };
