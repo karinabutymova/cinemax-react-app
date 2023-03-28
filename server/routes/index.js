@@ -1,5 +1,6 @@
 import express from "express";
 import { GetUsers, Register, Login, Logout } from "../controllers/Users.js";
+import { GetFilms } from "../controllers/Films.js";
 import { verifyToken } from "../middleware/VerifyToken.js";
 import { refreshToken } from "../controllers/RefreshToken.js";
 import { SendEmail, resetPassword, changePassword } from "../controllers/RessetPassword.js";
@@ -18,4 +19,8 @@ forgotPasswordRouter.post('/forgotPassword', SendEmail);
 forgotPasswordRouter.get('/resetPassword', resetPassword);
 forgotPasswordRouter.put('/changePassword', changePassword);
 
-export {userRouter, forgotPasswordRouter};
+
+const filmsRouter = express.Router();
+filmsRouter.get('/posters', GetFilms);
+
+export {userRouter, forgotPasswordRouter, filmsRouter};

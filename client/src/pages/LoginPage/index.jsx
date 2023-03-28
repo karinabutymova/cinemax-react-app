@@ -4,7 +4,7 @@ import { FlexContainer, Div, Title, TitleSpan, Text, SignUpLink, LoginImg, SignC
 import CinemaImg from '../../assets/images/LoginPage/cinemaAttribute.svg';
 
 const LoginPage = () => {
-
+// TODO: повесить ссылку на главную на название
  return (
    <FlexContainer>
       <Div>

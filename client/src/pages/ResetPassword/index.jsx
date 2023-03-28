@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useLayoutEffect } from 'react'
 import axios from "axios";
 import { useParams, useNavigate } from 'react-router-dom';
 
@@ -18,8 +18,7 @@ const ResetPassword = () =>{
    const [errors, setErrors] = useState({});
    const navigate = useNavigate();
 
-   // TODO: попробовать useLayoutEffect 
-   useEffect(() => {
+   useLayoutEffect(() => {
       const resetPassword = async () => {
          try {
             await axios.get('http://localhost:3001/resetPassword', {
@@ -31,7 +30,6 @@ const ResetPassword = () =>{
    
         } catch (error) {
             if (error.response) {
-               console.log(error.response.data.token_error)
                if(error.response.data.token_error)navigate("/404");
             }
         }
