@@ -5,10 +5,12 @@ import { Container, Row, Col } from 'styled-bootstrap-grid';
 import Header from '../../components/Header';
 import * as Styled from './styled';
 import TabHeader from '../../components/TabHeader';
+import PosterCard from '../../components/PosterCard';
  
 const PosterPage = () => {
    // const navigate = useNavigate();
    const [searchParams, setSearchParams] = useSearchParams({filter: 'now'});
+   const [posters, setPosters] = useState([]);
    const [activeTab, setActiveTab] = useState(Object.fromEntries(searchParams).filter);
 
    useEffect(() => {
@@ -18,13 +20,12 @@ const PosterPage = () => {
 
    const getPosters = async () => {
       try {
-         console.log(activeTab);
          const response = await axios.get('http://localhost:3001/posters', {
             params: {
                filter: activeTab,
             },
          },{ withCredentials: true });
-         console.log(response.data);
+         setPosters(response.data);
       } catch (error) {
          if (error.response) {
             console.log(error.response);
@@ -47,6 +48,9 @@ const PosterPage = () => {
                      setSearchParams ={setSearchParams}
                   />
                </Col>
+            </Row>
+            <Row>
+               {posters && posters.map((poster) => <PosterCard key={poster.id} poster={poster} filter={activeTab}/>)}
             </Row>
          </Container>
       </>
