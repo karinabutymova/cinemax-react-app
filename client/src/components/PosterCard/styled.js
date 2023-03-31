@@ -45,10 +45,10 @@ export const FilmGenre = styled.p`
 `;
 
 export const ImgLink = styled.img`
-   width: 100%;
-   height: 370px;
 
    object-fit: cover;
+   width: 100%;
+   height: 370px;
 
    transition: all 0.35s;
 

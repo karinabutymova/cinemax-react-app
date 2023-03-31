@@ -1,8 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import * as Styled from './styled';
 import { Col } from 'styled-bootstrap-grid';
-
-import testImg from "../../assets/images/Posters/thor.png";
 import { useLayoutEffect } from 'react';
  
 const PosterCard = ({poster, filter}) => {
@@ -40,6 +38,7 @@ const PosterCard = ({poster, filter}) => {
          <Col xl="3" lg="3" md="4" sm="6" xs="6">
             <Styled.CardContainer>
                {filter !== 'now' && <Styled.SoonDate>{toDateRent}</Styled.SoonDate>}
+               {(filter === 'now' && poster.rate)&& <Styled.SoonDate>{Number(poster.rate).toFixed(1)}</Styled.SoonDate>}
                <Styled.PosterLink>
                   <Styled.ImgLink src={require(`../../assets/images/Posters/${poster.photo_path}`)}/>
                </Styled.PosterLink>
