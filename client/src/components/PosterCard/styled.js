@@ -114,10 +114,13 @@ export const Wishlist = styled.svg`
    width: 26px;
    height: 26px;
    transition: all 0.25s;
-   fill: none;
+   fill: ${props => props.isWish ? '#8D1BCD' : 'none'};
+
+   & path{
+      stroke: ${props => props.isWish ? '#8D1BCD' : '#FFFFFF'};
+   }
 
    &:hover{
-      fill: #8D1BCD;
       cursor: pointer;
    }
 

@@ -1,8 +1,8 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
-export const Nav =styled.nav``;
-  
+export const Nav = styled.nav``;
+
 export const FullMenu = styled.div`
    display: none;
    @media (min-width: 992px) {
@@ -166,6 +166,7 @@ export const MobileMenuIcon = styled.div`
    height: 2px;
    -webkit-transition: 0.4s;
    transition: 0.4s;
+   overflow: visible;
    
    &::after, &::before{
       content: "";

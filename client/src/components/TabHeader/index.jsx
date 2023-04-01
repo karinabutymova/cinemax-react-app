@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import * as Styled from './styled';
- 
-const TabHeader = ({...props}) => {
-   const[active, SetActive] = useState(props.activeId);
+
+const TabHeader = ({ ...props }) => {
+   const [active, SetActive] = useState(props.activeId);
 
    const doClick = (index) => {
-      if(index !== active){
+      if (index !== active) {
          SetActive(index);
          props.setActiveTab(index);
-         props.setSearchParams({filter: index});
+         props.searchParams.set('filter', index);
+         props.setSearchParams(props.searchParams);
       }
    }
 
@@ -16,15 +17,15 @@ const TabHeader = ({...props}) => {
       <>
          <Styled.TabsHeader className="tabs-header">
             <Styled.TabsLi>
-               <Styled.LinkTab 
-                active={(active === 'now' ? 'active' : '')}
-                onClick={() => doClick('now')} >
+               <Styled.LinkTab
+                  active={active === 'now' && true}
+                  onClick={() => doClick('now')} >
                   <Styled.Span>Сейчас в прокате</Styled.Span>
                </Styled.LinkTab>
             </Styled.TabsLi>
             <Styled.TabsLi>
-               <Styled.LinkTab 
-                  active={(active === 'soon' ? 'active' : '')}
+               <Styled.LinkTab
+                  active={active === 'soon' && true}
                   onClick={() => doClick('soon')} >
                   <Styled.Span>Скоро</Styled.Span>
                </Styled.LinkTab>
@@ -40,5 +41,5 @@ const TabHeader = ({...props}) => {
       </>
    )
 }
- 
+
 export default TabHeader;

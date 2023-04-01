@@ -54,12 +54,14 @@ export const GlobalStyle = createGlobalStyle`
    margin: 0;
    padding: 0;
    box-sizing: border-box;
-   /* overflow: hidden; */
 
    font-family: 'Raleway';
 
    background-color: #2D2B35;
    color: #FFFFFF;
+}
+body{
+   overflow-x: hidden;
 }
 `;
 

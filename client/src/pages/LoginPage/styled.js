@@ -26,8 +26,8 @@ export const Div = styled.div`
 `;
 
 export const FlexContainer = styled.div.attrs({
-      className: 'FlexContainer',
-   })`
+   className: 'FlexContainer',
+})`
    display: flex;
 
    background-color: transparent;
@@ -51,8 +51,8 @@ export const FlexContainer = styled.div.attrs({
 `;
 
 export const SignContainer = styled.div.attrs({
-      className: 'SignContainer',
-   })`
+   className: 'SignContainer',
+})`
    display: none;
 
    @media screen and (max-width: 900px){
@@ -62,8 +62,8 @@ export const SignContainer = styled.div.attrs({
 `;
 
 export const Title = styled.h1.attrs({
-      className: 'SignupForm',
-   })`
+   className: 'SignupForm',
+})`
    font-style: normal;
    font-weight: 600;
    font-size: 42px;
@@ -86,6 +86,10 @@ export const TitleSpan = styled.span`
 
    background-color: #8D1BCD;
    border: 4px #8D1BCD solid;
+
+   &:hover{
+      cursor: pointer;
+   }
 `;
 
 export const Text = styled.p`

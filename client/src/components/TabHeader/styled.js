@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 export const LinkTab = styled.div`
    background-color: ${props => props.active ? '#8D1BCD' : '#4F4F4F'};
+   
 `;
 
 export const Span = styled.span`
