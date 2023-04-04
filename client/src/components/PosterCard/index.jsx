@@ -34,11 +34,9 @@ const PosterCard = ({ poster, filter, userId, isWish, setWishlist, deleteWishlis
    const AddToWhishlist = () => {
       if (userId) {
          if (isWishlist) {
-            console.log('unclick');
             setIsWishlist(false);
             deleteWishlist(isWish.id);
          } else {
-            console.log('click');
             setIsWishlist(true);
             setWishlist(poster.id);
          }

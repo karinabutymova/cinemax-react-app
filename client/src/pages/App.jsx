@@ -7,6 +7,7 @@ import PosterPage from './PosterPage';
 import ProfilePage from './ProfilePage';
 import ResetPassword from './ResetPassword';
 import SignPage from './SignPage';
+import SearchPage from './SearchPage';
 
 
 const App = () => {
@@ -19,6 +20,7 @@ const App = () => {
                <Route exact path="/poster" element={<PosterPage />} />
                <Route exact path="/auth" element={<LoginPage />} />
                <Route exact path="/sign" element={<SignPage />} />
+               <Route exact path="/search" element={<SearchPage />} />
                <Route exact path="/forgotpassword" element={<ForgotPassword />} />
                <Route exact path="/resetPassword/:token" element={<ResetPassword />} />
                <Route exact path="/emailsend" element={<EmailSend />} />

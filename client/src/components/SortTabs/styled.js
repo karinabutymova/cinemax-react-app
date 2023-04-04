@@ -14,7 +14,7 @@ export const FlexContainer = styled.div`
     &::-webkit-scrollbar { /* WebKit */
     width: 0;
     height: 0;
-}
+   }
 `;
 
 export const SortTitleDiv = styled.div`

@@ -1,6 +1,6 @@
 import express from "express";
 import { GetUsers, Register, Login, Logout } from "../controllers/Users.js";
-import { GetFilms } from "../controllers/Films.js";
+import { GetFilms, FindFilms } from "../controllers/Films.js";
 import { GetUserWishlist, DeleteUserWishlist, SetUserWishlist } from "../controllers/FilmsWishlist.js";
 import { verifyToken } from "../middleware/VerifyToken.js";
 import { refreshToken } from "../controllers/RefreshToken.js";
@@ -23,6 +23,7 @@ forgotPasswordRouter.put('/changePassword', changePassword);
 
 const filmsRouter = express.Router();
 filmsRouter.get('/posters', GetFilms);
+filmsRouter.get('/findfilms', FindFilms);
 
 const filmsWishlistRouter = express.Router();
 filmsWishlistRouter.get('/wishlist', verifyToken, GetUserWishlist);

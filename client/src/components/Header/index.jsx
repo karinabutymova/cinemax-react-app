@@ -2,7 +2,7 @@ import React from 'react';
 import * as Styled from './styled';
 import { Container, Row, Col } from 'styled-bootstrap-grid';
 
-import searchIcon from '../../assets/images/Icons/search.svg'
+import searchIcon from '../../assets/images/Icons/search.svg';
 
 const Header = () => {
    return (
@@ -26,7 +26,7 @@ const Header = () => {
                      </Col>
                      <Col xl="5" lg="4">
                         <Styled.LastSrcBlock>
-                           <Styled.SrcSearch to="/">
+                           <Styled.SrcSearch to="/search">
                               <Styled.SearchImg src={searchIcon} />
                            </Styled.SrcSearch>
                            <Styled.SrcAccount to="/profile">Мой профиль</Styled.SrcAccount>
@@ -45,7 +45,7 @@ const Header = () => {
                   <Styled.MobileMenuContainer>
                      <Styled.MobileMenuList>
                         <Styled.MobileMenuItem>
-                           <Styled.MobileMenuLink to="/">Афиша</Styled.MobileMenuLink>
+                           <Styled.MobileMenuLink to="/poster">Афиша</Styled.MobileMenuLink>
                         </Styled.MobileMenuItem>
                         <Styled.MobileMenuItem>
                            <Styled.MobileMenuLink to="/">Новости</Styled.MobileMenuLink>
@@ -57,10 +57,10 @@ const Header = () => {
                            <Styled.MobileMenuLink to="/">Помощь</Styled.MobileMenuLink>
                         </Styled.MobileMenuItem>
                         <Styled.MobileMenuItem>
-                           <Styled.MobileMenuLink to="/">Поиск</Styled.MobileMenuLink>
+                           <Styled.MobileMenuLink to="/search">Поиск</Styled.MobileMenuLink>
                         </Styled.MobileMenuItem>
                         <Styled.MobileMenuItem>
-                           <Styled.MobileMenuLink to="/">Мой профиль</Styled.MobileMenuLink>
+                           <Styled.MobileMenuLink to="/profile">Мой профиль</Styled.MobileMenuLink>
                         </Styled.MobileMenuItem>
                      </Styled.MobileMenuList>
                   </Styled.MobileMenuContainer>

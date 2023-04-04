@@ -14,7 +14,6 @@ export const PosterLink = styled.div`
    border-radius: 8px;
 
    overflow: hidden;
-
 `;
 
 

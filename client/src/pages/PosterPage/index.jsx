@@ -98,7 +98,7 @@ const PosterPage = () => {
 
    const setWishlist = async (filmId) => {
       try {
-         const response = await axiosJWT.get('http://localhost:3001/setWishlist', {
+         await axiosJWT.get('http://localhost:3001/setWishlist', {
             headers: {
                Authorization: `Bearer ${token}`,
             },
@@ -117,7 +117,7 @@ const PosterPage = () => {
 
    const deleteWishlist = async (wishId = false) => {
       try {
-         const response = await axiosJWT.get('http://localhost:3001/deleteWishlist', {
+         await axiosJWT.get('http://localhost:3001/deleteWishlist', {
             headers: {
                Authorization: `Bearer ${token}`,
             },
@@ -126,7 +126,7 @@ const PosterPage = () => {
             },
          });
          getWishlist();
-         console.log(response.data);
+
       } catch (error) {
          if (error.response) {
             console.log(error.response);
@@ -219,7 +219,6 @@ const PosterPage = () => {
                   {posters && posters.map((poster, index) => {
                      if (index < postersCount) {
                         let isWish = userWishlist.find(o => o.film_id === poster.id);
-                        // console.log(isWish);
                         return <PosterCard key={poster.id} poster={poster}
                            filter={activeTab} userId={userId} isWish={isWish}
                            setWishlist={setWishlist} deleteWishlist={deleteWishlist} />
