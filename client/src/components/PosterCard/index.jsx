@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import * as Styled from './styled';
 import { Col } from 'styled-bootstrap-grid';
 import { useLayoutEffect } from 'react';
+import { DateFormat } from '../../pages/FilmPage/functions';
 
 // TODO: переход на страницу фильма
 const PosterCard = ({ poster, filter, userId, isWish, setWishlist, deleteWishlist }) => {
@@ -10,26 +11,8 @@ const PosterCard = ({ poster, filter, userId, isWish, setWishlist, deleteWishlis
    const [isWishlist, setIsWishlist] = useState(isWish);
 
    useLayoutEffect(() => {
-      DateFormat();
+      DateFormat(poster, setToDateRent);
    }, []);
-
-   const DateFormat = () => {
-      let monthNames = ["января", "февраля", "марта", "апреля", "мая", "июня",
-         "июля", "августа", "сентября", "октября", "ноября", "декабря"];
-
-      let dateStr = '';
-      if (filter === 'now') {
-         let dateDay = new Date(poster.to_rent_date).getDate().toString();
-         let dateMounth = monthNames[new Date(poster.to_rent_date).getMonth().toString()];
-         dateStr = 'до ' + dateDay + ' ' + dateMounth;
-      } else {
-         let dateDay = new Date(poster.from_rent_date).getDate().toString();
-         let dateMounth = monthNames[new Date(poster.from_rent_date).getMonth().toString()];
-         dateStr = 'c ' + dateDay + ' ' + dateMounth;
-      }
-
-      setToDateRent(dateStr);
-   }
 
    const AddToWhishlist = () => {
       if (userId) {
@@ -41,7 +24,7 @@ const PosterCard = ({ poster, filter, userId, isWish, setWishlist, deleteWishlis
             setWishlist(poster.id);
          }
       } else {
-         console.log('Не авторизованный');
+         alert('Не авторизованный пользователь');
       }
    }
 

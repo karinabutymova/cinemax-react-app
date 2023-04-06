@@ -1,48 +1,51 @@
 import { Sequelize } from "sequelize";
 import db from "../config/database.js";
- 
+
 const { DataTypes } = Sequelize;
- 
-const Film = db.define('films',{
-   film_title:{
+
+const Film = db.define('films', {
+   film_title: {
       type: DataTypes.STRING
    },
-   photo_path:{
+   photo_path: {
       type: DataTypes.STRING
    },
-   description:{
+   description: {
       type: DataTypes.TEXT
    },
-   film_runtime:{
+   film_runtime: {
       type: DataTypes.SMALLINT(5)
    },
-   creators:{
+   creators: {
       type: DataTypes.TEXT
    },
-   actors:{
+   actors: {
       type: DataTypes.TEXT
    },
-   year:{
+   year: {
       type: DataTypes.INTEGER(5)
    },
-   genres:{
+   genres: {
       type: DataTypes.STRING
    },
-   country:{
+   country: {
       type: DataTypes.STRING
    },
-   from_rent_date:{
+   from_rent_date: {
       type: DataTypes.DATE
    },
-   to_rent_date:{
+   to_rent_date: {
       type: DataTypes.DATE
    },
-   age_limit:{
+   age_limit: {
       type: DataTypes.SMALLINT(5)
+   },
+   trailer_link: {
+      type: DataTypes.TEXT('medium')
    }
-},{
-    freezeTableName: true,
-    timestamps: false
+}, {
+   freezeTableName: true,
+   timestamps: false
 });
- 
+
 export default Film;

@@ -1,8 +1,39 @@
 import Film from "../models/filmModel.js";
+import FilmRating from "../models/filmRating.js";
 import { Op } from "sequelize";
 import db from "../config/database.js";
 import { response } from "express";
 
+
+export const GetFilmById = async (req, res) => {
+   let { filmId } = req.query;
+
+   try {
+      // const film = await Film.findOne({
+      //    where: {
+      //       id: filmId
+      //    }
+      // })
+
+      const film = await Film.findOne({
+         where: { id: filmId },
+         attributes: {
+            include: [
+               [db.fn('AVG', db.col('films_rating.rating')), 'avg_rating'],
+            ]
+         },
+         include: {
+            model: FilmRating,
+            as: 'films_rating',
+         },
+         raw: true,
+         group: ['films_rating.film_id'],
+      })
+      res.json(film);
+   } catch (error) {
+      console.log(error);
+   }
+}
 
 export const GetFilms = async (req, res) => {
    let { filter } = req.query;
@@ -39,16 +70,22 @@ export const FindFilms = async (req, res) => {
       const films = await Film.findAll({
          attributes: ['id', 'film_title', 'genres', 'from_rent_date', 'to_rent_date', 'photo_path'],
          where: {
-            [Op.or]: [{
-               film_title: {
-                  [Op.substring]: searchText
+            [Op.and]: [{
+               [Op.or]: [{
+                  film_title: {
+                     [Op.substring]: searchText
+                  }
+               },
+               {
+                  genres: {
+                     [Op.substring]: searchText
+                  }
+               }],
+            }, {
+               to_rent_date: {
+                  [Op.gt]: new Date()
                }
-            },
-            {
-               genres: {
-                  [Op.substring]: searchText
-               }
-            }],
+            }]
          }
       })
       res.json(films);

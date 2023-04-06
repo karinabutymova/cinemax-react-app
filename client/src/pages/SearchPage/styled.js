@@ -89,6 +89,7 @@ export const SectionTitle = styled.p`
    color: #FFFFFF;
 
    margin-bottom: 16px;
+   margin-top: 16px;
 `;
 
 export const Line = styled.p`

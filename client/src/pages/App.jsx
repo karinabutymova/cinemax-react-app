@@ -8,6 +8,7 @@ import ProfilePage from './ProfilePage';
 import ResetPassword from './ResetPassword';
 import SignPage from './SignPage';
 import SearchPage from './SearchPage';
+import FilmPage from './FilmPage';
 
 
 const App = () => {
@@ -21,6 +22,7 @@ const App = () => {
                <Route exact path="/auth" element={<LoginPage />} />
                <Route exact path="/sign" element={<SignPage />} />
                <Route exact path="/search" element={<SearchPage />} />
+               <Route exact path="/film/:filmId" element={<FilmPage />} />
                <Route exact path="/forgotpassword" element={<ForgotPassword />} />
                <Route exact path="/resetPassword/:token" element={<ResetPassword />} />
                <Route exact path="/emailsend" element={<EmailSend />} />

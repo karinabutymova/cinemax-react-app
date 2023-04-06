@@ -14,7 +14,7 @@ import SearchCard from '../../components/SearchCard';
 // TODO: на главное странице когда ничего не найдено выборка по кол-ву купл.билетов
 
 const SearchPage = () => {
-   const [searchParams, setSearchParams] = useSearchParams({ searchText: '' });
+   const [searchParams, setSearchParams] = useSearchParams({ searchText: '', filter: 'all' });
    const [films, setFilms] = useState([]);
    const [news, setNews] = useState([]);
    const [isEmpty, setIsEmpty] = useState(false);
@@ -63,10 +63,12 @@ const SearchPage = () => {
 
    const search = (e) => {
       e.preventDefault();
+      let searchText = searchParams.get('searchText');
       if (searchText.length > 2) {
          setIsLoading(true);
          setSearchParams(searchParams);
          setError('');
+         console.log(searchText);
          SubmitSearch(searchText);
 
       } else {
@@ -96,6 +98,7 @@ const SearchPage = () => {
                         value={searchParams.get('searchText')}
                         onChange={handleOnChange}
                         type='text'
+                        spellcheck='false'
                         placeholder='Поиск фильмов, новостей' />
                      {error && <Styled.ErrorText>{error}</Styled.ErrorText>}
                      <Styled.Button type="submit">
@@ -134,7 +137,7 @@ const SearchPage = () => {
                   <Col xl="6" lg="6" md="8" sm="12">
                      <Styled.SectionTitle>Фильмы</Styled.SectionTitle>
                      <Styled.Line />
-                     {films.map((film) => <SearchCard key={film.id} film={film} />)}
+                     {films.map((film, index) => { return index < 3 ? <SearchCard key={film.id} film={film} /> : false })}
                   </Col>
                </Row>
             }
@@ -154,7 +157,7 @@ const SearchPage = () => {
                   <Col xl="6" lg="6" md="8" sm="12">
                      <Styled.SectionTitle>Новости</Styled.SectionTitle>
                      <Styled.Line />
-                     {news.map((oneNews) => <SearchCard key={oneNews.id} film={oneNews} />)}
+                     {news.map((oneNews, index) => { return index < 3 ? <SearchCard key={oneNews.id} film={oneNews} /> : false })}
                   </Col>
                </Row>
             }

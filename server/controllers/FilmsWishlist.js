@@ -14,12 +14,43 @@ export const GetUserWishlist = async (req, res) => {
    }
 }
 
+export const GetFilmInWishlist = async (req, res) => {
+   try {
+      const filmWishlist = await FilmWishlist.findOne({
+         where: {
+            user_id: req.query.userId,
+            film_id: req.query.filmId
+         }
+      });
+      console.log(filmWishlist);
+      res.json(filmWishlist);
+   } catch (error) {
+      console.log(error);
+   }
+}
+
 export const DeleteUserWishlist = async (req, res) => {
    let { wishId } = req.query;
    try {
       const userWishlist = await FilmWishlist.destroy({
          where: {
             id: wishId
+         }
+      });
+      res.json(userWishlist);
+
+   } catch (error) {
+      console.log(error);
+   }
+}
+
+export const DeleteWishlistByUser = async (req, res) => {
+   let { userId, filmId } = req.query;
+   try {
+      const userWishlist = await FilmWishlist.destroy({
+         where: {
+            user_id: userId,
+            film_id: filmId
          }
       });
       res.json(userWishlist);

@@ -1,36 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import * as Styled from './styled';
-import { Col } from 'styled-bootstrap-grid';
 import { useLayoutEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { DateFormat } from '../../pages/FilmPage/functions';
 
-// TODO: переход на страницу фильма
 const SearchCard = ({ film }) => {
 
    const [toDateRent, setToDateRent] = useState();
    const navigate = useNavigate();
 
    useLayoutEffect(() => {
-      DateFormat();
+      DateFormat(film, setToDateRent);
    }, []);
-
-   const DateFormat = () => {
-      let monthNames = ["января", "февраля", "марта", "апреля", "мая", "июня",
-         "июля", "августа", "сентября", "октября", "ноября", "декабря"];
-
-      let dateStr = '';
-      if (new Date(film.from_rent_date) <= new Date()) {
-         let dateDay = new Date(film.to_rent_date).getDate().toString();
-         let dateMounth = monthNames[new Date(film.to_rent_date).getMonth().toString()];
-         dateStr = 'до ' + dateDay + ' ' + dateMounth;
-      } else {
-         let dateDay = new Date(film.from_rent_date).getDate().toString();
-         let dateMounth = monthNames[new Date(film.from_rent_date).getMonth().toString()];
-         dateStr = 'c ' + dateDay + ' ' + dateMounth;
-      }
-
-      setToDateRent(dateStr);
-   }
 
    const goToFilmPage = () => {
       navigate(`/film/${film.id}`);
