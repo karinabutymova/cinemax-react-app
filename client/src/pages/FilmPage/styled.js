@@ -277,5 +277,122 @@ export const GenresFlex = styled.div`
 
 `;
 
+export const ReviewsFlex = styled.div`
+   display: flex;
+   gap: 16px;
+
+   margin-bottom: 32px;
+   margin-top: 120px;
+`;
+
+export const ReviewsIcon = styled.img`
+   width: 20px;
+   height: 20px;
+`;
+
+export const ReviewsTitle = styled.h3`
+   font-style: normal;
+   font-weight: 600;
+   font-size: 20px;
+   line-height: 23px;
+
+   color: #FFFFFF;
+
+   text-align: ${props => props.center ? 'center' : 'left'};
+`;
+
+export const ReviewsFormDiv = styled.div`
+   display: flex;
+   justify-content: center;
+
+   margin-bottom: 48px;
+`;
+
+export const ReviewsForm = styled.form`
+   background-color: rgba(57, 55, 65, 0.5);
+   padding: 32px;
+   width: 100%;
+
+   border-radius: 8px;
+
+   @media (max-width: 992px) {
+      padding: 24px;
+   }
+
+   @media (max-width: 576px) {
+      padding: 16px;
+   }
+
+`;
+
+export const ReviewsTextarea = styled.textarea`
+   padding: 16px;
+   width: 100%;
+   height: 240px;
+   resize: none;
+   border-radius: 4px;
+
+
+   border-width: 1px;
+   border-color:${props => props.error ? '#EB5757' : 'rgba(57, 55, 65, 0.5)'};
+
+   font-size: 16px;
+`;
+
+export const ReviewsUser = styled.p`
+   padding: 0;
+   font-style: normal;
+   font-weight: 400;
+   font-size: 14px;
+   line-height: 16px;
+
+   background: transparent;
+
+   color: #FFFFFF;
+`;
+
+export const ReviewsUserFlex = styled.div`
+   display: flex;
+   gap: 16px;
+
+   align-items: center;
+
+   background: transparent;
+
+   margin-bottom: 16px;
+`;
+
+export const ReviewsUserCircle = styled.div`
+   width: 40px;
+   height: 40px;
+   border-radius: 50%;
+   background-color: #7A24B7;
+
+   display: flex;
+   align-items: center;
+   justify-content: center;
+`;
+
+export const PaginationBtn = styled.div`
+   font-style: normal;
+   font-weight: 400;
+   font-size: 14px;
+   line-height: 16px;
+
+   width: 100%;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   text-decoration-line: underline;
+
+   color: #757575;
+
+   &:hover{
+      cursor: pointer;
+      text-decoration: none;
+   }
+`;
+
+
 
 

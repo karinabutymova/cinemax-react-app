@@ -22,7 +22,6 @@ export const GetFilmInWishlist = async (req, res) => {
             film_id: req.query.filmId
          }
       });
-      console.log(filmWishlist);
       res.json(filmWishlist);
    } catch (error) {
       console.log(error);
@@ -62,14 +61,12 @@ export const DeleteWishlistByUser = async (req, res) => {
 
 export const SetUserWishlist = async (req, res) => {
    let { filmId, userId } = req.query;
-   console.log(req.query);
    try {
       const userWishlist = await FilmWishlist.create({
          user_id: userId,
          film_id: filmId
       });
       res.json(userWishlist);
-
    } catch (error) {
       console.log(error);
    }

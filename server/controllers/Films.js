@@ -9,12 +9,6 @@ export const GetFilmById = async (req, res) => {
    let { filmId } = req.query;
 
    try {
-      // const film = await Film.findOne({
-      //    where: {
-      //       id: filmId
-      //    }
-      // })
-
       const film = await Film.findOne({
          where: { id: filmId },
          attributes: {

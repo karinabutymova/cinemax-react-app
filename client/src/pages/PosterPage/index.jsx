@@ -33,6 +33,7 @@ const PosterPage = () => {
    }
    useEffect(() => {
       refreshToken();
+
    }, []);
 
    useEffect(() => {
@@ -42,6 +43,10 @@ const PosterPage = () => {
    useEffect(() => {
       getPosters();
    }, [activeTab]);
+
+   useEffect(() => {
+      sortPosters();
+   }, [posters]);
 
    const refreshToken = async () => {
       try {
@@ -151,6 +156,7 @@ const PosterPage = () => {
                break;
 
             default:
+               console.log('default');
                break;
          }
          setPosters(postersList);
@@ -169,8 +175,7 @@ const PosterPage = () => {
 
          let res = response.data;
          if (res.length > 4) setIsPagination(true);
-         searchParams.get('filter') === 'now' ? sortPosters(res) : setPosters(res);
-
+         setPosters(res);
       } catch (error) {
          if (error.response) {
             console.log(error.response);

@@ -1,6 +1,7 @@
 import express from "express";
 import { GetUsers, Register, Login, Logout } from "../controllers/Users.js";
 import { GetFilms, FindFilms, GetFilmById } from "../controllers/Films.js";
+import { SetFilmReview, GetAllFilmReviews } from "../controllers/FilmsReviews.js";
 import { GetUserWishlist, DeleteUserWishlist, SetUserWishlist, GetFilmInWishlist, DeleteWishlistByUser } from "../controllers/FilmsWishlist.js";
 import { verifyToken } from "../middleware/VerifyToken.js";
 import { refreshToken } from "../controllers/RefreshToken.js";
@@ -33,4 +34,8 @@ filmsWishlistRouter.get('/deleteWishlist', verifyToken, DeleteUserWishlist);
 filmsWishlistRouter.get('/deleteWishlistByUserId', verifyToken, DeleteWishlistByUser);
 filmsWishlistRouter.get('/setWishlist', verifyToken, SetUserWishlist);
 
-export { userRouter, forgotPasswordRouter, filmsRouter, filmsWishlistRouter };
+const filmReviewsRouter = express.Router();
+filmReviewsRouter.get('/sendUserReview', verifyToken, SetFilmReview);
+filmReviewsRouter.get('/getAllFilmReviews', GetAllFilmReviews);
+
+export { userRouter, forgotPasswordRouter, filmsRouter, filmsWishlistRouter, filmReviewsRouter };

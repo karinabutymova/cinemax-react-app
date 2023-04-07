@@ -2,24 +2,36 @@ import React, { useState, useEffect, useLayoutEffect } from 'react';
 import axios from 'axios';
 import jwt_decode from "jwt-decode";
 import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Container, Row, Col } from 'styled-bootstrap-grid';
 import Header from '../../components/Header';
 import * as Styled from './styled';
 import Preloader from '../../components/Preloader';
 import triangle from '../../assets/images/Icons/triangle.svg';
+import reviewIcon from '../../assets/images/Icons/message-square.svg';
 
 import { DateFormat } from './functions';
+import ReviewCard from '../../components/ReviewCard';
+
 
 const FilmPage = () => {
    let { filmId } = useParams();
+   const navigate = useNavigate();
    const [film, setFilm] = useState([]);
+   const [filmReviews, setFilmReviews] = useState([]);
    const [toDateRent, setToDateRent] = useState();
    const [isWishlist, setIsWishlist] = useState();
+
+   const [reviewsCount, setReviewsCount] = useState(4);
+   const [isPagination, setIsPagination] = useState(false);
+
+   const [textReview, setTextReview] = useState('');
 
    const [error, setError] = useState('');
    const [isLoading, setIsLoading] = useState(false);
 
    const [userId, setUserId] = useState('');
+   const [userName, setUserName] = useState('');
    const [token, setToken] = useState('');
    const [expire, setExpire] = useState('');
 
@@ -30,6 +42,7 @@ const FilmPage = () => {
    useLayoutEffect(() => {
       refreshToken();
       GetFilmById(filmId);
+      GetFilmReviews(filmId);
    }, []);
 
    useEffect(() => {
@@ -44,6 +57,7 @@ const FilmPage = () => {
          setToken(response.data.accessToken);
          const decoded = jwt_decode(response.data.accessToken);
          setUserId(decoded.userId);
+         setUserName(decoded.name);
          setExpire(decoded.exp);
       } catch (error) {
          if (error.response) {
@@ -64,6 +78,7 @@ const FilmPage = () => {
          setToken(response.data.accessToken);
          const decoded = jwt_decode(response.data.accessToken);
          setUserId(decoded.userId);
+         setUserName(decoded.name);
          setExpire(decoded.exp);
       }
       return config;
@@ -165,9 +180,69 @@ const FilmPage = () => {
       }
    }
 
+   const sendUserReview = async () => {
+      try {
+         await axiosJWT.get('http://localhost:3001/sendUserReview', {
+            headers: {
+               Authorization: `Bearer ${token}`,
+            },
+            params: {
+               filmId: filmId,
+               userId: userId,
+               textReview: textReview
+            },
+         });
+         setTextReview('');
+         GetFilmReviews(filmId);
+      } catch (error) {
+         if (error.response) {
+            console.log(error.response);
+         }
+      }
+   }
+
    const redirectYouTube = () => {
       film.trailer_link ?
-         window.open(film.trailer_link, '_blank') : alert('Упс.. Ссылки на трейлер нет');
+         window.open(film.trailer_link, '_blank') : alert('Упс.. Ссылка на трейлер не найдена');
+   }
+
+   const goToAuth = () => {
+      navigate('/auth');
+   }
+
+   const handleOnChange = (e) => {
+      setTextReview(e.target.value);
+   }
+
+   const GetFilmReviews = async (filmId) => {
+      try {
+         const response = await axios.get('http://localhost:3001/getAllFilmReviews', {
+            params: {
+               filmId: filmId
+            }
+         });
+         setFilmReviews(response.data);
+         if (response.data.length > 4) setIsPagination(true);
+      } catch (error) {
+         if (error.response) {
+            console.log(error.response);
+         }
+      }
+   }
+
+   const sendReview = (e) => {
+      e.preventDefault();
+      if (textReview) {
+         setError('');
+         sendUserReview();
+      } else {
+         setError('Пустое поле');
+      }
+   }
+
+   const showMore = () => {
+      setReviewsCount(reviewsCount + 4);
+      if (filmReviews.length <= reviewsCount + 4) setIsPagination(false);
    }
 
    return (
@@ -251,7 +326,7 @@ const FilmPage = () => {
                   <Col xl="2" lg="2" md="0" sm="0">
                      <Styled.InfoTitle />
                      <Styled.GenresFlex>
-                        {film.genres && film.genres.split(',').map((genre) => <Styled.InfoSpan>{genre}</Styled.InfoSpan>)}
+                        {film.genres && film.genres.split(',').map((genre, index) => <Styled.InfoSpan key={index}>{genre}</Styled.InfoSpan>)}
                      </Styled.GenresFlex>
 
                   </Col>
@@ -274,6 +349,56 @@ const FilmPage = () => {
                   </Col>
                   <Col xl="2" lg="2" md="0" sm="0">
                   </Col>
+               </Row>
+            }
+            {!isLoading &&
+               <Row>
+
+               </Row>
+            }
+
+            {!isLoading &&
+               <Row justifyContent='center'>
+                  <Col xl="8" lg="8" md="10" sm="12">
+                     <Styled.ReviewsFlex>
+                        <Styled.ReviewsIcon src={reviewIcon} />
+                        <Styled.ReviewsTitle>Отзывы</Styled.ReviewsTitle>
+                     </Styled.ReviewsFlex>
+                     <Styled.ReviewsFormDiv>
+                        {!userId && <Styled.PrimaryButton onClick={goToAuth} > Авторизуйтесь, чтобы оставить отзыв</Styled.PrimaryButton>}
+                        {userId &&
+                           <Styled.ReviewsForm>
+                              <Styled.ReviewsUserFlex>
+                                 <Styled.ReviewsUserCircle>{userName[0]}</Styled.ReviewsUserCircle>
+                                 <Styled.ReviewsUser>{userName}</Styled.ReviewsUser>
+                              </Styled.ReviewsUserFlex>
+                              <Styled.ReviewsTextarea
+                                 value={textReview}
+                                 placeholder="Поделись впечатлениями"
+                                 onChange={handleOnChange}
+                                 error={error}
+                              />
+                              <Styled.PrimaryButton width={'250px'} onClick={sendReview} >Отправить</Styled.PrimaryButton>
+                           </Styled.ReviewsForm>
+                        }
+                     </Styled.ReviewsFormDiv>
+
+                  </Col>
+               </Row>
+            }
+            {!isLoading &&
+               <Row justifyContent='center'>
+                  <Col xl="8" lg="8" md="10" sm="12">
+                     {filmReviews.length > 0 && filmReviews.map((review, index) => {
+                        return index < reviewsCount ? <ReviewCard key={review.id} review={review} /> : false
+                     })}
+                     {filmReviews.length === 0 && <Styled.ReviewsTitle center={'center'}> Ваш отзыв может быть первым!</Styled.ReviewsTitle>}
+                  </Col>
+               </Row>
+            }
+            {(!isLoading && filmReviews.length > 4 && isPagination) &&
+               <Row Row justifyContent='center'>
+                  <Styled.PaginationBtn onClick={showMore}>Показать больше</Styled.PaginationBtn>
                </Row>
             }
          </Container >

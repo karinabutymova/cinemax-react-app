@@ -7,7 +7,6 @@ import CinemaImg from '../../assets/images/LoginPage/cinemaAttribute.svg';
 const LoginPage = () => {
    const navigate = useNavigate();
 
-   // TODO: повесить ссылку на главную на название
    return (
       <FlexContainer>
          <Div>

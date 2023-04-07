@@ -1,14 +1,15 @@
 import { useState } from 'react'
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
+import { useBack } from 'use-back';
 import { Form, FlexContainer, Title, GoogleLogin, GoogleLogo, Text, Line, ForgorPasswordLink } from "../LoginForm/styled";
 import GoogleIcon from '../../assets/images/LoginPage/googleIcon.png';
 import InputField from "../InputField";
 import PrimaryButton from "../PrimaryButton";
 
-const SignForm = () =>{
+const SignForm = () => {
    const navigate = useNavigate();
+   const { hasBack, handleBack } = useBack();
    const [lastname, setLastName] = useState('');
    const [firstname, setFirstName] = useState('');
    const [email, setEmail] = useState('');
@@ -16,28 +17,28 @@ const SignForm = () =>{
    const [confPassword, setConfPassword] = useState('');
    const [errors, setErrors] = useState({});
 
-  const Register = async (e) => {
-   e.preventDefault();
-   try {
-       await axios.post('http://localhost:3001/users', {
-           lastname: lastname,
-           firstname: firstname,
-           email: email,
-           password: password,
-           confPassword: confPassword
-       },
-       { withCredentials: true });
-       navigate("/profile");
-   } catch (error) {
-       if (error.response) {
-         setErrors(error.response.data);
-         console.log(error.response.data);
-       }
+   const Register = async (e) => {
+      e.preventDefault();
+      try {
+         await axios.post('http://localhost:3001/users', {
+            lastname: lastname,
+            firstname: firstname,
+            email: email,
+            password: password,
+            confPassword: confPassword
+         },
+            { withCredentials: true });
+         handleBack();
+      } catch (error) {
+         if (error.response) {
+            setErrors(error.response.data);
+            console.log(error.response.data);
+         }
+      }
    }
-}
-   
-   return(
-      <Form onSubmit = { Register }>
+
+   return (
+      <Form onSubmit={Register}>
          <Title> Регистрация </Title>
          {/* <GoogleLogin><GoogleLogo src={GoogleIcon} alt="googleIcon"/>Зарегистрироваться через Google</GoogleLogin>
          <FlexContainer>
@@ -47,36 +48,36 @@ const SignForm = () =>{
             type="text"
             placeholder="Введите фамилию"
             label="Фамилия"
-            onChange ={setLastName}
+            onChange={setLastName}
          />
          <InputField
             type="text"
             placeholder="Введите имя"
             label="Имя"
-            onChange ={setFirstName}
+            onChange={setFirstName}
          />
          <InputField
             type="text"
             placeholder="Введите email"
             label="Email"
-            onChange ={setEmail}
+            onChange={setEmail}
             error={errors.email_invalid}
          />
          <InputField
             inputType="password"
             placeholder="Введите пароль"
             label="Пароль"
-            onChange ={setPassword}
+            onChange={setPassword}
             error={errors.error_password}
          />
          <InputField
             inputType="password"
             placeholder="Повторите пароль"
             label="Подтвердите пароль"
-            onChange ={setConfPassword}
+            onChange={setConfPassword}
             error={errors.password_do_not_match}
          />
-         <PrimaryButton btnText="Создать аккаунт" type="submit"/>
+         <PrimaryButton btnText="Создать аккаунт" type="submit" />
       </Form>
    );
 

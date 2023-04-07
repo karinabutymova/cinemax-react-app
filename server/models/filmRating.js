@@ -10,7 +10,6 @@ const FilmRating = db.define('films_rating', {
    },
    user_id: {
       type: DataTypes.INTEGER(10),
-      references: { model: Film, key: 'id' },
    },
    rating: {
       type: DataTypes.SMALLINT(5)

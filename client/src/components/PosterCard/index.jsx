@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import * as Styled from './styled';
 import { Col } from 'styled-bootstrap-grid';
 import { useLayoutEffect } from 'react';
 import { DateFormat } from '../../pages/FilmPage/functions';
 
-// TODO: переход на страницу фильма
 const PosterCard = ({ poster, filter, userId, isWish, setWishlist, deleteWishlist }) => {
 
+   const navigate = useNavigate();
    const [toDateRent, setToDateRent] = useState();
    const [isWishlist, setIsWishlist] = useState(isWish);
 
@@ -34,7 +35,7 @@ const PosterCard = ({ poster, filter, userId, isWish, setWishlist, deleteWishlis
             <Styled.CardContainer>
                {filter !== 'now' && <Styled.SoonDate>{toDateRent}</Styled.SoonDate>}
                {(filter === 'now' && poster.rate) && <Styled.SoonDate>{Number(poster.rate).toFixed(1)}</Styled.SoonDate>}
-               <Styled.PosterLink>
+               <Styled.PosterLink onClick={() => navigate(`/film/${poster.id}`)}>
                   <Styled.ImgLink src={require(`../../assets/images/Posters/${poster.photo_path}`)} />
                </Styled.PosterLink>
                <Styled.DateRent>
