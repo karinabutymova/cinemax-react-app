@@ -3,7 +3,14 @@ import config from "config";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import db from "./config/database.js";
-import { userRouter, forgotPasswordRouter, filmsRouter, filmsWishlistRouter, filmReviewsRouter } from "./routes/index.js";
+import {
+   userRouter,
+   forgotPasswordRouter,
+   filmsRouter,
+   filmsWishlistRouter,
+   filmReviewsRouter,
+   filmRatingRouter
+} from "./routes/index.js";
 import cors from "cors";
 
 dotenv.config();
@@ -27,6 +34,7 @@ const start = () => {
       app.use(filmsRouter);
       app.use(filmsWishlistRouter);
       app.use(filmReviewsRouter);
+      app.use(filmRatingRouter);
 
 
       app.listen(PORT, () => console.log('Server started on port', PORT));

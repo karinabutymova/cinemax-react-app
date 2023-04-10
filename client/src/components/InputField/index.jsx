@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { InputContainer, TextInput, RedTextInput, Label, FilledLabel, ErrorText } from "./styled";
 
 
-const InputField = ({...props}) =>{
+const InputField = ({ ...props }) => {
    const [textInput, setTextInput] = useState('');
    const [textError, setTextError] = useState('');
 
@@ -17,11 +17,11 @@ const InputField = ({...props}) =>{
       props.onChange(e.target.value);
    }
 
-   return(
+   return (
       <>
          <InputContainer>
-            {textError 
-               ?  <RedTextInput                   
+            {textError
+               ? <RedTextInput
                   type={props.inputType}
                   value={textInput}
                   id="input"
@@ -29,7 +29,7 @@ const InputField = ({...props}) =>{
                   placeholder={props.placeholder}
                   required
                   onChange={handleOnChange} />
-               : <TextInput                   
+               : <TextInput
                   type={props.inputType}
                   id="input"
                   value={textInput}
@@ -38,14 +38,14 @@ const InputField = ({...props}) =>{
                   required
                   onChange={handleOnChange} />
             }
-            
-            {(() =>{
+
+            {(() => {
                if (textInput) {
-                  if(textError) return <FilledLabel for="input" inputColor="#EB5757">{props.label}</FilledLabel> 
-                  else return <FilledLabel for="input">{props.label}</FilledLabel>
-               }else{
-                  if(textError) return <Label for="input" inputColor="#EB5757">{props.label}</Label>
-                  else return <Label for="input">{props.label}</Label>
+                  if (textError) return <FilledLabel htmlFor="input" inputColor="#EB5757">{props.label}</FilledLabel>
+                  else return <FilledLabel htmlFor="input">{props.label}</FilledLabel>
+               } else {
+                  if (textError) return <Label htmlFor="input" inputColor="#EB5757">{props.label}</Label>
+                  else return <Label htmlFor="input">{props.label}</Label>
                }
             })()}
 

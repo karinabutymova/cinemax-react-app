@@ -2,7 +2,6 @@ import Film from "../models/filmModel.js";
 import FilmRating from "../models/filmRating.js";
 import { Op } from "sequelize";
 import db from "../config/database.js";
-import { response } from "express";
 
 
 export const GetFilmById = async (req, res) => {

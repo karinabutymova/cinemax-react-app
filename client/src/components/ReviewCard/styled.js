@@ -65,3 +65,17 @@ export const ReviewReadMore = styled.p`
 
    background-color: #393741;
 `;
+
+export const ReviewDate = styled.p`
+   padding: 0;
+
+   font-style: normal;
+   font-weight: 400;
+   font-size: 12px;
+   line-height: 14px;
+
+   font-feature-settings: 'pnum' on, 'lnum' on;
+
+   color: #757575;
+   background: transparent;
+`;

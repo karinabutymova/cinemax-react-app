@@ -8,6 +8,7 @@ import Preloader from '../../components/Preloader';
 
 import searchIcon from '../../assets/images/Icons/search.svg';
 import SearchCard from '../../components/SearchCard';
+import Footer from '../../components/Footer';
 
 
 // TODO: (на будущее когда появятся новости) изменить карточку новостей 
@@ -172,6 +173,7 @@ const SearchPage = () => {
                </Row>
             }
          </Container>
+         <Footer />
       </>
    )
 }

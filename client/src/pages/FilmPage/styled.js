@@ -393,6 +393,21 @@ export const PaginationBtn = styled.div`
    }
 `;
 
+export const NumberDiv = styled.div`
+   display: flex;
+   font-style: normal;
+   font-weight: 600;
+   font-size: 13px;
+   line-height: 15px;
 
+   font-feature-settings: 'pnum' on, 'lnum' on;
+
+   gap: 17px; 
+   margin-left: 11px;
+`;
+
+export const NumberSpan = styled.span`
+   color: #757575;
+`;
 
 

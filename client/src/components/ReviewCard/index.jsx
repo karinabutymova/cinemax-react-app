@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import * as Styled from './styled';
-import { Col } from 'styled-bootstrap-grid';
-import { useLayoutEffect } from 'react';
-import { DateFormat } from '../../pages/FilmPage/functions';
 
 // TODO:: вывод - дата отзыва 
 const ReviewCard = ({ review }) => {
 
-   const [dateCreate, setDateCreate] = useState();
+   const [dateCreate, setDateCreate] = useState(review.created_at);
    const [longText, setLongText] = useState(true);
+
+   useEffect(() => {
+      let options = { hour: 'numeric', minute: 'numeric', year: 'numeric', month: 'long', day: 'numeric' };
+      let date = new Date(dateCreate);
+      setDateCreate(date.toLocaleDateString("ru", options));
+   }, []);
 
    const LongText = () => {
       setLongText(!longText);
@@ -20,6 +23,7 @@ const ReviewCard = ({ review }) => {
             <Styled.UserFlex>
                <Styled.UserCircle>{review['reviews_user.lastname'][0].toUpperCase()}</Styled.UserCircle>
                <Styled.User>{review['reviews_user.lastname']} {review['reviews_user.firstname']}</Styled.User>
+               <Styled.ReviewDate>{dateCreate}</Styled.ReviewDate>
             </Styled.UserFlex>
             {review.review_text.length > 300 ?
                <Styled.ReviewText long={longText}>{review.review_text}

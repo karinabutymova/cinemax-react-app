@@ -2,6 +2,7 @@ import express from "express";
 import { GetUsers, Register, Login, Logout } from "../controllers/Users.js";
 import { GetFilms, FindFilms, GetFilmById } from "../controllers/Films.js";
 import { SetFilmReview, GetAllFilmReviews } from "../controllers/FilmsReviews.js";
+import { SetRatingByUser, GetRatingByUser } from "../controllers/FilmRating.js";
 import { GetUserWishlist, DeleteUserWishlist, SetUserWishlist, GetFilmInWishlist, DeleteWishlistByUser } from "../controllers/FilmsWishlist.js";
 import { verifyToken } from "../middleware/VerifyToken.js";
 import { refreshToken } from "../controllers/RefreshToken.js";
@@ -38,4 +39,9 @@ const filmReviewsRouter = express.Router();
 filmReviewsRouter.get('/sendUserReview', verifyToken, SetFilmReview);
 filmReviewsRouter.get('/getAllFilmReviews', GetAllFilmReviews);
 
-export { userRouter, forgotPasswordRouter, filmsRouter, filmsWishlistRouter, filmReviewsRouter };
+const filmRatingRouter = express.Router();
+filmRatingRouter.get('/setFilmRating', verifyToken, SetRatingByUser);
+filmRatingRouter.get('/getFilmRating', verifyToken, GetRatingByUser);
+
+
+export { userRouter, forgotPasswordRouter, filmsRouter, filmsWishlistRouter, filmReviewsRouter, filmRatingRouter };

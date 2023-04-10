@@ -3,22 +3,24 @@ import axios from 'axios';
 import jwt_decode from "jwt-decode";
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import ReactStars from "react-rating-stars-component";
 import { Container, Row, Col } from 'styled-bootstrap-grid';
 import Header from '../../components/Header';
 import * as Styled from './styled';
+import { DateFormat } from './functions';
+import ReviewCard from '../../components/ReviewCard';
 import Preloader from '../../components/Preloader';
 import triangle from '../../assets/images/Icons/triangle.svg';
 import reviewIcon from '../../assets/images/Icons/message-square.svg';
+import Footer from '../../components/Footer';
 
-import { DateFormat } from './functions';
-import ReviewCard from '../../components/ReviewCard';
-
-
+// TODO: popup при добавлении/удалении лайка/рейтинга или уведомление что пользователь не авторизован
 const FilmPage = () => {
    let { filmId } = useParams();
    const navigate = useNavigate();
    const [film, setFilm] = useState([]);
    const [filmReviews, setFilmReviews] = useState([]);
+   const [ratingValue, setRatingValue] = useState(0);
    const [toDateRent, setToDateRent] = useState();
    const [isWishlist, setIsWishlist] = useState();
 
@@ -35,6 +37,19 @@ const FilmPage = () => {
    const [token, setToken] = useState('');
    const [expire, setExpire] = useState('');
 
+
+   const StarsRating = {
+      size: 30,
+      count: 10,
+      isHalf: false,
+      value: ratingValue,
+      activeColor: "#8D1BCD",
+      color: "#5D2381",
+      onChange: newValue => {
+         userId ? SetRating(newValue) : console.log("Не авторизованный пользователь");
+      }
+   };
+
    function timeout(delay) {
       return new Promise(res => setTimeout(res, delay));
    }
@@ -46,7 +61,10 @@ const FilmPage = () => {
    }, []);
 
    useEffect(() => {
-      if (userId) getWishlist();
+      if (userId) {
+         GetRating();
+         getWishlist();
+      }
    }, [userId]);
 
    const refreshToken = async () => {
@@ -96,6 +114,9 @@ const FilmPage = () => {
          },
             { withCredentials: true }
          );
+         if (!response.data) {
+            navigate('/notFoundPage');
+         }
          setFilm(response.data);
          DateFormat(response.data, setToDateRent);
       } catch (error) {
@@ -105,6 +126,52 @@ const FilmPage = () => {
       } finally {
          await timeout(300);
          setIsLoading(false);
+      }
+   }
+
+   const SetRating = async (rating) => {
+      try {
+         await axiosJWT.get('http://localhost:3001/setFilmRating', {
+            headers: {
+               Authorization: `Bearer ${token}`,
+            },
+            params: {
+               userId: userId,
+               filmId: filmId,
+               rating: rating
+            },
+         },
+            { withCredentials: true }
+         );
+         setRatingValue(rating);
+         GetFilmById(filmId);
+
+      } catch (error) {
+         if (error.response) {
+            console.log(error.response.data);
+         }
+      }
+   }
+
+   const GetRating = async () => {
+      try {
+         const response = await axiosJWT.get('http://localhost:3001/getFilmRating', {
+            headers: {
+               Authorization: `Bearer ${token}`,
+            },
+            params: {
+               userId: userId,
+               filmId: filmId
+            },
+         },
+            { withCredentials: true }
+         );
+         response.data ? setRatingValue(response.data.rating) : setRatingValue(0);
+
+      } catch (error) {
+         if (error.response) {
+            console.log(error.response.data);
+         }
       }
    }
 
@@ -344,6 +411,10 @@ const FilmPage = () => {
                      {(film.from_rent_date < new Date().toDateString()) &&
                         <div>
                            <Styled.InfoActorTitle>Ваша оценка</Styled.InfoActorTitle>
+                           <ReactStars {...StarsRating} />
+                           <Styled.NumberDiv>
+                              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((value) => <Styled.NumberSpan key={value}>{value}</Styled.NumberSpan>)}
+                           </Styled.NumberDiv>
                         </div>
                      }
                   </Col>
@@ -402,6 +473,7 @@ const FilmPage = () => {
                </Row>
             }
          </Container >
+         <Footer />
       </>
    )
 }

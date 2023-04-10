@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios';
 import jwt_decode from "jwt-decode";
 import { useNavigate } from 'react-router-dom';
+import Footer from '../../components/Footer';
 
 const ProfilePage = () => {
    const navigate = useNavigate();
@@ -76,33 +77,37 @@ const ProfilePage = () => {
    }
 
    return (
-      <div className="container mt-5">
-         <h1>Welcome Back: {name}</h1>
-         <table className="table is-striped is-fullwidth">
-            <thead>
-               <tr>
-                  <th>No</th>
-                  <th>Name</th>
-                  <th>Email</th>
-               </tr>
-            </thead>
-            <tbody>
-               {users.map((user, index) => (
-                  <tr key={user.id}>
-                     <td>{index + 1}</td>
-                     <td>{user.name}</td>
-                     <td>{user.email}</td>
-                     <td>{user.role}</td>
+      <>
+
+         <div className="container mt-5">
+            <h1>Welcome Back: {name}</h1>
+            <table className="table is-striped is-fullwidth">
+               <thead>
+                  <tr>
+                     <th>No</th>
+                     <th>Name</th>
+                     <th>Email</th>
                   </tr>
-               ))}
+               </thead>
+               <tbody>
+                  {users.map((user, index) => (
+                     <tr key={user.id}>
+                        <td>{index + 1}</td>
+                        <td>{user.name}</td>
+                        <td>{user.email}</td>
+                        <td>{user.role}</td>
+                     </tr>
+                  ))}
 
-            </tbody>
-         </table>
+               </tbody>
+            </table>
 
-         <button onClick={Logout} className="button is-light">
-            Log Out
-         </button>
-      </div>
+            <button onClick={Logout} className="button is-light">
+               Log Out
+            </button>
+         </div>
+         <Footer />
+      </>
    )
 }
 

@@ -9,6 +9,7 @@ import TabHeader from '../../components/TabHeader';
 import PosterCard from '../../components/PosterCard';
 import Preloader from '../../components/Preloader';
 import SortTabs from '../../components/SortTabs';
+import Footer from '../../components/Footer';
 
 // TODO: сделать popup когда добавляется/удаляется в избранное 
 // TODO: и когда пользователь неавторизован
@@ -240,6 +241,7 @@ const PosterPage = () => {
                </Row>
             }
          </Container>
+         <Footer />
       </>
    )
 }
