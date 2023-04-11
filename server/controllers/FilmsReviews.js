@@ -1,5 +1,6 @@
 import FilmReviews from "../models/filmReview.js";
 import User from "../models/userModel.js";
+import Film from "../models/filmModel.js";
 
 export const SetFilmReview = async (req, res) => {
    let { userId, textReview, filmId } = req.query;
@@ -23,7 +24,6 @@ export const GetAllFilmReviews = async (req, res) => {
          where: {
             film_id: filmId
          },
-         attributes: { exclude: ['reviews_user.password'] },
          include: {
             model: User,
             as: 'reviews_user',
@@ -37,6 +37,31 @@ export const GetAllFilmReviews = async (req, res) => {
       });
       res.json(allRewiews);
 
+   } catch (error) {
+      console.log(error);
+   }
+}
+
+export const GetAllUserReviews = async (req, res) => {
+   let { userId } = req.query;
+   try {
+      const allUserRewiews = await FilmReviews.findAll({
+         where: {
+            user_id: userId
+         },
+         include: {
+            model: Film,
+            as: 'reviews_film',
+            required: true,
+            attributes: ['film_title']
+         },
+         raw: true,
+         order: [
+            ['created_at', 'DESC']
+         ]
+      });
+
+      res.json(allUserRewiews);
    } catch (error) {
       console.log(error);
    }

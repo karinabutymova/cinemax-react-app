@@ -1,6 +1,7 @@
 import { Sequelize } from "sequelize";
 import db from "../config/database.js";
 import User from "./userModel.js";
+import Film from "./filmModel.js";
 
 const { DataTypes } = Sequelize;
 
@@ -24,5 +25,8 @@ const FilmReviews = db.define('films_reviews', {
 
 User.hasMany(FilmReviews, { foreignKey: 'id', as: 'reviews_user' });
 FilmReviews.belongsTo(User, { foreignKey: 'user_id', as: 'reviews_user' });
+
+Film.hasMany(FilmReviews, { foreignKey: 'id', as: 'reviews_film' });
+FilmReviews.belongsTo(Film, { foreignKey: 'film_id', as: 'reviews_film' });
 
 export default FilmReviews;

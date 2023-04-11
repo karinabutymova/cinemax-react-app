@@ -141,7 +141,7 @@ export const FilterItem = styled.p`
    position: relative;
 
    color: #FFFFFF;
-   opacity: ${props => props.active ? '#1' : '0.5'};
+   opacity: ${props => props.active ? '1' : '0.5'};
 
    padding: 0;
    white-space: nowrap;

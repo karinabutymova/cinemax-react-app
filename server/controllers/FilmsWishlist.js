@@ -1,5 +1,6 @@
 import FilmWishlist from "../models/filmWishlist.js";
-
+import Film from "../models/filmModel.js";
+import { Op } from "sequelize";
 
 export const GetUserWishlist = async (req, res) => {
    try {
@@ -13,6 +14,34 @@ export const GetUserWishlist = async (req, res) => {
       console.log(error);
    }
 }
+
+export const GetUserAllWishlist = async (req, res) => {
+   try {
+      const userWishlist = await FilmWishlist.findAll({
+         where: {
+            user_id: req.query.userId
+         },
+         include: {
+            model: Film,
+            as: 'wishlist',
+            required: true,
+            where: {
+               to_rent_date: {
+                  [Op.gt]: new Date()
+               }
+            }
+         },
+         raw: true,
+         order: [
+            ['id', 'DESC']
+         ]
+      });
+      res.json(userWishlist);
+   } catch (error) {
+      console.log(error);
+   }
+}
+
 
 export const GetFilmInWishlist = async (req, res) => {
    try {

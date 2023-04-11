@@ -34,7 +34,6 @@ const PosterPage = () => {
    }
    useEffect(() => {
       refreshToken();
-
    }, []);
 
    useEffect(() => {
@@ -48,6 +47,7 @@ const PosterPage = () => {
    useEffect(() => {
       sortPosters();
    }, [posters]);
+
 
    const refreshToken = async () => {
       try {
@@ -140,7 +140,6 @@ const PosterPage = () => {
       }
    }
 
-
    const sortPosters = (postersList = posters) => {
       if (postersList) {
          switch (searchParams.get('sort')) {
@@ -157,7 +156,6 @@ const PosterPage = () => {
                break;
 
             default:
-               console.log('default');
                break;
          }
          setPosters(postersList);

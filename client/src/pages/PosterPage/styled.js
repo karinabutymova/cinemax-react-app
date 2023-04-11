@@ -13,7 +13,6 @@ export const PageTitle = styled.h1`
 `;
 
 export const NotFound = styled.span`
-
    font-style: normal;
    font-weight: 600;
    font-size: 24px;
@@ -25,7 +24,6 @@ export const NotFound = styled.span`
    width: 100%;
    
    text-align: center;
-
 `;
 
 export const PaginationBtn = styled(Button)`
