@@ -1,5 +1,6 @@
 import FilmRating from "../models/filmRating.js";
 import db from "../config/database.js";
+import Film from "../models/filmModel.js";
 
 export const SetRatingByUser = async (req, res) => {
    let { filmId, userId, rating } = req.query;
@@ -50,6 +51,31 @@ export const GetRatingByUser = async (req, res) => {
 
       })
       res.json(getUserRating);
+   } catch (error) {
+      console.log(error);
+   }
+}
+
+export const GetAllRatingByUser = async (req, res) => {
+   let { userId } = req.query;
+
+   try {
+      const getAllUserRating = await FilmRating.findAll({
+         where: {
+            user_id: userId
+         },
+         attributes: {
+            include: ['rating']
+         },
+         include: {
+            model: Film,
+            as: 'ratings',
+            required: true,
+            attributes: ['film_title']
+         },
+         raw: true
+      })
+      res.json(getAllUserRating);
    } catch (error) {
       console.log(error);
    }

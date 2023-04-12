@@ -1,7 +1,5 @@
 import styled from "styled-components";
-import { Link } from "react-router-dom";
 import { Button } from "../../components/PrimaryButton/styled";
-import { ReviewText as Text, ReviewReadMore as ReadMore } from "../../components/ReviewCard/styled";
 
 export const PageTitle = styled.h1`
    font-style: normal;
@@ -257,59 +255,3 @@ export const PaginationBtn = styled(Button)`
    }
 
 `;
-
-export const ReviewDiv = styled.div`
-   padding: 24px 32px;
-   margin-bottom: 24px;
-
-   background-color: rgba(57, 55, 65, 0.5);
-   width: 100%;
-
-   border-radius: 8px;
-
-   @media (max-width: 992px) {
-      padding: 24px;
-   }
-
-   @media (max-width: 576px) {
-      padding: 16px;
-   }
-`;
-
-export const FilmInfoFlex = styled.div`
-   display: flex;
-   gap: 16px;
-   background: transparent;
-`;
-
-export const FilmInfoTitle = styled.p`
-   font-style: normal;
-   font-weight: 500;
-   font-size: 14px;
-   line-height: 16px;
-
-   color: #FFFFFF;
-   background: transparent;
-`;
-
-export const FilmLink = styled(Link)`
-   font-style: normal;
-   font-weight: 400;
-   font-size: 14px;
-   line-height: 16px;
-
-   text-decoration-line: underline;
-
-   color: #757575;
-   background: transparent;
-
-   &:hover{
-      cursor: pointer;
-      text-decoration: none;
-   }
-`;
-
-export const ReviewText = styled(Text)`
-   margin-top: 24px;
-`;
-export const ReviewReadMore = styled(ReadMore)``;

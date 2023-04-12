@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import * as Styled from './styled';
 
-// TODO:: вывод - дата отзыва 
 const ReviewCard = ({ review }) => {
 
    const [dateCreate, setDateCreate] = useState(review.created_at);

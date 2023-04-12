@@ -2,7 +2,7 @@ import express from "express";
 import { GetUsers, Register, Login, Logout } from "../controllers/Users.js";
 import { GetFilms, FindFilms, GetFilmById } from "../controllers/Films.js";
 import { SetFilmReview, GetAllFilmReviews, GetAllUserReviews } from "../controllers/FilmsReviews.js";
-import { SetRatingByUser, GetRatingByUser } from "../controllers/FilmRating.js";
+import { SetRatingByUser, GetRatingByUser, GetAllRatingByUser } from "../controllers/FilmRating.js";
 import {
    GetUserWishlist,
    DeleteUserWishlist,
@@ -11,6 +11,8 @@ import {
    DeleteWishlistByUser,
    GetUserAllWishlist
 } from "../controllers/FilmsWishlist.js";
+
+import { FindNews, GetLastNews } from "../controllers/News.js";
 import { verifyToken } from "../middleware/VerifyToken.js";
 import { refreshToken } from "../controllers/RefreshToken.js";
 import { SendEmail, resetPassword, changePassword } from "../controllers/RessetPassword.js";
@@ -51,6 +53,19 @@ filmReviewsRouter.get('/getAllUserReviews', GetAllUserReviews);
 const filmRatingRouter = express.Router();
 filmRatingRouter.get('/setFilmRating', verifyToken, SetRatingByUser);
 filmRatingRouter.get('/getFilmRating', verifyToken, GetRatingByUser);
+filmRatingRouter.get('/getUserRating', verifyToken, GetAllRatingByUser);
+
+const newsRouter = express.Router();
+newsRouter.get('/findNews', FindNews);
+newsRouter.get('/getLastNews', GetLastNews);
 
 
-export { userRouter, forgotPasswordRouter, filmsRouter, filmsWishlistRouter, filmReviewsRouter, filmRatingRouter };
+export {
+   userRouter,
+   forgotPasswordRouter,
+   filmsRouter,
+   filmsWishlistRouter,
+   filmReviewsRouter,
+   filmRatingRouter,
+   newsRouter
+};

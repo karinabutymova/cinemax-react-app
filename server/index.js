@@ -9,7 +9,8 @@ import {
    filmsRouter,
    filmsWishlistRouter,
    filmReviewsRouter,
-   filmRatingRouter
+   filmRatingRouter,
+   newsRouter
 } from "./routes/index.js";
 import cors from "cors";
 
@@ -35,7 +36,7 @@ const start = () => {
       app.use(filmsWishlistRouter);
       app.use(filmReviewsRouter);
       app.use(filmRatingRouter);
-
+      app.use(newsRouter);
 
       app.listen(PORT, () => console.log('Server started on port', PORT));
    } catch (e) {

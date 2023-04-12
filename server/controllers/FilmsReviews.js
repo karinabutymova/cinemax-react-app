@@ -1,6 +1,7 @@
 import FilmReviews from "../models/filmReview.js";
 import User from "../models/userModel.js";
 import Film from "../models/filmModel.js";
+import db from "../config/database.js";
 
 export const SetFilmReview = async (req, res) => {
    let { userId, textReview, filmId } = req.query;
@@ -18,7 +19,7 @@ export const SetFilmReview = async (req, res) => {
 }
 
 export const GetAllFilmReviews = async (req, res) => {
-   let { filmId } = req.query;
+   let { filmId, userId } = req.query;
    try {
       const allRewiews = await FilmReviews.findAll({
          where: {
@@ -32,7 +33,9 @@ export const GetAllFilmReviews = async (req, res) => {
          },
          raw: true,
          order: [
-            ['created_at', 'DESC']
+            db.literal(`case when films_reviews.user_id ='${userId}' then 0 else 1 end`),
+            ['created_at', 'DESC'],
+
          ]
       });
       res.json(allRewiews);

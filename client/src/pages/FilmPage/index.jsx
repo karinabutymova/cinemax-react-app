@@ -32,7 +32,7 @@ const FilmPage = () => {
    const [error, setError] = useState('');
    const [isLoading, setIsLoading] = useState(false);
 
-   const [userId, setUserId] = useState('');
+   const [userId, setUserId] = useState(0);
    const [userName, setUserName] = useState('');
    const [token, setToken] = useState('');
    const [expire, setExpire] = useState('');
@@ -64,6 +64,7 @@ const FilmPage = () => {
       if (userId) {
          GetRating();
          getWishlist();
+         GetFilmReviews(filmId);
       }
    }, [userId]);
 
@@ -285,7 +286,8 @@ const FilmPage = () => {
       try {
          const response = await axios.get('http://localhost:3001/getAllFilmReviews', {
             params: {
-               filmId: filmId
+               filmId: filmId,
+               userId: userId
             }
          });
          setFilmReviews(response.data);
@@ -408,7 +410,7 @@ const FilmPage = () => {
 
                   </Col>
                   <Col xl="5" lg="5" md="6" sm="12">
-                     {(film.from_rent_date < new Date().toDateString()) &&
+                     {(new Date(film.from_rent_date) <= new Date()) &&
                         <div>
                            <Styled.InfoActorTitle>Ваша оценка</Styled.InfoActorTitle>
                            <ReactStars {...StarsRating} />

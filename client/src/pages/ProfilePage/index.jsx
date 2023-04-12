@@ -12,6 +12,7 @@ import * as Styled from './styled';
 
 import userIcon from '../../assets/images/Icons/user.svg';
 import layersIcon from '../../assets/images/Icons/layers.svg';
+import ReviewRateCard from '../../components/ReviewRateCard';
 
 
 // TODO: редактирование профиля
@@ -35,8 +36,10 @@ const ProfilePage = () => {
    const [reviews, setReviews] = useState([]);
 
    const [isLoading, setIsLoading] = useState(false);
-   const [wishlistCount, setWishkistCount] = useState(4);
+   const [wishlistCount, setWishlistCount] = useState(4);
+   const [reviewCount, setReviewCount] = useState(4);
    const [wishlistPagination, setWishlistPagination] = useState(false);
+   const [reviewPagination, setReviewPagination] = useState(false);
 
    useEffect(() => {
       refreshToken();
@@ -59,12 +62,10 @@ const ProfilePage = () => {
 
             case 'wishlist':
                getWishlist();
-               console.log('wishlist');
                break;
 
             case 'reviews':
                getReviews();
-               console.log('reviews');
                break;
 
             default:
@@ -100,7 +101,7 @@ const ProfilePage = () => {
             posters.push(poster);
          });
 
-         if (posters.length > 4) setWishlistPagination(true);
+         if (posters.length > 4 && wishlistCount < posters.length) setWishlistPagination(true);
 
          setUserWishlist(posters);
       } catch (error) {
@@ -124,11 +125,34 @@ const ProfilePage = () => {
                userId: userId,
             },
          });
-         setReviews(response.data);
 
-         console.log(response.data);
+         const responseRate = await axiosJWT.get('http://localhost:3001/getUserRating', {
+            headers: {
+               Authorization: `Bearer ${token}`,
+            },
+            params: {
+               userId: userId,
+            },
+         });
 
-         // if (posters.length > 4) setWishlistPagination(true);
+         let reviews = response.data;
+         let ar = [];
+         reviews.forEach(review => {
+            responseRate.data.forEach(rate => {
+               if (review.film_id === rate.film_id) {
+                  review['rating'] = rate.rating;
+                  if (ar.indexOf(rate) === -1) ar.push(rate);
+               }
+            });
+         });
+
+         responseRate.data.forEach(rate => {
+            if (ar.indexOf(rate) === -1) reviews.push(rate);
+         });
+
+         setReviews(reviews);
+         if (reviews.length > 4 && reviewCount < reviews.length) setReviewPagination(true);
+
       } catch (error) {
          if (error.response) {
             console.log(error.response);
@@ -233,8 +257,13 @@ const ProfilePage = () => {
    }
 
    const showMoreWishlist = () => {
-      setWishkistCount(wishlistCount + 4);
+      setWishlistCount(wishlistCount + 4);
       if (userWishlist.length <= wishlistCount + 4) setWishlistPagination(false);
+   }
+
+   const showMoreReviews = () => {
+      setReviewCount(reviewCount + 4);
+      if (reviews.length <= reviewCount + 4) setReviewPagination(false);
    }
 
    return (
@@ -337,19 +366,16 @@ const ProfilePage = () => {
                   }
                   {reviews.length > 0 &&
                      <Col xl="8" lg="8" md="12" sm="12" style={{ marginTop: '48px' }}>
-                        {reviews.map((review) => <Styled.ReviewDiv>
-                           <Styled.FilmInfoFlex>
-                              <Styled.FilmInfoTitle>{review['reviews_film.film_title']}</Styled.FilmInfoTitle>
-                              <Styled.FilmLink to={`/film/${review.film_id}`}>Перейти к фильму</Styled.FilmLink>
-                           </Styled.FilmInfoFlex>
-                           {review.review_text.length > 300 ?
-                              <Styled.ReviewText long={true}>{review.review_text}
-                                 <Styled.ReviewReadMore >Читать полностью</Styled.ReviewReadMore>
-                              </Styled.ReviewText>
-                              : <Styled.ReviewText>{review.review_text}</Styled.ReviewText>}
-                        </Styled.ReviewDiv>)}
+                        {reviews.length > 0 && reviews.map((review, index) => {
+                           return index < reviewCount ? <ReviewRateCard key={review.id} review={review} /> : false
+                        })}
                      </Col>
                   }
+               </Row>
+            }
+            {(!isLoading && reviews.length > 4 && reviewPagination) &&
+               <Row Row justifyContent='center'>
+                  <Styled.PaginationBtn onClick={showMoreReviews}> Показать больше</Styled.PaginationBtn>
                </Row>
             }
          </Container >

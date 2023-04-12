@@ -20,6 +20,6 @@ const FilmRating = db.define('films_rating', {
 });
 
 Film.hasMany(FilmRating, { foreignKey: 'film_id', as: 'films_rating' });
-FilmRating.belongsTo(Film, { foreignKey: 'id' });
+FilmRating.belongsTo(Film, { foreignKey: 'film_id', as: 'ratings' });
 
 export default FilmRating;

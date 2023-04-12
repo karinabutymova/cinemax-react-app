@@ -9,6 +9,7 @@ import Preloader from '../../components/Preloader';
 import searchIcon from '../../assets/images/Icons/search.svg';
 import SearchCard from '../../components/SearchCard';
 import Footer from '../../components/Footer';
+import SearchNewsCard from '../../components/SearchNewsCard';
 
 
 // TODO: (на будущее когда появятся новости) изменить карточку новостей 
@@ -18,6 +19,7 @@ const SearchPage = () => {
    const [searchParams, setSearchParams] = useSearchParams({ searchText: '', filter: 'all' });
    const [films, setFilms] = useState([]);
    const [news, setNews] = useState([]);
+   const [lastNews, setLastNews] = useState([]);
    const [isEmpty, setIsEmpty] = useState(false);
    const [searchText, setSearchtext] = useState('');
    const [active, SetActive] = useState(searchParams.get('filter'));
@@ -31,8 +33,25 @@ const SearchPage = () => {
 
    useEffect(() => {
       let searchInput = searchParams.get('searchText');
-      if (searchInput) SubmitSearch(searchInput);
+      searchInput ? SubmitSearch(searchInput) : getLastNews();
    }, []);
+
+   const getLastNews = async () => {
+      try {
+         const responseLastNews = await axios.get('http://localhost:3001/getLastNews',
+            { withCredentials: true }
+         );
+         setLastNews(responseLastNews.data);
+
+      } catch (error) {
+         if (error.response) {
+            console.log(error.response.data);
+         }
+      } finally {
+         await timeout(300);
+         setIsLoading(false);
+      }
+   }
 
    // обработка изменений поля ввода
    const handleOnChange = (e) => {
@@ -42,16 +61,25 @@ const SearchPage = () => {
 
    const SubmitSearch = async (searchText) => {
       try {
-         const response = await axios.get('http://localhost:3001/findfilms', {
+         const responseFilms = await axios.get('http://localhost:3001/findfilms', {
             params: {
                searchText: searchText,
             }
          },
             { withCredentials: true }
          );
-         setFilms(response.data);
-         setNews(response.data);
-         !response.data.length ? setIsEmpty(true) : setIsEmpty(false);
+
+         const responseNews = await axios.get('http://localhost:3001/findNews', {
+            params: {
+               searchText: searchText,
+            }
+         },
+            { withCredentials: true }
+         );
+         setFilms(responseFilms.data);
+         setNews(responseNews.data);
+
+         !responseNews.data.length && !responseFilms.data.length ? setIsEmpty(true) : setIsEmpty(false);
       } catch (error) {
          if (error.response) {
             console.log(error.response.data);
@@ -109,6 +137,15 @@ const SearchPage = () => {
                </Col>
             </Row>
             {isLoading && <Preloader />}
+            {(!isLoading && lastNews.length > 0 && news.length === 0 && films.length === 0) &&
+               <Row justifyContent='center'>
+                  <Col xl="6" lg="6" md="8" sm="12">
+                     <Styled.SectionTitle>Последние новости</Styled.SectionTitle>
+                     <Styled.Line />
+                     {lastNews.map((oneNews) => <SearchNewsCard key={oneNews.id} news={oneNews} />)}
+                  </Col>
+               </Row>
+            }
             {(!isLoading && films.length > 0 && news.length > 0) &&
                <Row justifyContent='center'>
                   <Col xl="6" lg="6" md="8" sm="12">
@@ -158,7 +195,7 @@ const SearchPage = () => {
                   <Col xl="6" lg="6" md="8" sm="12">
                      <Styled.SectionTitle>Новости</Styled.SectionTitle>
                      <Styled.Line />
-                     {news.map((oneNews, index) => { return index < 3 ? <SearchCard key={oneNews.id} film={oneNews} /> : false })}
+                     {news.map((oneNews, index) => { return index < 3 ? <SearchNewsCard key={oneNews.id} news={oneNews} /> : false })}
                   </Col>
                </Row>
             }
@@ -168,7 +205,7 @@ const SearchPage = () => {
                   <Col xl="6" lg="6" md="8" sm="12">
                      <Styled.SectionTitle>Новости</Styled.SectionTitle>
                      <Styled.Line />
-                     {news.map((oneNews) => <SearchCard key={oneNews.id} film={oneNews} />)}
+                     {news.map((oneNews) => <SearchNewsCard key={oneNews.id} news={oneNews} />)}
                   </Col>
                </Row>
             }
