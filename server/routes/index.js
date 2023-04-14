@@ -13,6 +13,8 @@ import {
 } from "../controllers/FilmsWishlist.js";
 
 import { FindNews, GetLastNews } from "../controllers/News.js";
+
+import { GetAllFilmShows, GetShowHalls } from "../controllers/FilmsShows.js";
 import { verifyToken } from "../middleware/VerifyToken.js";
 import { refreshToken } from "../controllers/RefreshToken.js";
 import { SendEmail, resetPassword, changePassword } from "../controllers/RessetPassword.js";
@@ -59,6 +61,10 @@ const newsRouter = express.Router();
 newsRouter.get('/findNews', FindNews);
 newsRouter.get('/getLastNews', GetLastNews);
 
+const filmsShowsRouter = express.Router();
+filmsShowsRouter.get('/getAllFilmShows', GetAllFilmShows);
+filmsShowsRouter.get('/getShowHalls', GetShowHalls);
+
 
 export {
    userRouter,
@@ -67,5 +73,6 @@ export {
    filmsWishlistRouter,
    filmReviewsRouter,
    filmRatingRouter,
-   newsRouter
+   newsRouter,
+   filmsShowsRouter
 };

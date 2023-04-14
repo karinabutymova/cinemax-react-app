@@ -13,6 +13,7 @@ import Preloader from '../../components/Preloader';
 import triangle from '../../assets/images/Icons/triangle.svg';
 import reviewIcon from '../../assets/images/Icons/message-square.svg';
 import Footer from '../../components/Footer';
+import Booking from '../../components/Booking';
 
 // TODO: popup при добавлении/удалении лайка/рейтинга или уведомление что пользователь не авторизован
 const FilmPage = () => {
@@ -424,11 +425,7 @@ const FilmPage = () => {
                   </Col>
                </Row>
             }
-            {!isLoading &&
-               <Row>
-
-               </Row>
-            }
+            {!isLoading && <Booking filmId={filmId} />}
 
             {!isLoading &&
                <Row justifyContent='center'>
@@ -439,7 +436,7 @@ const FilmPage = () => {
                      </Styled.ReviewsFlex>
                      <Styled.ReviewsFormDiv>
                         {!userId && <Styled.PrimaryButton onClick={goToAuth} > Авторизуйтесь, чтобы оставить отзыв</Styled.PrimaryButton>}
-                        {userId &&
+                        {userId > 0 &&
                            <Styled.ReviewsForm>
                               <Styled.ReviewsUserFlex>
                                  <Styled.ReviewsUserCircle>{userName[0]}</Styled.ReviewsUserCircle>
