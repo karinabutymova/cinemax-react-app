@@ -13,14 +13,11 @@ import * as Styled from './styled';
 import userIcon from '../../assets/images/Icons/user.svg';
 import layersIcon from '../../assets/images/Icons/layers.svg';
 import ReviewRateCard from '../../components/ReviewRateCard';
-
+import UserTickets from '../../components/UserTickets';
 
 // TODO: редактирование профиля
 // TODO: история бонусов
 // TODO: popup 
-
-// TODO: переход к большому отзыву 
-// TODO: на странице фильма показывать сначала отзывы юзера
 
 const ProfilePage = () => {
    const navigate = useNavigate();
@@ -31,9 +28,11 @@ const ProfilePage = () => {
    const [token, setToken] = useState('');
    const [expire, setExpire] = useState('');
 
+   const [ticketsCount, setTicketsCount] = useState([]);
    const [tickets, setTickets] = useState([]);
    const [userWishlist, setUserWishlist] = useState([]);
    const [reviews, setReviews] = useState([]);
+   const [userBonuses, setUserBonuses] = useState(0);
 
    const [isLoading, setIsLoading] = useState(false);
    const [wishlistCount, setWishlistCount] = useState(4);
@@ -47,17 +46,57 @@ const ProfilePage = () => {
 
    useEffect(() => {
       setFilter();
+      getUserBonuses();
    }, [activeTab, userId]);
 
    function timeout(delay) {
       return new Promise(res => setTimeout(res, delay));
    }
 
+   const getUserTicketsCount = async () => {
+      setIsLoading(true);
+      try {
+         const response = await axios.get('http://localhost:3001/getUserTicketsCount', {
+            params: {
+               userId: userId
+            }
+         },
+            { withCredentials: true }
+         );
+         console.log(response.data);
+         setTicketsCount(response.data);
+      } catch (error) {
+         if (error.response) {
+            console.log(error.response.data);
+         }
+      } finally {
+         await timeout(250);
+         setIsLoading(false);
+      }
+   }
+
+   const getUserBonuses = async () => {
+      try {
+         const response = await axios.get('http://localhost:3001/getUserBonuses', {
+            params: {
+               userId: userId
+            }
+         },
+            { withCredentials: true }
+         );
+         setUserBonuses(response.data.current_balance);
+      } catch (error) {
+         if (error.response) {
+            console.log(error.response.data);
+         }
+      }
+   }
+
    const setFilter = () => {
       if (activeTab && userId) {
          switch (searchParams.get('filter')) {
             case 'tickets':
-               console.log('tickets');
+               getUserTicketsCount();
                break;
 
             case 'wishlist':
@@ -292,8 +331,8 @@ const ProfilePage = () => {
                   <Styled.BonusDiv>
                      <Styled.BonusTitle>Бонусные баллы</Styled.BonusTitle>
                      <Styled.BonusCountDiv>
-                        <Styled.BonusCount>140</Styled.BonusCount>
-                        <Styled.BonusMoney>1.4BYN</Styled.BonusMoney>
+                        <Styled.BonusCount>{userBonuses}</Styled.BonusCount>
+                        <Styled.BonusMoney>{userBonuses / 100}BYN</Styled.BonusMoney>
                      </Styled.BonusCountDiv>
                   </Styled.BonusDiv>
                   <Styled.BonusHistoryDiv>
@@ -327,13 +366,21 @@ const ProfilePage = () => {
                </Row>
             }
             {(!isLoading && activeTab === 'tickets') &&
-               <Row>
-                  {!tickets.length &&
-                     <Col col="12">
-                        <Styled.NullArrayText>Список ваших билетов пуст</Styled.NullArrayText>
-                     </Col>
+               <>
+                  {!ticketsCount.length &&
+                     <Row>
+                        <Col col="12">
+                           <Styled.NullArrayText>Список ваших билетов пуст</Styled.NullArrayText>
+                        </Col>
+                     </Row>
+
                   }
-               </Row>
+                  {ticketsCount.length > 0 &&
+                     <>
+                        {ticketsCount.map((tickets) => <UserTickets key={tickets.id} tickets={tickets} />)}
+                     </>
+                  }
+               </>
             }
             {(!isLoading && activeTab === 'wishlist') &&
                <Row>

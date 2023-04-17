@@ -5,12 +5,19 @@ import { Row, Col } from 'styled-bootstrap-grid';
 import Select from 'react-select'
 import ShowHalls from '../ShowHalls';
 import BookingSteps from '../BookingSteps';
+import SeatsChoice from '../SeatsChoice';
+import Payment from '../Payment';
 
 
-const Booking = ({ filmId }) => {
+const Booking = ({ filmId, userId, userName }) => {
    const [shows, setShows] = useState([]);
    const [step, setStep] = useState(1);
+   const [dateChoice, setDateChoice] = useState('');
+   const [selectedHall, setSelectedHall] = useState([]);
    const [showsHalls, setShowsHalls] = useState([]);
+   const [selectedSeats, setSelectedSeats] = useState([]);
+
+   const [active, setActive] = useState(false);
 
    useLayoutEffect(() => {
       if (filmId) getFilmShows();
@@ -73,12 +80,19 @@ const Booking = ({ filmId }) => {
    }
 
    const onChangeDate = (e) => {
-      e ? GetShowHalls(e.value) : setShowsHalls([]);
+      if (e) {
+         GetShowHalls(e.value);
+         setDateChoice(e);
+      } else {
+         setShowsHalls([]);
+      }
+
    }
 
 
    return (
       <Styled.BookingDiv>
+         {shows.length === 0 && <Styled.NullArrayText>Даты сеансов ещё не назначены</Styled.NullArrayText>}
          {shows.length > 0 &&
             <>
                <Row>
@@ -93,6 +107,7 @@ const Booking = ({ filmId }) => {
                         isClearable="true"
                         isSearchable="false"
                         options={shows}
+                        defaultValue={dateChoice}
                         onChange={onChangeDate}
                         styles={{
                            menu: (baseStyles) => ({
@@ -154,9 +169,29 @@ const Booking = ({ filmId }) => {
                {(step === 1 && showsHalls.length > 0) &&
                   <Row>
                      <Col xl="6" lg="6" md="8" xs="12">
-                        <ShowHalls showsHalls={showsHalls} step={setStep} />
+                        <ShowHalls showsHalls={showsHalls}
+                           step={setStep}
+                           active={active}
+                           setActive={setActive}
+                           selectedHall={setSelectedHall} />
                      </Col>
                   </Row>
+               }
+
+               {(step === 2 && selectedHall) &&
+                  <SeatsChoice
+                     step={setStep}
+                     showHall={selectedHall}
+                     selectedSeats={selectedSeats}
+                     setSelectedSeats={setSelectedSeats} />
+               }
+               {(step === 3 && selectedHall) &&
+                  <Payment
+                     step={setStep}
+                     showHall={selectedHall}
+                     selectedSeats={selectedSeats}
+                     userId={userId}
+                     userName={userName} />
                }
             </>
          }

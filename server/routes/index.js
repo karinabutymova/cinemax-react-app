@@ -11,13 +11,15 @@ import {
    DeleteWishlistByUser,
    GetUserAllWishlist
 } from "../controllers/FilmsWishlist.js";
-
+import { GetUserBonuses, SetUserBonus } from "../controllers/UserBonuses.js";
+import { SetNewSeats } from "../controllers/Seats.js";
 import { FindNews, GetLastNews } from "../controllers/News.js";
-
+import { GetUnavailableSeats, SetNewTickets, GetUserTicketsCount, GetUserShowTickets } from "../controllers/Tickets.js";
 import { GetAllFilmShows, GetShowHalls } from "../controllers/FilmsShows.js";
 import { verifyToken } from "../middleware/VerifyToken.js";
 import { refreshToken } from "../controllers/RefreshToken.js";
 import { SendEmail, resetPassword, changePassword } from "../controllers/RessetPassword.js";
+import { SetOrder } from "../controllers/Orders.js";
 
 
 const userRouter = express.Router();
@@ -65,6 +67,21 @@ const filmsShowsRouter = express.Router();
 filmsShowsRouter.get('/getAllFilmShows', GetAllFilmShows);
 filmsShowsRouter.get('/getShowHalls', GetShowHalls);
 
+const ticketsRouter = express.Router();
+ticketsRouter.get('/getUnavailableSeats', GetUnavailableSeats);
+ticketsRouter.get('/setNewTickets', SetNewTickets);
+ticketsRouter.get('/getUserTicketsCount', GetUserTicketsCount);
+ticketsRouter.get('/getUserShowTickets', GetUserShowTickets);
+
+const userBonusesRouter = express.Router();
+userBonusesRouter.get('/getUserBonuses', GetUserBonuses);
+userBonusesRouter.post('/setUserBonus', SetUserBonus);
+
+const seatsRouter = express.Router();
+seatsRouter.get('/setNewSeats', SetNewSeats);
+
+const orderRouter = express.Router();
+orderRouter.post('/setOrder', SetOrder);
 
 export {
    userRouter,
@@ -74,5 +91,9 @@ export {
    filmReviewsRouter,
    filmRatingRouter,
    newsRouter,
-   filmsShowsRouter
+   filmsShowsRouter,
+   ticketsRouter,
+   userBonusesRouter,
+   seatsRouter,
+   orderRouter
 };

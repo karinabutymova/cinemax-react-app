@@ -425,7 +425,7 @@ const FilmPage = () => {
                   </Col>
                </Row>
             }
-            {!isLoading && <Booking filmId={filmId} />}
+            {!isLoading && <Booking filmId={filmId} userId={userId} userName={userName} />}
 
             {!isLoading &&
                <Row justifyContent='center'>

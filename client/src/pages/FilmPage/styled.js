@@ -33,21 +33,13 @@ export const MainScreen = styled.div`
 export const FilmTitle = styled.h1`
    font-style: normal;
    font-weight: 900;
-   font-size: 80px;
-   line-height: 94px;
+   font-size: calc(3vw + 2vh + 1vmin);
+   /* line-height: 94px; */
 
    color: #FFFFFF;
 
-   margim: 16px 0 40px 0;
+   margin: 16px 0 40px 0;
 
-   @media (max-width: 992px) {
-      font-size: 60px;
-      line-height: 68px;
-   }
-   @media (max-width: 576px) {
-      font-size: 32px;
-      line-height: 38px;
-   }
 `;
 
 export const Flex = styled.div`

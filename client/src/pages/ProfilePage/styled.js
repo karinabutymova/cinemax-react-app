@@ -91,7 +91,7 @@ export const BonusDiv = styled.div`
    padding: 19px 40px;
    gap: 16px;
 
-   background: #D9D9D9;
+   background: #FFFFFF;
    border-radius: 8px;
 
    margin-top: -40px;
@@ -188,6 +188,7 @@ export const FilterContainer = styled.div`
    position: relative;
 
    margin-top: 80px;
+   margin-bottom: 42px;
 
    @media (max-width: 576px) {
       justify-content: flex-start;

@@ -7,6 +7,7 @@ import GoogleIcon from '../../assets/images/LoginPage/googleIcon.png';
 import InputField from "../InputField";
 import PrimaryButton from "../PrimaryButton";
 
+// TODO: возврат на страницу с которой пришел, но проверку надо
 const SignForm = () => {
    const navigate = useNavigate();
    const { hasBack, handleBack } = useBack();
@@ -28,7 +29,8 @@ const SignForm = () => {
             confPassword: confPassword
          },
             { withCredentials: true });
-         handleBack();
+         // handleBack();
+         navigate('/profile');
       } catch (error) {
          if (error.response) {
             setErrors(error.response.data);

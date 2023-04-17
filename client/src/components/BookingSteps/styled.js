@@ -17,6 +17,7 @@ export const StepDiv = styled.div`
    padding: 24px 8px;
 
    position: relative;
+   cursor: default;
 
    transition: all 0.25s;
    opacity: ${props => props.step === props.id ? '1' : '0.5'};
@@ -31,6 +32,10 @@ export const StepDiv = styled.div`
       background-color: #8D1BCD;
       display: block;
       opacity: ${props => props.step === props.id ? '1' : '0'};
+   }
+
+   @media (max-width: 768px) {
+      justify-content: center;
    }
 `;
 
@@ -49,12 +54,17 @@ export const StepNumber = styled.div`
     font-feature-settings: 'pnum' on, 'lnum' on;
 
    color: #FFFFFF;
+
 `;
 
 export const StepDescriptionDiv = styled.div`
    display: flex;
    flex-direction: column;
    gap: 4px;
+
+   @media (max-width: 768px) {
+      display: none;
+   }
 `;
 
 export const StepTitle = styled.p`

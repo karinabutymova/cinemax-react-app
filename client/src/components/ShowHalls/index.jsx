@@ -2,10 +2,10 @@ import { useState, useEffect } from 'react';
 import * as Styled from './styled';
 import TimeCard from '../TimeCard';
 
-const ShowHalls = ({ showsHalls, step }) => {
+const ShowHalls = ({ showsHalls, step, selectedHall, active, setActive }) => {
 
    const [halls, setHalls] = useState([]);
-   const [active, setActive] = useState(false);
+
 
    const timeOptions = { hour: 'numeric', minute: 'numeric' };
 
@@ -25,6 +25,9 @@ const ShowHalls = ({ showsHalls, step }) => {
 
    const nextStep = () => {
       step(2);
+      showsHalls.forEach(show => {
+         if (show.id === active) selectedHall(show);
+      });
    }
 
    return (
