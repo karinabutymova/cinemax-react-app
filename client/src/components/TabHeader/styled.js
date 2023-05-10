@@ -21,6 +21,10 @@ export const TabsHeader = styled.ul`
 
    margin-top: 112px;
 
+   @media (max-width: 768px) {
+      margin-top: 80px;
+   }
+
    & ${TabsLi}{
       display: table-cell;
       text-align: center;
@@ -46,6 +50,8 @@ export const TabsHeader = styled.ul`
    & ${TabsLi}.active > ${LinkTab}{
       background: #8D1BCD;
    }
+
+   
 
 `;
 

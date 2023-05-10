@@ -3,6 +3,103 @@ import FilmRating from "../models/filmRating.js";
 import { Op } from "sequelize";
 import db from "../config/database.js";
 
+export const GetAllFilms = async (req, res) => {
+   try {
+      const films = await Film.findAll({
+         attributes: {
+            include: [['id', 'delete_id']]
+         }
+      });
+      res.json(films);
+   } catch (error) {
+      console.log(error);
+   }
+}
+
+export const GetPopularFilm = async (req, res) => {
+   try {
+      const [films] = await db.query(
+         `SELECT films.id, films.film_title, films.photo_path, films.genres,
+         films.to_rent_date, films.from_rent_date
+         FROM tickets
+         INNER JOIN films_shows
+         ON tickets.film_show_id = films_shows.id
+         INNER JOIN films
+         ON films.id = films_shows.film_id
+         GROUP BY films.id
+         ORDER BY COUNT(films.id) DESC
+         LIMIT 3`
+      );
+
+      res.json(films);
+   } catch (error) {
+      console.log(error);
+   }
+}
+
+export const GetFilmTitles = async (req, res) => {
+   try {
+      const films = await Film.findAll({
+         attributes: ['id', 'film_title', 'from_rent_date', 'to_rent_date', 'film_runtime']
+      });
+
+      res.json(films);
+   } catch (error) {
+      console.log(error);
+   }
+}
+
+export const AddFilm = async (req, res) => {
+   let { title,
+      poster,
+      description,
+      actors,
+      creators,
+      year,
+      genres,
+      country,
+      runtime,
+      age,
+      fromRent,
+      toRent,
+      trailer
+   } = req.body.newFilm;
+   try {
+      const film = await Film.create({
+         film_title: title,
+         photo_path: poster,
+         description: description,
+         film_runtime: runtime,
+         creators: creators,
+         actors: actors,
+         year: year,
+         genres: genres,
+         country: country,
+         from_rent_date: fromRent,
+         to_rent_date: toRent,
+         age_limit: age,
+         trailer_link: trailer
+      });
+      res.json(film);
+   } catch (error) {
+      console.log(error);
+   }
+}
+
+export const DeleteFilmById = async (req, res) => {
+   try {
+      await Film.destroy({
+         where: {
+            id: req.query.id
+         }
+      });
+      res.json({
+         "message": "Фильм удалён"
+      });
+   } catch (error) {
+      res.json({ message: error.message });
+   }
+}
 
 export const GetFilmById = async (req, res) => {
    let { filmId } = req.query;

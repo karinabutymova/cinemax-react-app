@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react';
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 
@@ -8,45 +8,49 @@ import InputField from "../../components/InputField";
 import PrimaryButton from "../../components/PrimaryButton";
 
 // TODO : лоадер пока ждём ответа
-const ForgotPassword = () =>{
+const ForgotPassword = () => {
    const [email, setEmail] = useState('');
    const [errors, setErrors] = useState({});
    const navigate = useNavigate();
-   
+
+   useEffect(() => {
+      document.title = 'Забыли пароль? - Cinemax';
+   }, []);
+
    const sendEmail = async (e) => {
       e.preventDefault();
       try {
          await axios.post('http://localhost:3001/forgotPassword', {
-             email: email,
-         },{ withCredentials: true })
-         .then((response) => {
-            if(response.data.success) navigate("/emailsend");
-         });
-        
-     } catch (error) {
+            email: email,
+         }, { withCredentials: true })
+            .then((response) => {
+               if (response.data.success) navigate("/emailsend");
+            });
+
+      } catch (error) {
          if (error.response) {
             setErrors(error.response.data);
             console.log(error.response.data);
          }
-     }
-  }
-   
-   return(
+      }
+   }
+
+   return (
       <FlexContainer>
-         <Form onSubmit = { sendEmail }>
+         <Form onSubmit={sendEmail}>
             <Title> Забыли пароль? </Title>
             <SecondText>
-               Введите почту для получения инструкции<br/>сброса пароля
+               Введите почту для получения инструкции<br />сброса пароля
             </SecondText>
             <InputField
                type="text"
                placeholder="Введите email"
                label="Email"
-               onChange ={setEmail}
+               onChange={setEmail}
                error={errors.email_invalid}
             />
-            <PrimaryButton btnText="Сбросить пароль" type="submit"/>
-            <Line/>
+            <PrimaryButton btnText="Сбросить пароль" type="submit" />
+            <Line />
             <ForgorPasswordLink to="/auth">Вернуться к авторизации</ForgorPasswordLink>
             <FormLogoText>CINEMAX</FormLogoText>
          </Form>

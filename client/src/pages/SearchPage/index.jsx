@@ -20,6 +20,7 @@ const SearchPage = () => {
    const [films, setFilms] = useState([]);
    const [news, setNews] = useState([]);
    const [lastNews, setLastNews] = useState([]);
+   const [popularFilm, setPopularFilm] = useState([]);
    const [isEmpty, setIsEmpty] = useState(false);
    const [searchText, setSearchtext] = useState('');
    const [active, SetActive] = useState(searchParams.get('filter'));
@@ -32,8 +33,16 @@ const SearchPage = () => {
    }
 
    useEffect(() => {
+      document.title = 'Поиск - Cinemax';
+
       let searchInput = searchParams.get('searchText');
-      searchInput ? SubmitSearch(searchInput) : getLastNews();
+      if (searchInput) {
+         SubmitSearch(searchInput);
+      } else {
+         getLastNews();
+         getPopularFilm();
+      }
+
    }, []);
 
    const getLastNews = async () => {
@@ -42,6 +51,24 @@ const SearchPage = () => {
             { withCredentials: true }
          );
          setLastNews(responseLastNews.data);
+
+      } catch (error) {
+         if (error.response) {
+            console.log(error.response.data);
+         }
+      } finally {
+         await timeout(300);
+         setIsLoading(false);
+      }
+   }
+
+   const getPopularFilm = async () => {
+      try {
+         const responsePopularFilm = await axios.get('http://localhost:3001/getPopularFilm',
+            { withCredentials: true }
+         );
+         setPopularFilm(responsePopularFilm.data);
+         console.log(responsePopularFilm.data);
 
       } catch (error) {
          if (error.response) {
@@ -137,6 +164,15 @@ const SearchPage = () => {
                </Col>
             </Row>
             {isLoading && <Preloader />}
+            {(!isLoading && popularFilm.length > 0 && news.length === 0 && films.length === 0) &&
+               <Row justifyContent='center'>
+                  <Col xl="6" lg="6" md="8" sm="12">
+                     <Styled.SectionTitle>Популярное</Styled.SectionTitle>
+                     <Styled.Line />
+                     {popularFilm.map((film) => <SearchCard key={film.id} film={film} />)}
+                  </Col>
+               </Row>
+            }
             {(!isLoading && lastNews.length > 0 && news.length === 0 && films.length === 0) &&
                <Row justifyContent='center'>
                   <Col xl="6" lg="6" md="8" sm="12">

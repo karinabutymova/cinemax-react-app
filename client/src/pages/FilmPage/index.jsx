@@ -120,6 +120,7 @@ const FilmPage = () => {
             navigate('/notFoundPage');
          }
          setFilm(response.data);
+         document.title = response.data.film_title + ' - Cinemax';
          DateFormat(response.data, setToDateRent);
       } catch (error) {
          if (error.response) {
@@ -349,7 +350,7 @@ const FilmPage = () => {
                            </Styled.Flex>
                            <Styled.FilmTitle>{film.film_title}</Styled.FilmTitle>
                            <Styled.Flex gap="20px">
-                              <Styled.PrimaryButton>Купить билет</Styled.PrimaryButton>
+                              <Styled.PrimaryButton>Забронировать билет</Styled.PrimaryButton>
                               <Styled.InWishlist isWish={isWishlist} onClick={AddToWhishlist} viewBox="0 0 48 48">
                                  <rect width="48" height="48" rx="8" fill="#EBEBEB" />
                                  <path d="M32.7699 16.2706C32.2474 15.7462 31.6264 15.3302 30.9427 15.0463C30.2589 14.7624 29.5259 14.6162 28.7856 14.6162C28.0452 14.6162 27.3122 14.7624 26.6285 15.0463C25.9447 15.3302 25.3238 15.7462 24.8012 16.2706L23.9991 17.0831L23.197 16.2706C22.6744 15.7462 22.0535 15.3302 21.3698 15.0463C20.686 14.7624 19.953 14.6162 19.2127 14.6162C18.4723 14.6162 17.7393 14.7624 17.0556 15.0463C16.3718 15.3302 15.7509 15.7462 15.2283 16.2706C13.0199 18.479 12.8845 22.2081 15.6658 25.0415L23.9991 33.3748L32.3324 25.0415C35.1137 22.2081 34.9783 18.479 32.7699 16.2706Z" stroke="#8D1BCD" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -411,7 +412,7 @@ const FilmPage = () => {
 
                   </Col>
                   <Col xl="5" lg="5" md="6" sm="12">
-                     {(new Date(film.from_rent_date) <= new Date()) &&
+                     {((new Date(film.from_rent_date) <= new Date()) && userId > 0) &&
                         <div>
                            <Styled.InfoActorTitle>Ваша оценка</Styled.InfoActorTitle>
                            <ReactStars {...StarsRating} />
@@ -425,7 +426,14 @@ const FilmPage = () => {
                   </Col>
                </Row>
             }
-            {!isLoading && <Booking filmId={filmId} userId={userId} userName={userName} />}
+            {(!isLoading && !userId) &&
+               <Row justifyContent='center' style={{ marginTop: '72px' }}>
+                  <Col col="4">
+                     <Styled.PrimaryButton onClick={goToAuth} > Авторизуйтесь, чтобы забронировать билеты</Styled.PrimaryButton>
+                  </Col>
+               </Row>
+            }
+            {(!isLoading && userId > 0) && <Booking filmId={filmId} userId={userId} userName={userName} />}
 
             {!isLoading &&
                <Row justifyContent='center'>

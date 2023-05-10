@@ -6,8 +6,13 @@ import jwt from "jsonwebtoken";
 export const GetUsers = async (req, res) => {
    try {
       const users = await User.findAll({
-         attributes: ['id', 'lastname', 'firstname', 'email', 'role']
+         attributes: ['id', 'lastname', 'firstname', 'email', 'role', ['id', 'delete_id']]
       });
+
+      users.map(user => {
+         user.lastname = user.lastname + ' ' + user.firstname;
+      });
+
       res.json(users);
    } catch (error) {
       console.log(error);
@@ -140,6 +145,21 @@ export const Logout = async (req, res) => {
    return res.sendStatus(200);
 }
 
+export const DeleteUser = async (req, res) => {
+   try {
+      await User.destroy({
+         where: {
+            id: req.query.id
+         }
+      });
+      res.json({
+         "message": "Пользователь удалён"
+      });
+   } catch (error) {
+      res.json({ message: error.message });
+   }
+}
+
 
 // export const getAllUsers = async (req, res) => {
 //    try {
@@ -174,21 +194,6 @@ export const Logout = async (req, res) => {
 //        });
 //        res.json({
 //            "message": "User Updated"
-//        });
-//    } catch (error) {
-//        res.json({ message: error.message });
-//    }
-// }
-
-// export const deleteUser = async (req, res) => {
-//    try {
-//        await User.destroy({
-//            where: {
-//                id: req.params.id
-//            }
-//        });
-//        res.json({
-//            "message": "User Deleted"
 //        });
 //    } catch (error) {
 //        res.json({ message: error.message });

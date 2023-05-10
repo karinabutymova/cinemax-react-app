@@ -24,12 +24,12 @@ const ProfilePage = () => {
    const [searchParams, setSearchParams] = useSearchParams({ filter: 'tickets' });
    const [activeTab, setActiveTab] = useState(searchParams.get('filter'));
    const [userId, setUserId] = useState('');
+   const [userRole, setUserRole] = useState('');
    const [name, setName] = useState('');
    const [token, setToken] = useState('');
    const [expire, setExpire] = useState('');
 
    const [ticketsCount, setTicketsCount] = useState([]);
-   const [tickets, setTickets] = useState([]);
    const [userWishlist, setUserWishlist] = useState([]);
    const [reviews, setReviews] = useState([]);
    const [userBonuses, setUserBonuses] = useState(0);
@@ -41,13 +41,22 @@ const ProfilePage = () => {
    const [reviewPagination, setReviewPagination] = useState(false);
 
    useEffect(() => {
+      document.title = 'Мой профиль - Cinemax';
+
       refreshToken();
    }, []);
 
+
    useEffect(() => {
-      setFilter();
-      getUserBonuses();
-   }, [activeTab, userId]);
+      if (userRole && userRole === 'user') {
+         setFilter();
+         getUserBonuses();
+      }
+      if (userRole && userRole === 'admin') {
+         navigate('/adminpanel');
+      }
+
+   }, [activeTab, userId, userRole]);
 
    function timeout(delay) {
       return new Promise(res => setTimeout(res, delay));
@@ -212,6 +221,7 @@ const ProfilePage = () => {
          setUserId(decoded.userId);
          setName(decoded.name);
          setExpire(decoded.exp);
+         setUserRole(decoded.role)
       } catch (error) {
          if (error.response) {
             navigate("/auth");
@@ -233,6 +243,7 @@ const ProfilePage = () => {
          setUserId(decoded.userId);
          setName(decoded.name);
          setExpire(decoded.exp);
+         setUserRole(decoded.role);
       }
       return config;
    }, (error) => {
@@ -336,8 +347,8 @@ const ProfilePage = () => {
                      </Styled.BonusCountDiv>
                   </Styled.BonusDiv>
                   <Styled.BonusHistoryDiv>
-                     <Styled.BonusHistoryIcon src={layersIcon} />
-                     <Styled.BonusHistory>История накопления</Styled.BonusHistory>
+                     {/* <Styled.BonusHistoryIcon src={layersIcon} /> */}
+                     {/* <Styled.BonusHistory>История накопления</Styled.BonusHistory> */}
                   </Styled.BonusHistoryDiv>
                </Col>
             </Row>

@@ -2,9 +2,7 @@ import React, { useState } from 'react';
 import * as Styled from './styled';
 import { Row, Col } from 'styled-bootstrap-grid';
 
-
 const BookingSteps = ({ step }) => {
-
    return (
       <Col xl="9" lg="9" md="12" xs="12">
          <Styled.StepsFlexDiv >

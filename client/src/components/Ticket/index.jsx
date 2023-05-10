@@ -63,7 +63,7 @@ const Ticket = ({ ticket }) => {
                   </Styled.FlexDiv>
                </Styled.FilmInfoDiv>
                <Styled.QRContainer>
-                  <QRCodeCanvas value={ticket} />
+                  <QRCodeCanvas value={JSON.stringify(ticket)} />
                </Styled.QRContainer>
             </Styled.SingleTicketContainer>
          </Styled.ShowTicketsConatainer>

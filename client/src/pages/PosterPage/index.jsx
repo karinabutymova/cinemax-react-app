@@ -32,7 +32,10 @@ const PosterPage = () => {
    function timeout(delay) {
       return new Promise(res => setTimeout(res, delay));
    }
+
    useEffect(() => {
+      document.title = 'Афиша - Cinemax';
+
       refreshToken();
    }, []);
 

@@ -2,7 +2,7 @@ import React, { useState, useLayoutEffect } from 'react';
 import axios from 'axios';
 import * as Styled from './styled';
 import { Row, Col } from 'styled-bootstrap-grid';
-import Select from 'react-select'
+import Select from 'react-select';
 import ShowHalls from '../ShowHalls';
 import BookingSteps from '../BookingSteps';
 import SeatsChoice from '../SeatsChoice';
@@ -86,7 +86,6 @@ const Booking = ({ filmId, userId, userName }) => {
       } else {
          setShowsHalls([]);
       }
-
    }
 
 

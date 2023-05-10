@@ -2,7 +2,7 @@ import { useState, useLayoutEffect } from 'react'
 import axios from "axios";
 import { useParams, useNavigate } from 'react-router-dom';
 
-import { Form, FlexContainer, Title, SecondText, LogoText  } from "../../pages/ForgotPassword/styled";
+import { Form, FlexContainer, Title, SecondText, LogoText } from "../../pages/ForgotPassword/styled";
 import { FormLogoText } from "./styled";
 import InputField from "../../components/InputField";
 import PrimaryButton from "../../components/PrimaryButton";
@@ -11,14 +11,16 @@ import PrimaryButton from "../../components/PrimaryButton";
 // TODO : (на будущее) Ограничить количество обновления пароля на время
 // TODO : (на будущее) Лоадер (пока приходит ответ)
 
-const ResetPassword = () =>{
-   const {token} = useParams();
+const ResetPassword = () => {
+   const { token } = useParams();
    const [password, setPassword] = useState('');
    const [confPassword, setConfPassword] = useState('');
    const [errors, setErrors] = useState({});
    const navigate = useNavigate();
 
    useLayoutEffect(() => {
+      document.title = 'Сброс пароля - Cinemax';
+
       const resetPassword = async () => {
          try {
             await axios.get('http://localhost:3001/resetPassword', {
@@ -26,19 +28,19 @@ const ResetPassword = () =>{
                   resetToken: token,
                },
             },
-            { withCredentials: true }) 
-   
-        } catch (error) {
+               { withCredentials: true })
+
+         } catch (error) {
             if (error.response) {
-               if(error.response.data.token_error)navigate("/404");
+               if (error.response.data.token_error) navigate("/404");
             }
-        }
-     }
+         }
+      }
       resetPassword();
 
    }, []);
-   
-   
+
+
    const changePassword = async (e) => {
       e.preventDefault();
       try {
@@ -47,37 +49,37 @@ const ResetPassword = () =>{
             confPassword: confPassword,
             resetToken: token
          },
-         { withCredentials: true }
+            { withCredentials: true }
          );
          navigate("/auth");
-     } catch (error) {
+      } catch (error) {
          if (error.response) {
             setErrors(error.response.data);
          }
-     }
-  }
-   
-   return(
+      }
+   }
+
+   return (
       <FlexContainer>
-         <Form onSubmit = { changePassword }>
+         <Form onSubmit={changePassword}>
             <Title> Сброс пароля </Title>
-            <SecondText> Пароль должен быть длинной не менее 8 символов, <br/>
+            <SecondText> Пароль должен быть длинной не менее 8 символов, <br />
                содержать минимум одну заглавную букву и цифру</SecondText>
             <InputField
                inputType="password"
                placeholder="Введите пароль"
                label="Пароль"
-               onChange ={setPassword}
+               onChange={setPassword}
                error={errors.error_password}
             />
             <InputField
                inputType="password"
                placeholder="Повторите пароль"
                label="Подтвердите пароль"
-               onChange ={setConfPassword}
+               onChange={setConfPassword}
                error={errors.password_do_not_match}
             />
-            <PrimaryButton btnText="Сменить пароль" type="submit"/>
+            <PrimaryButton btnText="Сменить пароль" type="submit" />
             <FormLogoText>CINEMAX</FormLogoText>
          </Form>
          <LogoText>CINEMAX</LogoText>

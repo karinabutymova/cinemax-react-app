@@ -4,12 +4,12 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { checkPassword } from "./Users.js";
 
-export const SendEmail = async(req, res) => {
-    // Валидация email
+export const SendEmail = async (req, res) => {
+   // Валидация email
    const { email } = req.body;
-   if (email === '') return res.status(400).json({email_invalid: 'Введите email'});
+   if (email === '') return res.status(400).json({ email_invalid: 'Введите email' });
    let getUser = await checkEmail(email);
-   if(typeof getUser === 'string') return res.status(400).json({email_invalid: getUser});
+   if (typeof getUser === 'string') return res.status(400).json({ email_invalid: getUser });
 
    try {
       const userId = getUser.id;
@@ -17,14 +17,14 @@ export const SendEmail = async(req, res) => {
       const email = getUser.email;
       const role = getUser.role;
 
-      const accessToken = jwt.sign({userId, name, email, role}, process.env.ACCESS_TOKEN_SECRET,{
+      const accessToken = jwt.sign({ userId, name, email, role }, process.env.ACCESS_TOKEN_SECRET, {
          expiresIn: '30m'
       });
-      const refreshToken = jwt.sign({userId, name, email, role}, process.env.REFRESH_TOKEN_SECRET,{
+      const refreshToken = jwt.sign({ userId, name, email, role }, process.env.REFRESH_TOKEN_SECRET, {
          expiresIn: '1d'
       });
-      await User.update({refresh_token: refreshToken},{
-         where:{
+      await User.update({ refresh_token: refreshToken }, {
+         where: {
             id: userId
          }
       });
@@ -42,19 +42,18 @@ export const SendEmail = async(req, res) => {
          to: `${email}`,
          subject: 'Сброс пароля',
          text:
-            'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n'
-            + 'Please click on the following link, or paste this into your browser to complete the process within one hour of receiving it:\n\n'
+            'Вы получаете это сообщение, потому что вы (или кто-то другой) запросили сброс пароля для вашей учетной записи.\n\n'
+            + 'Пожалуйста, нажмите на следующую ссылку или вставьте ее в свой браузер, чтобы завершить процесс::\n\n'
             + `http://localhost:3000/resetPassword/${refreshToken}\n\n`
-            + 'If you did not request this, please ignore this email and your password will remain unchanged.\n',
+            + 'Если вы не запрашивали этого, пожалуйста, проигнорируйте это письмо, и ваш пароль останется неизменным.\n',
       };
 
-      console.log('sending mail');
 
       transporter.sendMail(mailOptions, (err, response) => {
          if (err) {
             console.error('there was an error: ', err);
          } else {
-            res.status(200).json({success: 'Сообщение отправлено'});
+            res.status(200).json({ success: 'Сообщение отправлено' });
          }
       });
    } catch (error) {
@@ -62,59 +61,59 @@ export const SendEmail = async(req, res) => {
    }
 }
 
-const checkEmail = async(email) =>{
+const checkEmail = async (email) => {
    let emailFilter = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
-   if(!emailFilter.test(email)) return "Неверный формат email";
+   if (!emailFilter.test(email)) return "Неверный формат email";
 
    let user = await User.findOne({
-      where:{
+      where: {
          email: email
       }
    });
-   if(user === null) return "Пользователь не существует";
+   if (user === null) return "Пользователь не существует";
 
    return user;
 }
 
-export const resetPassword = async(req, res) =>{
+export const resetPassword = async (req, res) => {
    let user = await User.findOne({
-      where:{
+      where: {
          refresh_token: req.query.resetToken
       }
    });
 
    if (user == null) {
-      return res.status(403).json({ token_error:'Ссылка на сброс пароля недействительна'});
+      return res.status(403).json({ token_error: 'Ссылка на сброс пароля недействительна' });
    } else {
       return res.status(200);
    }
 }
-export const changePassword = async(req, res) =>{
-   let {resetToken, password, confPassword} = req.body;
+export const changePassword = async (req, res) => {
+   let { resetToken, password, confPassword } = req.body;
    let user = await User.findOne({
-      where:{
+      where: {
          refresh_token: resetToken
       }
    });
 
    if (user == null) {
-      return res.status(403).json({ token_error:'Ссылка на сброс пароля недействительна'});
+      return res.status(403).json({ token_error: 'Ссылка на сброс пароля недействительна' });
    } else {
       // Валидация пароля
       let validPassword = checkPassword(password);
-      if(validPassword) return res.status(400).json({error_password: validPassword});
-      if(password !== confPassword) return res.status(400).json({password_do_not_match: "Пароли не совпадают"});
+      if (validPassword) return res.status(400).json({ error_password: validPassword });
+      if (password !== confPassword) return res.status(400).json({ password_do_not_match: "Пароли не совпадают" });
       const salt = await bcrypt.genSalt();
       const hashPassword = await bcrypt.hash(password, salt);
 
-      await User.update({password: hashPassword, refresh_token: null},{
-         where:{
+      await User.update({ password: hashPassword, refresh_token: null }, {
+         where: {
             id: user.id
          }
       })
-      .then(() => {
-         res.status(200).json({ done: 'Пароль обновлён!' });
-       });
-      
+         .then(() => {
+            res.status(200).json({ done: 'Пароль обновлён!' });
+         });
+
    }
 }

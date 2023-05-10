@@ -57,12 +57,12 @@ export const SorOption = styled.p`
 
    color: ${props => props.active ? '#8D1BCD' : '#FFFFFF'};
    opacity: ${props => props.active ? '#1' : '0.5'};
+   cursor: pointer;
 
    transition: all 0.25s;
 
    &:hover{
       opacity: 1;
-      cursor: pointer;
    }
 
    &::after {

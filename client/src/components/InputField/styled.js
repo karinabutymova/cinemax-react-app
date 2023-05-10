@@ -21,6 +21,7 @@ export const Label = styled.label`
    transition: all 0.25s;
    padding: 0 2px;
    z-index: 1;
+   pointer-events: none;
    
    color: ${props => props.inputColor || "#2D2B35"};
 
@@ -52,6 +53,8 @@ export const TextInput = styled.input`
    line-height: 19px;
    outline: none;
    transition: all 0.25s;
+   
+   font-feature-settings: 'pnum' on, 'lnum' on;
    
    &:focus{
       border: 1px solid #8D1BCD;

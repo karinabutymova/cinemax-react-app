@@ -6,7 +6,6 @@ import sortIcon from '../../assets/images/Icons/trending-up.svg';
 const SortTabs = ({ ...props }) => {
    const [active, SetActive] = useState(props.activeId);
 
-
    const doClick = (index) => {
       if (index !== active) {
          SetActive(index);

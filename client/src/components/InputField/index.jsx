@@ -28,6 +28,8 @@ const InputField = ({ ...props }) => {
                   autoComplete="off"
                   placeholder={props.placeholder}
                   required
+                  max={props.dateMax}
+                  min={props.dateMin}
                   onChange={handleOnChange} />
                : <TextInput
                   type={props.inputType}
@@ -36,6 +38,8 @@ const InputField = ({ ...props }) => {
                   autoComplete="off"
                   placeholder={props.placeholder}
                   required
+                  max={props.dateMax}
+                  min={props.dateMin}
                   onChange={handleOnChange} />
             }
 
