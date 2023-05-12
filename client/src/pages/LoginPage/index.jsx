@@ -16,7 +16,7 @@ const LoginPage = () => {
       <FlexContainer>
          <Div>
             <Title>
-               С возвращением в <TitleSpan onClick={() => navigate('/poster')}>CINEMAX</TitleSpan>!
+               С возвращением в <TitleSpan onClick={() => navigate('/')}>CINEMAX</TitleSpan>!
             </Title>
             <FlexContainer>
                <Text>Нет аккаунта?</Text>

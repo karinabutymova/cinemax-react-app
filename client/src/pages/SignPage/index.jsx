@@ -17,7 +17,7 @@ const SignPage = () => {
       <FlexContainer>
          <Div>
             <SignTitle>
-               Добро пожаловать в <TitleSpan onClick={() => navigate('/poster')}>CINEMAX</TitleSpan>!
+               Добро пожаловать в <TitleSpan onClick={() => navigate('/')}>CINEMAX</TitleSpan>!
             </SignTitle>
             <FlexContainer>
                <Text>Есть аккаунт?</Text>

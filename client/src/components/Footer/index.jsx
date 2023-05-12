@@ -24,9 +24,9 @@ const Footer = () => {
                            <Styled.MainLink to="/poster">Афиша</Styled.MainLink>
                            <Styled.SecondLink to="/poster?filter=now">Сейчас в кино</Styled.SecondLink>
                            <Styled.SecondLink to="/poster?filter=soon">Скоро</Styled.SecondLink>
-                           <Styled.SecondLink>Подобрать фильм</Styled.SecondLink>
+                           <Styled.SecondLink></Styled.SecondLink>
                         </Styled.LinkContainer>
-                        <Styled.SecondMainLink>Подобрать фильм</Styled.SecondMainLink>
+                        <Styled.SecondMainLink to="/search">Поиск</Styled.SecondMainLink>
                         <Styled.LinkContainer>
                            <Styled.MainLink>Помощь</Styled.MainLink>
                            <Styled.SecondLink>Бонусная программа</Styled.SecondLink>

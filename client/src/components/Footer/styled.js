@@ -48,14 +48,13 @@ export const Policy = styled.p`
       text-align: center;
       width: 100%;
    }
-
 `;
 
 export const LinksFlexDiv = styled.div`
    display: flex;
    justify-content: center;
    flex-wrap: wrap;
-   align-items: center;
+   align-items: flex-start;
 
    gap: 56px;
 
@@ -63,6 +62,11 @@ export const LinksFlexDiv = styled.div`
       flex-direction: column;
       gap: 32px;
       text-align: center;
+      align-items: center;
+   }
+   @media (max-width: 992px) {
+
+      justify-content: space-between;
    }
 `;
 

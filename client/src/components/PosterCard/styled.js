@@ -4,7 +4,6 @@ export const CardContainer = styled.div`
    width: 100%;
    margin-top: 48px;
    position: relative;
- 
 `;
 
 export const PosterLink = styled.div`
@@ -43,10 +42,10 @@ export const FilmGenre = styled.p`
 `;
 
 export const ImgLink = styled.img`
-
-   object-fit: cover;
-   width: 100%;
    height: 370px;
+   width: 100%;
+   object-fit: cover;
+   object-position: center;
 
    transition: all 0.35s;
 
@@ -73,7 +72,6 @@ export const FilmTitle = styled.p`
 
    color: #FFFFFF;
    margin: 16px 0 8px 0;
-
 `;
 
 export const SoonDate = styled.div`

@@ -15,6 +15,11 @@ const PosterCard = ({ poster, filter, userId, isWish, setWishlist, deleteWishlis
       DateFormat(poster, setToDateRent);
    }, []);
 
+   const goToPage = (link) => {
+      navigate(link);
+      window.scrollTo(0, 0);
+   }
+
    const AddToWhishlist = () => {
       if (userId) {
          if (isWishlist) {
@@ -35,7 +40,7 @@ const PosterCard = ({ poster, filter, userId, isWish, setWishlist, deleteWishlis
             <Styled.CardContainer>
                {filter !== 'now' && <Styled.SoonDate>{toDateRent}</Styled.SoonDate>}
                {(filter === 'now' && poster.rate) && <Styled.SoonDate>{Number(poster.rate).toFixed(1)}</Styled.SoonDate>}
-               <Styled.PosterLink onClick={() => navigate(`/film/${poster.id}`)}>
+               <Styled.PosterLink onClick={() => goToPage(`/film/${poster.id}`)}>
                   <Styled.ImgLink src={require(`../../assets/images/Posters/${poster.photo_path}`)} />
                </Styled.PosterLink>
                <Styled.DateRent>

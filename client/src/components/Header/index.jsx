@@ -14,9 +14,9 @@ const Header = () => {
                      <Col xl="5" lg="6">
                         <Styled.SrcBlock>
                            <Styled.Src to="/poster">Афиша</Styled.Src>
-                           <Styled.Src to="/">Новости</Styled.Src>
-                           <Styled.Src to="/">О кинотеатре</Styled.Src>
-                           <Styled.Src to="/">Помощь</Styled.Src>
+                           <Styled.Src to="/news">Новости</Styled.Src>
+                           <Styled.Src to="/about">О кинотеатре</Styled.Src>
+                           <Styled.Src to="/help">Помощь</Styled.Src>
                         </Styled.SrcBlock>
                      </Col>
                      <Col xl="2" lg="2">
@@ -48,13 +48,13 @@ const Header = () => {
                            <Styled.MobileMenuLink to="/poster">Афиша</Styled.MobileMenuLink>
                         </Styled.MobileMenuItem>
                         <Styled.MobileMenuItem>
-                           <Styled.MobileMenuLink to="/">Новости</Styled.MobileMenuLink>
+                           <Styled.MobileMenuLink to="/news">Новости</Styled.MobileMenuLink>
                         </Styled.MobileMenuItem>
                         <Styled.MobileMenuItem>
-                           <Styled.MobileMenuLink to="/">О кинотеатре</Styled.MobileMenuLink>
+                           <Styled.MobileMenuLink to="/about">О кинотеатре</Styled.MobileMenuLink>
                         </Styled.MobileMenuItem>
                         <Styled.MobileMenuItem>
-                           <Styled.MobileMenuLink to="/">Помощь</Styled.MobileMenuLink>
+                           <Styled.MobileMenuLink to="/help">Помощь</Styled.MobileMenuLink>
                         </Styled.MobileMenuItem>
                         <Styled.MobileMenuItem>
                            <Styled.MobileMenuLink to="/search">Поиск</Styled.MobileMenuLink>

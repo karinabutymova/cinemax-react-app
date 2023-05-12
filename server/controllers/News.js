@@ -33,5 +33,4 @@ export const GetLastNews = async (req, res) => {
       console.log(error);
    }
 
-
 }

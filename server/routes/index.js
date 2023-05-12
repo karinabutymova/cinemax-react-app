@@ -8,7 +8,9 @@ import {
    DeleteFilmById,
    AddFilm,
    GetFilmTitles,
-   GetPopularFilm
+   GetPopularFilm,
+   GetBestRateFilms,
+   GetSoonFilms
 } from "../controllers/Films.js";
 import { SetFilmReview, GetAllFilmReviews, GetAllUserReviews } from "../controllers/FilmsReviews.js";
 import { SetRatingByUser, GetRatingByUser, GetAllRatingByUser } from "../controllers/FilmRating.js";
@@ -55,6 +57,8 @@ filmsRouter.get('/getfilm', GetFilmById);
 filmsRouter.get('/films', verifyToken, GetAllFilms);
 filmsRouter.post('/addFilm', AddFilm);
 filmsRouter.get('/getPopularFilm', GetPopularFilm);
+filmsRouter.get('/getBestRateFilms', GetBestRateFilms);
+filmsRouter.get('/getSoonFilms', GetSoonFilms);
 
 const filmsWishlistRouter = express.Router();
 filmsWishlistRouter.get('/filmWishlist', verifyToken, GetFilmInWishlist);

@@ -49,6 +49,46 @@ export const GetFilmTitles = async (req, res) => {
    }
 }
 
+export const GetBestRateFilms = async (req, res) => {
+   try {
+      let check_date = new Date().toISOString().split('T')[0];
+      const [films] = await db.query(
+         `SELECT films.id, films.film_title, films.photo_path, films.genres,
+         films.to_rent_date, films.from_rent_date, AVG(films_rating.rating) as rate
+         FROM films_rating
+         INNER JOIN films
+         ON films.id = films_rating.film_id
+         WHERE (films.from_rent_date <= "${check_date}") AND (films.to_rent_date >= "${check_date}")
+         GROUP BY films.id
+         ORDER BY rate DESC
+         LIMIT 5`
+      );
+
+      res.json(films);
+   } catch (error) {
+      console.log(error);
+   }
+}
+
+export const GetSoonFilms = async (req, res) => {
+   try {
+      const films = await Film.findAll({
+         attributes: ['id', 'film_title', 'genres', 'from_rent_date', 'to_rent_date', 'photo_path'],
+         where: {
+            from_rent_date: {
+               [Op.gt]: new Date()
+            }
+         },
+         order: [['from_rent_date', 'ASC']],
+         limit: 4
+      })
+
+      res.json(films);
+   } catch (error) {
+      console.log(error);
+   }
+}
+
 export const AddFilm = async (req, res) => {
    let { title,
       poster,
