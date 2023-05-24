@@ -58,10 +58,70 @@ export const GlobalStyle = createGlobalStyle`
    font-family: 'Raleway';
 
    background-color: #2D2B35;
+   
    color: #FFFFFF;
 }
+
+html{
+   scroll-behavior: smooth;
+}
+
 body{
    overflow-x: hidden;
+   & .rnc__base, .rnc__base *{
+      background-color: initial;
+   }
+
+   & .rnc__notification-content{
+      background-color: #2D2B35;
+      border-radius: 0 4px 4px 0;
+   }
+   & .rnc__notification-item--success {
+      border-left: 8px solid #8D1BCD;
+   }
+   & .rnc__notification-item--success .rnc__notification-timer {
+    background-color: #8D1BCD;
+   }
+
+   & .quill {
+      background-color: transparent !important;
+      margin-bottom: 12px;
+   }
+   & .quill *{
+      background-color: transparent !important;
+   }
+   & .ql-editor p{
+      color: #2D2B35;
+   }
+
+   & .ql-picker-item, 
+   & .ql-picker-label{
+      color: #2D2B35;
+   }
+
+   & .ql-picker-options{
+      background-color: #FFFFFF !important;
+   }
+
+   & .ql-formats *{
+      background-color: #FFFFFF !important;
+   }
+   & .ql-container{
+      min-height: 80px;
+   }
+
+   .popup-content{
+      background-color: transparent;
+      border: 0;
+
+      @media (max-width: 768px) {
+         width: 70%;
+      }
+
+      @media (max-width: 576px) {
+         width: 80%;
+      }
+   }
 }
 `;
 

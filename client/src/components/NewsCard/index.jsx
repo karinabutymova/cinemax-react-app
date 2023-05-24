@@ -11,6 +11,12 @@ const NewsCard = ({ news }) => {
    const [imagePath, setImagePath] = useState();
    const [createdDate, setCreatedDate] = useState();
 
+   const goToPage = (link) => {
+      navigate(link);
+      window.scrollTo(0, 0);
+      navigate(0);
+   }
+
    useLayoutEffect(() => {
       try {
          setImagePath(require(`../../assets/images/News/${news.news_images.split(',')[0]}`));
@@ -29,7 +35,7 @@ const NewsCard = ({ news }) => {
       <>
          <Col xl="4" lg="4" md="4" sm="12" xs="12">
             <Styled.CardContainer>
-               <Styled.NewsLink onClick={() => navigate(`/film/${news.id}`)}>
+               <Styled.NewsLink onClick={() => goToPage(`/news/${news.id}`)}>
                   {imagePath !== null &&
                      <Styled.ImgLink src={imagePath} alt={news.news_images.split(',')[0]} />
                   }

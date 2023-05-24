@@ -9,15 +9,20 @@ import Header from '../../components/Header';
 import Preloader from '../../components/Preloader';
 import PosterCard from '../../components/PosterCard';
 import * as Styled from './styled';
+import { Store } from 'react-notifications-component';
 
 import userIcon from '../../assets/images/Icons/user.svg';
 import layersIcon from '../../assets/images/Icons/layers.svg';
+import hammerIcon from '../../assets/images/Icons/hammer.svg';
 import ReviewRateCard from '../../components/ReviewRateCard';
 import UserTickets from '../../components/UserTickets';
 
-// TODO: редактирование профиля
+// TODO: редактирование профиля (и удаление!)
 // TODO: история бонусов
-// TODO: popup 
+// TODO: модальное окно (уверены что ходите вернуть билеты) 
+// TODO: модальное окно (уверены что хотите выйти) 
+// TODO: пагинация для билетов
+// TODO: состояние для билетов когда событие прошло (или удалено) + удаление таких билетов
 
 const ProfilePage = () => {
    const navigate = useNavigate();
@@ -52,15 +57,28 @@ const ProfilePage = () => {
          setFilter();
          getUserBonuses();
       }
-      if (userRole && userRole === 'admin') {
-         navigate('/adminpanel');
-      }
+      // if (userRole && userRole === 'admin') {
+      //    navigate('/adminPanel');
+      //    window.scrollTo(0, 0);
+      // }
 
    }, [activeTab, userId, userRole]);
 
    function timeout(delay) {
       return new Promise(res => setTimeout(res, delay));
    }
+
+   const wishlistNotification = (mess) => Store.addNotification({
+      title: mess,
+      type: "success",
+      insert: "top",
+      container: "bottom-center",
+      animationIn: ["animate__animated", "animate__fadeIn"],
+      animationOut: ["animate__animated", "animate__fadeOut"],
+      dismiss: {
+         duration: 3000,
+      }
+   });
 
    const getUserTicketsCount = async () => {
       setIsLoading(true);
@@ -225,6 +243,7 @@ const ProfilePage = () => {
       } catch (error) {
          if (error.response) {
             navigate("/auth");
+            window.scrollTo(0, 0);
          }
       }
    }
@@ -254,6 +273,7 @@ const ProfilePage = () => {
       try {
          await axios.delete('http://localhost:3001/logout', { withCredentials: true });
          navigate("/auth");
+         window.scrollTo(0, 0);
       } catch (error) {
          console.log(error);
       }
@@ -281,6 +301,8 @@ const ProfilePage = () => {
                filmId: filmId,
             },
          });
+
+         wishlistNotification('Добавлено в избранное');
       } catch (error) {
          if (error.response) {
             console.log(error.response);
@@ -298,7 +320,7 @@ const ProfilePage = () => {
                wishId: wishId,
             },
          });
-
+         wishlistNotification('Удалено из избранного');
       } catch (error) {
          if (error.response) {
             console.log(error.response);
@@ -326,7 +348,7 @@ const ProfilePage = () => {
                </Col>
             </Row>
             <Row justifyContent='end' >
-               <Col xl="3" lg="3" md="6" sm="12">
+               <Col xl="4" lg="4" md="6" sm="12">
                   <Styled.UserInfoDiv>
                      <Styled.Icon src={userIcon} />
                      <Styled.UserInfoColumnDiv>
@@ -337,6 +359,10 @@ const ProfilePage = () => {
                         </Styled.BtnDiv>
                      </Styled.UserInfoColumnDiv>
                   </Styled.UserInfoDiv>
+                  <Styled.BonusHistoryDiv>
+                     <Styled.BonusHistoryIcon src={hammerIcon} />
+                     <Styled.BonusHistory onClick={() => navigate('/adminPanel')}>Панель администратора</Styled.BonusHistory>
+                  </Styled.BonusHistoryDiv>
                </Col>
                <Col xl="3" lg="3" md="6" sm="12">
                   <Styled.BonusDiv>
@@ -347,8 +373,8 @@ const ProfilePage = () => {
                      </Styled.BonusCountDiv>
                   </Styled.BonusDiv>
                   <Styled.BonusHistoryDiv>
-                     {/* <Styled.BonusHistoryIcon src={layersIcon} /> */}
-                     {/* <Styled.BonusHistory>История накопления</Styled.BonusHistory> */}
+                     <Styled.BonusHistoryIcon src={layersIcon} />
+                     <Styled.BonusHistory>История накопления</Styled.BonusHistory>
                   </Styled.BonusHistoryDiv>
                </Col>
             </Row>

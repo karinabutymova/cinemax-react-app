@@ -1,4 +1,6 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { ReactNotifications, Store } from 'react-notifications-component';
+import "react-notifications-component/dist/theme.css";
 import EmailSend from './EmailSendPage';
 import ForgotPassword from './ForgotPassword';
 import LoginPage from './LoginPage';
@@ -11,12 +13,14 @@ import SearchPage from './SearchPage';
 import FilmPage from './FilmPage';
 import AdminPage from './AdminPage';
 import MainPage from "./MainPage";
-
+import NewsPage from './NewsPage';
+import SingleNewsPage from './SingleNewsPage';
 
 const App = () => {
 
    return (
       <>
+         <ReactNotifications />
          <Router>
             <Routes>
                <Route exact path="/" element={<MainPage />} />
@@ -28,8 +32,10 @@ const App = () => {
                <Route exact path="/film/:filmId" element={<FilmPage />} />
                <Route exact path="/forgotpassword" element={<ForgotPassword />} />
                <Route exact path="/resetPassword/:token" element={<ResetPassword />} />
-               <Route exact path="/adminpanel" element={<AdminPage />} />
+               <Route exact path="/adminPanel" element={<AdminPage />} />
                <Route exact path="/emailsend" element={<EmailSend />} />
+               <Route exact path="/news" element={<NewsPage />} />
+               <Route exact path="/news/:newsId" element={<SingleNewsPage />} />
                <Route path="*" element={<Page404 />} status={404} />
             </Routes>
          </Router>

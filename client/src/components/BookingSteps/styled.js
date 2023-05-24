@@ -29,7 +29,7 @@ export const StepDiv = styled.div`
       height: 2px;
       left: 0;
       bottom: 0;
-      background-color: #8D1BCD;
+      background-color: #8D1BCD !important;
       display: block;
       opacity: ${props => props.step === props.id ? '1' : '0'};
    }

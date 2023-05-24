@@ -3,18 +3,18 @@ import { PrimaryButton as Primary, SecondaryButton as Secondary } from "../Payme
 
 export const PrimaryButton = styled(Primary)`
    pointer-events: auto;
-   background-color: #8D1BCD;
+   background-color: #8D1BCD !important;
 
    transition: all 0.25s;
    &:hover{
-     opacity: 0.9;
+     opacity: 0.8;
    }
 `;
 export const SecondaryButton = styled(Secondary)`
    transition: all 0.25s;
    &:hover{
-      background-color: #8D1BCD;
-     opacity: 0.5;
+      border-color: #2D2B35;
+      color: #2D2B35 !important;
    }
 `;
 
@@ -84,6 +84,8 @@ export const Label = styled.p`
    z-index: 1;
    pointer-events: none;
    margin-bottom: 16px;
+
+   font-weight: 500;
    
    color: ${props => props.inputColor || "#2D2B35"};
 `;

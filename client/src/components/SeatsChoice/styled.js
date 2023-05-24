@@ -11,7 +11,7 @@ export const ButtonsDiv = styled.div`
 `;
 
 export const PrimaryButton = styled(Button)`
-   background-color: ${props => props.active ? '#8D1BCD' : 'gray'};
+   background-color: ${props => props.active ? '#8D1BCD' : 'gray'} !important;
    width: 200px;
    
    pointer-events: ${props => props.active ? 'auto' : 'none'};
@@ -24,7 +24,7 @@ export const PrimaryButton = styled(Button)`
 export const SecondaryButton = styled(Button)`
    background-color: transparent;
    width: 200px;
-   color: #8D1BCD;
+   color: #8D1BCD !important;
    border: 1px solid #8D1BCD;
 
    @media (max-width: 768px) {
@@ -33,18 +33,18 @@ export const SecondaryButton = styled(Button)`
 
    &:hover{
       background-color: transparent;
+      color: #FFFFFF !important;
    }
 `;
 
 export const AvailableSeat = styled(Seat)``;
 export const SelectSeat = styled(Seat)`
-   background-color: #8D1BCD;
+   background-color: #8D1BCD !important;
 `;
-export const DisableSeat = styled(DisSeat)``;
+export const DisableSeat = styled(DisSeat)` background-color: #424242 !important`;
 
 export const ScreenDiv = styled.div`
    width: 100%;
-
 
    text-align: center;
 `;

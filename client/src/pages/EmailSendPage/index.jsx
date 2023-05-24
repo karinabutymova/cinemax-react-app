@@ -16,6 +16,7 @@ const EmailSend = () => {
    const goToMainPage = (e) => {
       e.preventDefault();
       navigate("/");
+      window.scrollTo(0, 0);
    }
 
    return (

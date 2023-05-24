@@ -15,6 +15,7 @@ const SearchCard = ({ film }) => {
 
    const goToFilmPage = () => {
       navigate(`/film/${film.id}`);
+      window.scrollTo(0, 0);
    }
 
    return (

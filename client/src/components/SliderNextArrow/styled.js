@@ -15,7 +15,7 @@ export const NextArrow = styled.div`
 
    position: absolute;
    right: 1%;
-   top: 20%;
+   top: ${props => props.top ? props.top : '20%'};
    z-index: 1;
 
    opacity: 0.6;

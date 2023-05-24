@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect } from 'react';
+import React, { useState, useLayoutEffect, useEffect } from 'react';
 import axios from 'axios';
 import * as Styled from './styled';
 import { Row, Col } from 'styled-bootstrap-grid';
@@ -9,7 +9,7 @@ import SeatsChoice from '../SeatsChoice';
 import Payment from '../Payment';
 
 
-const Booking = ({ filmId, userId, userName }) => {
+const Booking = ({ filmId, userId }) => {
    const [shows, setShows] = useState([]);
    const [step, setStep] = useState(1);
    const [dateChoice, setDateChoice] = useState('');
@@ -21,7 +21,11 @@ const Booking = ({ filmId, userId, userName }) => {
 
    useLayoutEffect(() => {
       if (filmId) getFilmShows();
-   }, [])
+   }, []);
+
+   useEffect(() => {
+      if (filmId) setSelectedSeats([]);
+   }, [active]);
 
    const getFilmShows = async () => {
       try {
@@ -82,6 +86,7 @@ const Booking = ({ filmId, userId, userName }) => {
    const onChangeDate = (e) => {
       if (e) {
          GetShowHalls(e.value);
+         setActive(false);
          setDateChoice(e);
       } else {
          setShowsHalls([]);
@@ -148,7 +153,8 @@ const Booking = ({ filmId, userId, userName }) => {
                               ...baseStyles,
                               border: `0px`,
                               color: "#FFFFFF",
-                              background: 'transparent'
+                              background: 'transparent',
+                              fontFeatureSettings: "'pnum' on, 'lnum' on"
                            }),
                            input: (baseStyles) => ({
                               ...baseStyles,
@@ -189,8 +195,7 @@ const Booking = ({ filmId, userId, userName }) => {
                      step={setStep}
                      showHall={selectedHall}
                      selectedSeats={selectedSeats}
-                     userId={userId}
-                     userName={userName} />
+                     userId={userId} />
                }
             </>
          }

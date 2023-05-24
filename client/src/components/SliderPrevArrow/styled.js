@@ -12,8 +12,9 @@ export const PrevArrow = styled.div`
    border-radius: 8px;
 
    position: absolute;
+   
    left: 1%;
-   top: 20%;
+   top: ${props => props.top ? props.top : '20%'};
    z-index: 1;
 
    opacity: 0.6;

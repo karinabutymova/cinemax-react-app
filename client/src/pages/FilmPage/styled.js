@@ -107,12 +107,47 @@ export const Rating = styled.div`
    line-height: 19px;
 
    color: #CACACA;
-
+   
    & span{
       color: #CACACA;
    }
 
    text-align: center;
+`;
+
+export const RatingFlexDiv = styled.div`
+   display: flex;
+   justify-content: space-between;
+
+   @media (max-width: 767px) {
+      margin-top: 40px;
+   }
+`;
+
+export const DeleteRating = styled.div`
+   font-style: normal;
+   font-weight: 500;
+   font-size: 14px;
+   line-height: 16px;
+
+   color: #BABABA;
+   margin-top: 40px;
+
+   cursor: pointer;
+
+   transition: color 0.2s;
+   
+   &:hover{
+      color: #FFFFFF;
+   }
+
+   @media (max-width: 992px) {
+      margin-top: 0;
+   }
+   @media screen and (max-width: 576px){
+      font-size: 16px;
+   }
+
 `;
 
 export const RatingNumber = styled.div`
@@ -150,8 +185,15 @@ export const FilmInfo = styled.p`
    margin-top: 8px;
 `;
 
+export const ReviewBtnFlex = styled.div`
+   display: flex;
+   gap: 16px;
+   background: transparent;
+`;
+
 export const PrimaryButton = styled(Button)`
    background: #8D1BCD;
+   border-color: #8D1BCD;
 
    transition: all 0.25s;
 
@@ -159,6 +201,20 @@ export const PrimaryButton = styled(Button)`
       color: #FFFFFF;
       border-color: #FFFFFF;
       background: rgba(141, 27, 205, 0.9);
+   }
+`;
+
+export const SecondaryButton = styled(Button)`
+   background: transparent;
+   border: 1px solid #8D1BCD;
+   color: #8D1BCD;
+   width: 200px;
+
+   transition: all 0.25s;
+
+   &:hover{
+      border-color: #FFFFFF;
+      color: #FFFFFF;
    }
 `;
 
@@ -246,6 +302,22 @@ export const InfoSpan = styled.span`
    color: #BABABA;
 `;
 
+export const ReviewFormError = styled.p`
+   font-style: normal;
+   font-weight: 500;
+   font-size: 12px;
+   line-height: 14px;
+
+   width:100%;
+
+   color: #EB5757;
+   background-color: transparent;
+   padding: 0;
+   margin-top: 4px;
+
+   font-feature-settings: 'pnum' on, 'lnum' on;
+`;
+
 export const DescriptionSpan = styled(InfoSpan)`
    color: #FFFFFF;
 
@@ -318,7 +390,7 @@ export const ReviewsForm = styled.form`
 `;
 
 export const ReviewsTextarea = styled.textarea`
-   padding: 16px;
+   padding: 14px;
    width: 100%;
    height: 240px;
    resize: none;

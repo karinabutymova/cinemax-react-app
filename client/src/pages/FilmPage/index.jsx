@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import axios from 'axios';
 import jwt_decode from "jwt-decode";
 import { useParams } from 'react-router-dom';
@@ -14,10 +14,12 @@ import triangle from '../../assets/images/Icons/triangle.svg';
 import reviewIcon from '../../assets/images/Icons/message-square.svg';
 import Footer from '../../components/Footer';
 import Booking from '../../components/Booking';
+import { Store } from 'react-notifications-component';
 
-// TODO: popup при добавлении/удалении лайка/рейтинга или уведомление что пользователь не авторизован
 const FilmPage = () => {
    let { filmId } = useParams();
+   const reviewForm = useRef(null);
+   const bookingForm = useRef(null);
    const navigate = useNavigate();
    const [film, setFilm] = useState([]);
    const [filmReviews, setFilmReviews] = useState([]);
@@ -26,6 +28,7 @@ const FilmPage = () => {
    const [isWishlist, setIsWishlist] = useState();
 
    const [reviewsCount, setReviewsCount] = useState(4);
+   const [reviewToEdit, setReviewToEdit] = useState({});
    const [isPagination, setIsPagination] = useState(false);
 
    const [textReview, setTextReview] = useState('');
@@ -38,6 +41,35 @@ const FilmPage = () => {
    const [token, setToken] = useState('');
    const [expire, setExpire] = useState('');
 
+   const ratingNotification = (title = 'Оценка изменена') => Store.addNotification({
+      title: title,
+      message: "Данные обновятся через несколько секунд",
+      type: "success",
+      insert: "top",
+      container: "bottom-center",
+      animationIn: ["animate__animated", "animate__fadeIn"],
+      animationOut: ["animate__animated", "animate__fadeOut"],
+      dismiss: {
+         duration: 2000,
+         onScreen: true
+      },
+      onRemoval: (id, removedBy) => {
+         GetFilmById(filmId);
+         if (userId) GetRating();
+      }
+   });
+
+   const wishlistNotification = (mess) => Store.addNotification({
+      title: mess,
+      type: "success",
+      insert: "top",
+      container: "bottom-center",
+      animationIn: ["animate__animated", "animate__fadeIn"],
+      animationOut: ["animate__animated", "animate__fadeOut"],
+      dismiss: {
+         duration: 2500
+      }
+   });
 
    const StarsRating = {
       size: 30,
@@ -47,7 +79,7 @@ const FilmPage = () => {
       activeColor: "#8D1BCD",
       color: "#5D2381",
       onChange: newValue => {
-         userId ? SetRating(newValue) : console.log("Не авторизованный пользователь");
+         userId ? SetRating(newValue) : wishlistNotification("Не авторизованный пользователь");
       }
    };
 
@@ -60,6 +92,14 @@ const FilmPage = () => {
       GetFilmById(filmId);
       GetFilmReviews(filmId);
    }, []);
+
+   useEffect(() => {
+      if (Object.keys(reviewToEdit).length !== 0) {
+         setTextReview(reviewToEdit.text);
+         setError('');
+         reviewForm.current.scrollIntoView();
+      }
+   }, [reviewToEdit]);
 
    useEffect(() => {
       if (userId) {
@@ -80,9 +120,6 @@ const FilmPage = () => {
          setUserName(decoded.name);
          setExpire(decoded.exp);
       } catch (error) {
-         if (error.response) {
-            console.log('Не авторизованный пользователь');
-         }
       }
    }
 
@@ -118,6 +155,7 @@ const FilmPage = () => {
          );
          if (!response.data) {
             navigate('/notFoundPage');
+            window.scrollTo(0, 0);
          }
          setFilm(response.data);
          document.title = response.data.film_title + ' - Cinemax';
@@ -147,7 +185,7 @@ const FilmPage = () => {
             { withCredentials: true }
          );
          setRatingValue(rating);
-         GetFilmById(filmId);
+         ratingNotification();
 
       } catch (error) {
          if (error.response) {
@@ -178,6 +216,31 @@ const FilmPage = () => {
       }
    }
 
+   const deleteRating = async () => {
+      try {
+         const response = await axiosJWT.get('http://localhost:3001/deteleFilmRating', {
+            headers: {
+               Authorization: `Bearer ${token}`,
+            },
+            params: {
+               userId: userId,
+               filmId: filmId
+            },
+         },
+            { withCredentials: true }
+         );
+
+         if (response.data)
+            ratingNotification('Оценка удалена');
+
+
+      } catch (error) {
+         if (error.response) {
+            console.log(error.response.data);
+         }
+      }
+   }
+
    const AddToWhishlist = () => {
       if (userId) {
          if (isWishlist) {
@@ -188,7 +251,7 @@ const FilmPage = () => {
             setWishlist();
          }
       } else {
-         alert('Не авторизованный пользователь');
+         wishlistNotification('Необходимо авторизоваться');
       }
    }
 
@@ -223,6 +286,7 @@ const FilmPage = () => {
             },
          });
          getWishlist();
+         wishlistNotification('Добавлено в избранное');
       } catch (error) {
          if (error.response) {
             console.log(error.response);
@@ -242,13 +306,14 @@ const FilmPage = () => {
             },
          });
          getWishlist();
-
+         wishlistNotification('Удалено из избранного');
       } catch (error) {
          if (error.response) {
             console.log(error.response);
          }
       }
    }
+
 
    const sendUserReview = async () => {
       try {
@@ -259,10 +324,33 @@ const FilmPage = () => {
             params: {
                filmId: filmId,
                userId: userId,
-               textReview: textReview
+               textReview: textReview.trim()
             },
          });
          setTextReview('');
+         wishlistNotification('Отзыв добавлен');
+         GetFilmReviews(filmId);
+      } catch (error) {
+         if (error.response) {
+            console.log(error.response);
+         }
+      }
+   }
+
+   const editUserReview = async () => {
+      try {
+         await axiosJWT.get('http://localhost:3001/editUserReview', {
+            headers: {
+               Authorization: `Bearer ${token}`,
+            },
+            params: {
+               reviewId: reviewToEdit.id,
+               textReview: textReview.trim()
+            },
+         });
+         setTextReview('');
+         setReviewToEdit({});
+         wishlistNotification('Отзыв отредактирован');
          GetFilmReviews(filmId);
       } catch (error) {
          if (error.response) {
@@ -278,10 +366,23 @@ const FilmPage = () => {
 
    const goToAuth = () => {
       navigate('/auth');
+      window.scrollTo(0, 0);
    }
 
    const handleOnChange = (e) => {
       setTextReview(e.target.value);
+      if (e.target.value.length > 0) setError('');
+      else if (Object.keys(reviewToEdit).length !== 0) {
+         setReviewToEdit({});
+      }
+   }
+
+   const cencelReview = () => {
+      setTextReview('');
+      setError('');
+      if (Object.keys(reviewToEdit).length !== 0) {
+         setReviewToEdit({});
+      }
    }
 
    const GetFilmReviews = async (filmId) => {
@@ -303,17 +404,23 @@ const FilmPage = () => {
 
    const sendReview = (e) => {
       e.preventDefault();
-      if (textReview) {
+      if (textReview.trim() && textReview.trim().length <= 6000) {
          setError('');
-         sendUserReview();
+         Object.keys(reviewToEdit).length !== 0 ? editUserReview() : sendUserReview();
+      } else if (textReview.trim().length > 6000) {
+         setError('Максимальная длина отзыва - 6 000 знаков (с пробелами)');
       } else {
-         setError('Пустое поле');
+         setError('Пустой отзыв');
       }
    }
 
    const showMore = () => {
       setReviewsCount(reviewsCount + 4);
       if (filmReviews.length <= reviewsCount + 4) setIsPagination(false);
+   }
+
+   const scrollToBooking = () => {
+      bookingForm.current.scrollIntoView();
    }
 
    return (
@@ -350,7 +457,7 @@ const FilmPage = () => {
                            </Styled.Flex>
                            <Styled.FilmTitle>{film.film_title}</Styled.FilmTitle>
                            <Styled.Flex gap="20px">
-                              <Styled.PrimaryButton>Забронировать билет</Styled.PrimaryButton>
+                              <Styled.PrimaryButton onClick={scrollToBooking}>Забронировать билет</Styled.PrimaryButton>
                               <Styled.InWishlist isWish={isWishlist} onClick={AddToWhishlist} viewBox="0 0 48 48">
                                  <rect width="48" height="48" rx="8" fill="#EBEBEB" />
                                  <path d="M32.7699 16.2706C32.2474 15.7462 31.6264 15.3302 30.9427 15.0463C30.2589 14.7624 29.5259 14.6162 28.7856 14.6162C28.0452 14.6162 27.3122 14.7624 26.6285 15.0463C25.9447 15.3302 25.3238 15.7462 24.8012 16.2706L23.9991 17.0831L23.197 16.2706C22.6744 15.7462 22.0535 15.3302 21.3698 15.0463C20.686 14.7624 19.953 14.6162 19.2127 14.6162C18.4723 14.6162 17.7393 14.7624 17.0556 15.0463C16.3718 15.3302 15.7509 15.7462 15.2283 16.2706C13.0199 18.479 12.8845 22.2081 15.6658 25.0415L23.9991 33.3748L32.3324 25.0415C35.1137 22.2081 34.9783 18.479 32.7699 16.2706Z" stroke="#8D1BCD" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -406,7 +513,7 @@ const FilmPage = () => {
             {!isLoading &&
                <Row justifyContent='between'>
                   <Col xl="4" lg="4" md="6" sm="12">
-                     <Styled.InfoActorTitle>Актёрский состав</Styled.InfoActorTitle>
+                     <Styled.InfoActorTitle ref={bookingForm}>Актёрский состав</Styled.InfoActorTitle>
                      <Styled.InfoSpan>{film.actors}</Styled.InfoSpan>
                      <Styled.TrailerButton onClick={redirectYouTube}>Трейлер</Styled.TrailerButton>
 
@@ -414,7 +521,11 @@ const FilmPage = () => {
                   <Col xl="5" lg="5" md="6" sm="12">
                      {((new Date(film.from_rent_date) <= new Date()) && userId > 0) &&
                         <div>
-                           <Styled.InfoActorTitle>Ваша оценка</Styled.InfoActorTitle>
+                           <Styled.RatingFlexDiv>
+                              <Styled.InfoActorTitle>Ваша оценка</Styled.InfoActorTitle>
+                              {ratingValue > 0 && <Styled.DeleteRating onClick={deleteRating}>Удалить оценку</Styled.DeleteRating>}
+                           </Styled.RatingFlexDiv>
+
                            <ReactStars {...StarsRating} />
                            <Styled.NumberDiv>
                               {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((value) => <Styled.NumberSpan key={value}>{value}</Styled.NumberSpan>)}
@@ -428,19 +539,19 @@ const FilmPage = () => {
             }
             {(!isLoading && !userId) &&
                <Row justifyContent='center' style={{ marginTop: '72px' }}>
-                  <Col col="4">
+                  <Col xl="8" lg="8" md="10" sm="12" style={{ textAlign: 'center' }}>
                      <Styled.PrimaryButton onClick={goToAuth} > Авторизуйтесь, чтобы забронировать билеты</Styled.PrimaryButton>
                   </Col>
                </Row>
             }
-            {(!isLoading && userId > 0) && <Booking filmId={filmId} userId={userId} userName={userName} />}
+            {(!isLoading && userId > 0) && <Booking filmId={filmId} userId={userId} />}
 
             {!isLoading &&
                <Row justifyContent='center'>
                   <Col xl="8" lg="8" md="10" sm="12">
                      <Styled.ReviewsFlex>
                         <Styled.ReviewsIcon src={reviewIcon} />
-                        <Styled.ReviewsTitle>Отзывы</Styled.ReviewsTitle>
+                        <Styled.ReviewsTitle ref={reviewForm}>Отзывы</Styled.ReviewsTitle>
                      </Styled.ReviewsFlex>
                      <Styled.ReviewsFormDiv>
                         {!userId && <Styled.PrimaryButton onClick={goToAuth} > Авторизуйтесь, чтобы оставить отзыв</Styled.PrimaryButton>}
@@ -456,7 +567,12 @@ const FilmPage = () => {
                                  onChange={handleOnChange}
                                  error={error}
                               />
-                              <Styled.PrimaryButton width={'250px'} onClick={sendReview} >Отправить</Styled.PrimaryButton>
+                              <Styled.ReviewFormError>{error}</Styled.ReviewFormError>
+                              <Styled.ReviewBtnFlex>
+                                 <Styled.PrimaryButton width={'250px'} onClick={sendReview} >Отправить</Styled.PrimaryButton>
+                                 {textReview.length > 0 && <Styled.SecondaryButton onClick={cencelReview}>Отменить</Styled.SecondaryButton>}
+                              </Styled.ReviewBtnFlex>
+
                            </Styled.ReviewsForm>
                         }
                      </Styled.ReviewsFormDiv>
@@ -468,14 +584,19 @@ const FilmPage = () => {
                <Row justifyContent='center'>
                   <Col xl="8" lg="8" md="10" sm="12">
                      {filmReviews.length > 0 && filmReviews.map((review, index) => {
-                        return index < reviewsCount ? <ReviewCard key={review.id} review={review} /> : false
+                        return index < reviewsCount ? <ReviewCard key={review.id}
+                           review={review}
+                           user={userId}
+                           getFilmReviews={GetFilmReviews}
+                           reviewToEdit={setReviewToEdit}
+                        /> : false
                      })}
                      {filmReviews.length === 0 && <Styled.ReviewsTitle center={'center'}> Ваш отзыв может быть первым!</Styled.ReviewsTitle>}
                   </Col>
                </Row>
             }
             {(!isLoading && filmReviews.length > 4 && isPagination) &&
-               <Row Row justifyContent='center'>
+               <Row justifyContent='center'>
                   <Styled.PaginationBtn onClick={showMore}>Показать больше</Styled.PaginationBtn>
                </Row>
             }

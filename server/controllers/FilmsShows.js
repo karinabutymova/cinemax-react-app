@@ -31,13 +31,13 @@ export const GetAllFilmsShowsAdmin = async (req, res) => {
    try {
       const [allShows] = await db.query(
          `SELECT films_shows.id, films_shows.film_datetime, halls.hall_title,
-         films.film_title, films_shows.price, films_shows.id AS delete_id
+         films.film_title, films_shows.price, films_shows.id AS delete_id, films_shows.id AS edit_id
          FROM films_shows
          INNER JOIN halls
          ON halls.id = films_shows.hall_id
          INNER JOIN films
          ON films.id = films_shows.film_id
-         ORDER BY films_shows.id`
+         ORDER BY films_shows.id DESC`
       );
       res.json(allShows);
 

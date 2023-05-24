@@ -2,11 +2,41 @@ import User from "../models/userModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
+export const GetUserById = async (req, res) => {
+   try {
+      const user = await User.findOne({
+         where: {
+            id: req.query.id
+         },
+         attributes: ['id', 'lastname', 'firstname', 'email', 'role'],
+      });
+
+      res.json(user);
+   } catch (error) {
+      console.log(error);
+   }
+}
+
+export const UpdateUserRole = async (req, res) => {
+   let { id, role } = req.query;
+   try {
+      await User.update({ role: role }, {
+         where: {
+            id: id
+         }
+      });
+
+      res.sendStatus(200);
+   } catch (error) {
+      console.log(error);
+   }
+}
 
 export const GetUsers = async (req, res) => {
    try {
       const users = await User.findAll({
-         attributes: ['id', 'lastname', 'firstname', 'email', 'role', ['id', 'delete_id']]
+         attributes: ['id', 'lastname', 'firstname', 'email', 'role', ['id', 'delete_id'], ['id', 'edit_id']],
+         order: [['id', 'DESC']],
       });
 
       users.map(user => {
@@ -159,31 +189,6 @@ export const DeleteUser = async (req, res) => {
       res.json({ message: error.message });
    }
 }
-
-
-// export const getAllUsers = async (req, res) => {
-//    try {
-//        const users = await User.findAll();
-//        res.json(users);
-//    } catch (error) {
-//        res.json({ message: error.message });
-//    }
-// }
-
-
-// export const getUserById = async (req, res) => {
-//    try {
-//        const user = await User.findAll({
-//            where: {
-//                id: req.params.id
-//            }
-//        });
-//        res.json(user[0]);
-//    } catch (error) {
-//        res.json({ message: error.message });
-//    }
-// }
-
 
 // export const updateUser = async (req, res) => {
 //    try {

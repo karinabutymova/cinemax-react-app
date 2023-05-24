@@ -11,10 +11,6 @@ import SearchCard from '../../components/SearchCard';
 import Footer from '../../components/Footer';
 import SearchNewsCard from '../../components/SearchNewsCard';
 
-
-// TODO: (на будущее когда появятся новости) изменить карточку новостей 
-// TODO: на главное странице когда ничего не найдено выборка по кол-ву купл.билетов и последние новости
-
 const SearchPage = () => {
    const [searchParams, setSearchParams] = useSearchParams({ searchText: '', filter: 'all' });
    const [films, setFilms] = useState([]);

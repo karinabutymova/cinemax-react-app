@@ -36,6 +36,32 @@ export const SetRatingByUser = async (req, res) => {
    }
 }
 
+export const DeleteRatingByUser = async (req, res) => {
+   let { filmId, userId } = req.query;
+
+   try {
+      let rate = await FilmRating.findOne({
+         where: {
+            film_id: filmId,
+            user_id: userId
+         }
+      });
+
+      if (rate) {
+         await FilmRating.destroy({
+            where: {
+               id: rate.id
+            }
+         });
+         res.json({
+            "message": "Оценка удалена"
+         });
+      }
+   } catch (error) {
+      console.log(error);
+   }
+}
+
 export const GetRatingByUser = async (req, res) => {
    let { filmId, userId } = req.query;
 

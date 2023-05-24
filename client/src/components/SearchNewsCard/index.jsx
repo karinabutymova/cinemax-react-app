@@ -25,6 +25,7 @@ const SearchNewsCard = ({ news }) => {
 
    const goToNewsPage = () => {
       navigate(`/news/${news.id}`);
+      window.scrollTo(0, 0);
    }
 
    return (

@@ -7,8 +7,9 @@ export const GetAllFilms = async (req, res) => {
    try {
       const films = await Film.findAll({
          attributes: {
-            include: [['id', 'delete_id']]
-         }
+            include: [['id', 'delete_id'], ['id', 'edit_id']]
+         },
+         order: [['id', 'DESC']]
       });
       res.json(films);
    } catch (error) {

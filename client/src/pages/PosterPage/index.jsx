@@ -10,9 +10,8 @@ import PosterCard from '../../components/PosterCard';
 import Preloader from '../../components/Preloader';
 import SortTabs from '../../components/SortTabs';
 import Footer from '../../components/Footer';
+import { Store } from 'react-notifications-component';
 
-// TODO: сделать popup когда добавляется/удаляется в избранное 
-// TODO: и когда пользователь неавторизован
 // TODO: адаптивную версию подправить
 
 const PosterPage = () => {
@@ -32,6 +31,18 @@ const PosterPage = () => {
    function timeout(delay) {
       return new Promise(res => setTimeout(res, delay));
    }
+
+   const wishlistNotification = (mess) => Store.addNotification({
+      title: mess,
+      type: "success",
+      insert: "top",
+      container: "bottom-center",
+      animationIn: ["animate__animated", "animate__fadeIn"],
+      animationOut: ["animate__animated", "animate__fadeOut"],
+      dismiss: {
+         duration: 3000,
+      }
+   });
 
    useEffect(() => {
       document.title = 'Афиша - Cinemax';
@@ -116,6 +127,7 @@ const PosterPage = () => {
                filmId: filmId,
             },
          });
+         wishlistNotification('Добавлено в избранное');
          getWishlist();
       } catch (error) {
          if (error.response) {
@@ -134,6 +146,7 @@ const PosterPage = () => {
                wishId: wishId,
             },
          });
+         wishlistNotification('Удалено из избранного');
          getWishlist();
 
       } catch (error) {
@@ -178,6 +191,7 @@ const PosterPage = () => {
          let res = response.data;
          if (res.length > 4) setIsPagination(true);
          setPosters(res);
+         console.log(res);
       } catch (error) {
          if (error.response) {
             console.log(error.response);

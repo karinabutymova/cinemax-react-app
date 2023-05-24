@@ -8,7 +8,7 @@ import instagramIcon from '../../assets/images/Icons/instagram.svg';
 import youtubeIcon from '../../assets/images/Icons/youtube.svg';
 import twitterIcon from '../../assets/images/Icons/twitter.svg';
 
-// TODO:: добавить ссылки
+// TODO: добавить ссылки
 const Footer = () => {
    return (
       <>
@@ -28,7 +28,7 @@ const Footer = () => {
                         </Styled.LinkContainer>
                         <Styled.SecondMainLink to="/search">Поиск</Styled.SecondMainLink>
                         <Styled.LinkContainer>
-                           <Styled.MainLink>Помощь</Styled.MainLink>
+                           <Styled.MainLink to="/help">Помощь</Styled.MainLink>
                            <Styled.SecondLink>Бонусная программа</Styled.SecondLink>
                            <Styled.SecondLink>Возврат билетов</Styled.SecondLink>
                            <Styled.SecondLink>Частые вопросы</Styled.SecondLink>

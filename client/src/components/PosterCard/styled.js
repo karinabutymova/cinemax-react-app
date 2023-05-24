@@ -74,12 +74,20 @@ export const FilmTitle = styled.p`
    margin: 16px 0 8px 0;
 `;
 
-export const SoonDate = styled.div`
+export const SoonDateDiv = styled.div`
    position: absolute;
    left: 16px;
    top: 16px;
    z-index: 99999;
 
+   background: transparent;
+
+   display: flex;
+   flex-direction: column;
+   gap: 8px;
+`;
+
+export const SoonDate = styled.div`
    padding: 6px 16px;
 
    background-color: #44006A;
@@ -88,6 +96,7 @@ export const SoonDate = styled.div`
    font-weight: 500;
    font-size: 14px;
    line-height: 16px;
+   text-align: center;
    font-feature-settings: 'pnum' on, 'lnum' on;
 
    color: #F3F3F3;
@@ -97,6 +106,10 @@ export const SoonDate = styled.div`
       left: 8px;
       top: 8px;
    }
+`;
+
+export const AgeLimit = styled(SoonDate)`
+   background-color: #9B2D30;
 `;
 
 export const Rate = styled(SoonDate)`

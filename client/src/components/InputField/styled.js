@@ -102,6 +102,8 @@ export const ErrorText = styled.p`
 
    width:100%;
 
+   font-feature-settings: 'pnum' on, 'lnum' on;
+
    color: #EB5757;
    background-color: #FFFFFF;
    padding: 0;

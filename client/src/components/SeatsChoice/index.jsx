@@ -33,7 +33,6 @@ const SeatsChoice = ({ showHall, step, selectedSeats, setSelectedSeats }) => {
          },
             { withCredentials: true }
          );
-         console.log(response.data);
          setUnavailableSeats(response.data);
       } catch (error) {
          if (error.response) {

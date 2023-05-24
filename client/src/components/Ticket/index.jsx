@@ -21,6 +21,11 @@ const Ticket = ({ ticket }) => {
       setTime(onlyTime.toLocaleTimeString('ru', timeOptions));
    }, [])
 
+   const goToPage = (link) => {
+      navigate(link);
+      window.scrollTo(0, 0);
+   }
+
 
    return (
       <>
@@ -32,7 +37,7 @@ const Ticket = ({ ticket }) => {
                   </Styled.PosterLink>
                </Styled.PosterContainer>
                <Styled.FilmInfoDiv>
-                  <Styled.FilmTitle onClick={() => navigate(`/film/${ticket.film_id}`)}>{ticket.film_title}</Styled.FilmTitle>
+                  <Styled.FilmTitle onClick={() => goToPage(`/film/${ticket.film_id}`)}>{ticket.film_title}</Styled.FilmTitle>
                   <Styled.FlexDiv>
                      <Styled.OptionDiv>
                         <Styled.OptionTitle>Дата</Styled.OptionTitle>

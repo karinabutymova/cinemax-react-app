@@ -8,7 +8,7 @@ export const CardContainer = styled.div`
    flex-direction: column;
    gap: 16px;
 
-   @media (max-width: 786px) {
+   @media (max-width: 767px) {
       flex-direction: row;
       align-items: center;
    }

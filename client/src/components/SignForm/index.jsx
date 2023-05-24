@@ -2,6 +2,7 @@ import { useState } from 'react'
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useBack } from 'use-back';
+import { PasswordReq } from './styled';
 import { Form, FlexContainer, Title, GoogleLogin, GoogleLogo, Text, Line, ForgorPasswordLink } from "../LoginForm/styled";
 import GoogleIcon from '../../assets/images/LoginPage/googleIcon.png';
 import InputField from "../InputField";
@@ -72,6 +73,9 @@ const SignForm = () => {
             onChange={setPassword}
             error={errors.error_password}
          />
+         {!errors.error_password &&
+            <PasswordReq>Пароль должен быть от 8 до 16 символов и содержать только латинские символы, а также хотя бы одну цифру</PasswordReq>
+         }
          <InputField
             inputType="password"
             placeholder="Повторите пароль"

@@ -12,11 +12,16 @@ const LoginPage = () => {
       document.title = 'Авторизация - Cinemax';
    }, []);
 
+   const goToPage = (link) => {
+      navigate(link);
+      window.scrollTo(0, 0);
+   }
+
    return (
       <FlexContainer>
          <Div>
             <Title>
-               С возвращением в <TitleSpan onClick={() => navigate('/')}>CINEMAX</TitleSpan>!
+               С возвращением в <TitleSpan onClick={() => goToPage('/')}>CINEMAX</TitleSpan>!
             </Title>
             <FlexContainer>
                <Text>Нет аккаунта?</Text>

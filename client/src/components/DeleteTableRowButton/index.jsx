@@ -1,8 +1,7 @@
 import React from 'react';
-import * as Styled from './styled';
+import { EditRowBtn } from '../TableUsers/styled';
 
-
-const DeleteTableRowButton = ({ value, setDeleteUser, setDeleteFilm, setDeleteFilmShow }) => {
+const DeleteTableRowButton = ({ value, setDeleteUser, setDeleteFilm, setDeleteFilmShow, setDeleteNews }) => {
 
    const deleteUser = async () => {
       if (setDeleteUser) {
@@ -20,12 +19,17 @@ const DeleteTableRowButton = ({ value, setDeleteUser, setDeleteFilm, setDeleteFi
          if (isDelete) {
             setDeleteFilmShow(value);
          }
+      } else if (setDeleteNews) {
+         let isDelete = window.confirm('Уверены, что хотите удалить новость?');
+         if (isDelete) {
+            setDeleteNews(value);
+         }
       }
    }
 
    return (
       <>
-         <button onClick={deleteUser}>Удалить</button>
+         <EditRowBtn onClick={deleteUser}>Удалить</EditRowBtn>
       </>
    )
 }

@@ -69,3 +69,37 @@ export const GetAllUserReviews = async (req, res) => {
       console.log(error);
    }
 }
+
+export const EditReview = async (req, res) => {
+   let { reviewId, textReview } = req.query;
+   try {
+      await FilmReviews.update({ review_text: textReview }, {
+         where: {
+            id: reviewId
+         }
+      });
+
+      res.json({
+         "message": "Отзыв отредактирован"
+      });
+   } catch (error) {
+      console.log(error);
+   }
+}
+
+export const DeteleReview = async (req, res) => {
+   let { reviewId } = req.query;
+   try {
+
+      await FilmReviews.destroy({
+         where: {
+            id: reviewId
+         }
+      });
+      res.json({
+         "message": "Отзыв удалён"
+      });
+   } catch (error) {
+      console.log(error);
+   }
+}

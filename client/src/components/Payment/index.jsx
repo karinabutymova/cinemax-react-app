@@ -2,20 +2,39 @@ import { useState, useEffect } from 'react';
 import { Row, Col } from 'styled-bootstrap-grid';
 import * as Styled from './styled';
 import axios from 'axios';
-
+import { Store } from 'react-notifications-component';
 import SelectedSeats from '../SelectedSeats';
-
+import { useNavigate } from 'react-router-dom';
+import Popup from 'reactjs-popup';
+import 'reactjs-popup/dist/index.css';
 
 const Payment = ({ showHall, selectedSeats, step, userId, userName }) => {
-
    const [userBonuses, setUserBonuses] = useState(0);
    const [bonusInUse, setBonusInUse] = useState(0);
    const [active, setActive] = useState(true);
    const [error, setError] = useState('');
+   const [open, setOpen] = useState(false);
+   const navigate = useNavigate();
 
    useEffect(() => {
       if (userId) getUserBonuses();
    }, [])
+
+   const ticketNotification = (mess) => Store.addNotification({
+      title: mess,
+      type: "success",
+      insert: "top",
+      container: "bottom-center",
+      animationIn: ["animate__animated", "animate__fadeIn"],
+      animationOut: ["animate__animated", "animate__fadeOut"],
+      dismiss: {
+         duration: 1000,
+         onScreen: true
+      },
+      onRemoval: (id, removedBy) => {
+         setOpen(true);
+      }
+   });
 
 
    const getUserBonuses = async () => {
@@ -42,6 +61,11 @@ const Payment = ({ showHall, selectedSeats, step, userId, userName }) => {
       step(2);
    }
 
+   const goToPage = (link) => {
+      navigate(link);
+      window.scrollTo(0, 0);
+   }
+
    const submitSelectedSeat = async () => {
       if (!error.length) {
          try {
@@ -64,7 +88,7 @@ const Payment = ({ showHall, selectedSeats, step, userId, userName }) => {
                },
                   { withCredentials: true }
                );
-               console.log(tickets.data)
+               console.log(tickets.data);
 
                if (tickets.data.length) {
                   const orderNumber = await axios.post('http://localhost:3001/setOrder', {
@@ -88,8 +112,7 @@ const Payment = ({ showHall, selectedSeats, step, userId, userName }) => {
                         { withCredentials: true }
                      );
 
-                     console.log(bonus.data);
-                     if (bonus.data) window.location.reload();
+                     if (bonus.data) ticketNotification('Билеты забронированы!');
                   }
 
                }
@@ -105,14 +128,24 @@ const Payment = ({ showHall, selectedSeats, step, userId, userName }) => {
    }
 
    const bonusCount = (e) => {
-      // TODO:: проверка на дробное число и не более 50% от суммы
+      // TODO: проверка на дробное число (если точка в самом конце???)
 
       console.log(e.target.value);
+
       if (parseInt(e.target.value) > parseInt(userBonuses)) {
          setError('Больше количества доступных вам бонусов');
          setActive(false);
          setBonusInUse(0);
-      } else {
+      } else if (e.target.value / 100 > selectedSeats.length * showHall.price / 2) {
+         setError(`Оплатить можно не более 50% от общей стоимости (т.е. не более ${selectedSeats.length * showHall.price / 2 * 100} баллов для использования)`);
+         setActive(false);
+         setBonusInUse(0);
+      } else if (e.target.value.indexOf('.') !== -1 || e.target.value.indexOf(',') !== -1) {
+         setError('Введите целое число');
+         setActive(false);
+         setBonusInUse(0);
+      }
+      else {
          setBonusInUse(e.target.value);
          setError('');
          setActive(true);
@@ -123,17 +156,53 @@ const Payment = ({ showHall, selectedSeats, step, userId, userName }) => {
       <>
          <Row justifyContent='start' mdJustifyContent='center'>
             <Col xl="6" lg="6" md="8" xs="12">
-               {(userId > 0 && userName.length > 0) &&
+               {userId > 0 &&
                   <Styled.BonusDiv>
-                     {userName.split(' ')[1]}, забронированные билеты отобразятся в вашем профиле
-                     {userBonuses > 0 && <p>Доступные бонусы: {userBonuses}</p>}
-                     {!(userBonuses > 0) && <p>У вас пока нет доступных бонусов</p>}
+                     {userBonuses > 0 &&
+                        <>
+                           <Popup
+                              open={open}
+                              modal
+                              nested
+                              onClose={() => { if (~window.location.href.indexOf("film")) window.location.reload() }}
+                           >
+                              {close => (
+                                 <Styled.ModalContainer>
+                                    <Styled.ModalHeader>Спасибо за бронирование!</Styled.ModalHeader>
+                                    <Styled.ModalContent>Информация о&nbsp;купленных билетах находится в&nbsp;профиле</Styled.ModalContent>
+                                    <Styled.ModalBtnFlex>
+                                       <Styled.SecondaryButton
+                                          onClick={() => {
+                                             goToPage('/');
+                                             close();
+                                          }}>
+                                          На главную
+                                       </Styled.SecondaryButton>
+                                       <Styled.PrimaryButton active={true}
+                                          onClick={() => {
+                                             goToPage('/profile');
+                                             close();
+                                          }}>
+                                          Перейти в профиль
+                                       </Styled.PrimaryButton>
+                                    </Styled.ModalBtnFlex>
+                                 </Styled.ModalContainer>
+                              )}
+                           </Popup>
+                           <Styled.BonusTitle>Оплата бонусами</Styled.BonusTitle>
+                           <Styled.BonusCountP>Доступное количество:
+                              <Styled.BonusCount>{userBonuses}</Styled.BonusCount>
+                              <Styled.BonusCountBYN>{userBonuses / 100}BYN</Styled.BonusCountBYN>
+                           </Styled.BonusCountP>
+                        </>
+                     }
+                     {!(userBonuses > 0) && <Styled.BonusTitle>У вас пока нет доступных бонусов</Styled.BonusTitle>}
                      {userBonuses > 0 &&
                         <Styled.InputDiv>
-                           <Styled.BonusLabel>Бонусы*</Styled.BonusLabel>
-                           <Styled.BonusInput type="number" placeholder='Введите кол-во бонусов' onChange={bonusCount} />
+                           <Styled.BonusLabel>Используемые бонусные баллы:</Styled.BonusLabel>
+                           <Styled.BonusInput type="number" placeholder='Введите количество' onChange={bonusCount} />
                            {error.length > 0 && <Styled.BonusError>{error}</Styled.BonusError>}
-                           <Styled.BonusMark>*Оплатить можно до 50% от общей стоимости. При использовании бонусных баллов, бонусы за текущую покупку начисляться не будут.</Styled.BonusMark>
+                           <Styled.BonusMark>*Оплатить можно до&nbsp;50% от&nbsp;общей стоимости.<br />При использовании бонусных баллов, бонусы за&nbsp;текущую покупку не начисляются</Styled.BonusMark>
                         </Styled.InputDiv>
                      }
 

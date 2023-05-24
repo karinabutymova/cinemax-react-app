@@ -111,5 +111,5 @@ export const TotalBonusCount = styled(TotalPrice)`
 `;
 
 export const SelectSeat = styled(Seat)`
-   background-color: #8D1BCD;
+   background-color: #8D1BCD !important;
 `;

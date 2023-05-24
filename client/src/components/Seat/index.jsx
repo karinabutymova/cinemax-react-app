@@ -46,6 +46,7 @@ const Seat = ({ seat, row, selectedSeats, setSelectedSeats, unavailableSeats }) 
                name="seats[]"
                id={`seat-${row}-${seat}`}
                onChange={selectSeat}
+               checked={active}
                value="Y"></Styled.SeatInput>
 
             <Styled.Seat

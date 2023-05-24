@@ -2,7 +2,6 @@ import { useState } from 'react'
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 import { useBack } from "use-back";
-
 import { Form, FlexContainer, Title, GoogleLogin, GoogleLogo, Text, Line, ForgorPasswordLink } from "./styled";
 import GoogleIcon from '../../assets/images/LoginPage/googleIcon.png';
 import InputField from "../InputField";
@@ -16,6 +15,10 @@ const LoginForm = () => {
    const [errors, setErrors] = useState({});
    const navigate = useNavigate();
 
+   const goToPage = (link) => {
+      navigate(link);
+      window.scrollTo(0, 0);
+   }
 
    const AuthUser = async (e) => {
       e.preventDefault();
@@ -27,7 +30,7 @@ const LoginForm = () => {
             { withCredentials: true }
          );
          // handleBack();
-         navigate('/profile');
+         goToPage('/profile');
       } catch (error) {
          if (error.response) {
             setErrors(error.response.data);

@@ -33,8 +33,9 @@ const ShowHalls = ({ showsHalls, step, selectedHall, active, setActive }) => {
    return (
       <>
          <Styled.HallsListDiv>
-            {halls.map((hallTitle, index) =>
-               <Styled.HallDiv key={index}>
+            {halls.map((hallTitle, index) => {
+               let border = index !== halls.length - 1 ? '1px solid #414141' : 'none';
+               return <Styled.HallDiv key={index} style={{ borderBottom: border }} s>
                   <Styled.HallTitle key={index}>{hallTitle}</Styled.HallTitle>
                   <Styled.TimeFlexDiv>
                      {showsHalls.map((showHall) => {
@@ -52,7 +53,7 @@ const ShowHalls = ({ showsHalls, step, selectedHall, active, setActive }) => {
                      })}
                   </Styled.TimeFlexDiv>
                </Styled.HallDiv>
-            )}
+            })}
          </Styled.HallsListDiv>
 
          <Styled.PrimaryButton active={active} onClick={nextStep}>Далее</Styled.PrimaryButton>

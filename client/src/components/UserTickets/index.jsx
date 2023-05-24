@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import { Row, Col } from 'styled-bootstrap-grid';
 import Ticket from '../Ticket';
 
-
 // TODO: возврат билетов
 const UserTickets = ({ tickets }) => {
    const navigate = useNavigate();
