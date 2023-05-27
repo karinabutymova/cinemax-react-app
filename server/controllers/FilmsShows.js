@@ -12,7 +12,7 @@ export const GetAllFilmShows = async (req, res) => {
                film_id: filmId
             }, {
                film_datetime: {
-                  [Op.gt]: new Date()
+                  [Op.gt]: new Date().getTime() + 3 * 60 * 60 * 1000
                }
             }]
          },
@@ -70,18 +70,16 @@ export const GetShowHalls = async (req, res) => {
                film_id: filmId
             }, {
                film_datetime: {
-                  [Op.gt]: new Date()
-               }
-            }, {
-               film_datetime: {
                   [Op.substring]: showDate
                }
             }]
          },
+         order: [
+            ['film_datetime', 'ASC'],
+         ],
          include: {
             model: Halls,
             as: 'halls',
-            // required: true
          },
          raw: true,
       });

@@ -54,7 +54,7 @@ export const GetBestRateFilms = async (req, res) => {
    try {
       let check_date = new Date().toISOString().split('T')[0];
       const [films] = await db.query(
-         `SELECT films.id, films.film_title, films.photo_path, films.genres,
+         `SELECT films.id, films.film_title, films.age_limit, films.photo_path, films.genres,
          films.to_rent_date, films.from_rent_date, AVG(films_rating.rating) as rate
          FROM films_rating
          INNER JOIN films
@@ -74,10 +74,10 @@ export const GetBestRateFilms = async (req, res) => {
 export const GetSoonFilms = async (req, res) => {
    try {
       const films = await Film.findAll({
-         attributes: ['id', 'film_title', 'genres', 'from_rent_date', 'to_rent_date', 'photo_path'],
+         attributes: ['id', 'film_title', 'genres', 'from_rent_date', 'to_rent_date', 'photo_path', 'age_limit'],
          where: {
             from_rent_date: {
-               [Op.gt]: new Date()
+               [Op.gt]: new Date().getTime() + 3 * 60 * 60 * 1000
             }
          },
          order: [['from_rent_date', 'ASC']],
@@ -214,7 +214,7 @@ export const FindFilms = async (req, res) => {
                }],
             }, {
                to_rent_date: {
-                  [Op.gt]: new Date()
+                  [Op.gt]: new Date().getTime() + 3 * 60 * 60 * 1000
                }
             }]
          }

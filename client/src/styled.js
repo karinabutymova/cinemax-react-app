@@ -114,6 +114,7 @@ body{
       background-color: transparent;
       border: 0;
 
+
       @media (max-width: 768px) {
          width: 70%;
       }

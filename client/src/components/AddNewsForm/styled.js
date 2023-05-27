@@ -10,9 +10,13 @@ import {
 } from "../AddFilmForm/styled";
 
 export const Form = styled(FilmForm)``;
-export const FileInput = styled(FilmFileInput)``;
+export const FileInput = styled(FilmFileInput)`
+   margin-bottom: 12px;
+`;
 export const Label = styled(FilmLabel)``;
-export const Flex = styled(FilmFlex)``;
+export const Flex = styled(FilmFlex)`
+   margin-top: 24px;
+`;
 export const PrimaryButton = styled(Primary)``;
 export const SecondaryButton = styled(Secondary)``;
 export const ErrorText = styled(FilmErrorText)``;

@@ -27,7 +27,9 @@ const SliderFilmCard = ({ film, imgHeight }) => {
    return (
       <Styled.CardContainer>
          {typeof film.rate === "undefined" && <Styled.Rate>{toDateRent}</Styled.Rate>}
+         {(typeof film.rate === "undefined" && film.age_limit && film.age_limit >= 18) && <Styled.Rate style={{ backgroundColor: '#9B2D30', top: '40px' }}>{film.age_limit}+</Styled.Rate>}
          {film.rate && <Styled.Rate>{Number(film.rate).toFixed(1)}</Styled.Rate>}
+         {(film.age_limit && film.age_limit >= 18) && <Styled.Rate style={{ backgroundColor: '#9B2D30', top: '40px' }}>{film.age_limit}+</Styled.Rate>}
          <Styled.PosterLink onClick={() => goToPage(`/film/${film.id}`)}>
             {imagePath !== null &&
                <Styled.ImgLink imgHeight={imgHeight} src={imagePath} alt={film.photo_path} />

@@ -28,16 +28,64 @@ const AddNewsForm = ({ setIsAddNews }) => {
       if (!body.length || !body.trim().length) allErrors.body = 'Пустое содержание';
       if (!template) allErrors.template = 'Выберите шаблон';
 
+      [...images].forEach(img => {
+         let fileFormat = img.name.split('.').at(-1).toLowerCase();
+         if (fileFormat !== 'jpg' && fileFormat !== 'png' && fileFormat !== 'jpeg') {
+            allErrors.images = 'Неверный формат файла. Необходим jpg/png';
+         }
+      });
+
+      if (![...images].length) allErrors.images = 'Необходимо добавить изображение';
+
       if (Object.keys(allErrors).length !== 0) {
          console.log(allErrors);
          setErrors(allErrors);
+      } else {
+         let newNews = {};
+
+         newNews.news_title = title;
+         newNews.news_body = body;
+         newNews.news_template = template;
+
+         let imgs = '';
+         [...images].forEach(img => {
+            imgs += img.name + ', ';
+         });
+         newNews.news_images = imgs.replace(/, $/, '');
+
+         newNews.created_at = new Date();
+
+
+         [...images].forEach(async (img) => {
+            const data = new FormData();
+            data.append('file', img);
+
+            try {
+               const response = await axios.post('http://localhost:3001/uploadNewsImg', data,
+                  { withCredentials: true }
+               );
+               console.log(response.statusText);
+            } catch (error) {
+               if (error.response) {
+                  console.log(error.response.data);
+               }
+            }
+         });
+
+         try {
+            const response = await axios.post('http://localhost:3001/addNews', {
+               newNews: newNews
+            },
+               { withCredentials: true }
+            );
+            console.log(response.data);
+            if (response.data) window.location.reload();
+         } catch (error) {
+            if (error.response) {
+               console.log(error.response.data);
+            }
+         }
       }
-
-      // let fileFormat = poster.name.split('.').at(-1).toLowerCase();
-      // if (fileFormat !== 'jpg' && fileFormat !== 'png' && fileFormat !== 'jpeg') {
-      //    allErrors.posterError = 'Неверный формат файла. Необходим jpg/png';
-      // }
-
 
       // const data = new FormData();
       // data.append('file', poster);
@@ -53,19 +101,7 @@ const AddNewsForm = ({ setIsAddNews }) => {
       //    }
       // }
 
-      // try {
-      //    const response = await axios.post('http://localhost:3001/addNews', {
-      //       newNews: newNews
-      //    },
-      //       { withCredentials: true }
-      //    );
-      //    console.log(response.data);
-      //    if (response.data) window.location.reload();
-      // } catch (error) {
-      //    if (error.response) {
-      //       console.log(error.response.data);
-      //    }
-      // }
+
    }
 
 
@@ -90,7 +126,7 @@ const AddNewsForm = ({ setIsAddNews }) => {
    }
 
    const uploadImages = (e) => {
-      setImages(e.target.files[0]);
+      setImages(e.target.files);
    }
 
    return (
@@ -117,7 +153,8 @@ const AddNewsForm = ({ setIsAddNews }) => {
                {(errors.template && errors.template.length > 0) && <Styled.ErrorText>{errors.template}</Styled.ErrorText>}
 
                <Styled.Label>Изображения</Styled.Label>
-               <Styled.FileInput type="file" onChange={uploadImages} />
+               {template === 1 && <Styled.FileInput type="file" onChange={uploadImages} />}
+               {template === 2 && <Styled.FileInput type="file" multiple onChange={uploadImages} />}
                {(errors.images && errors.images.length > 0) && <Styled.ErrorText>{errors.images}</Styled.ErrorText>}
 
                <Styled.Flex>

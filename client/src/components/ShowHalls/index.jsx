@@ -46,6 +46,7 @@ const ShowHalls = ({ showsHalls, step, selectedHall, active, setActive }) => {
                               id={showHall.id}
                               setActiveTime={setActiveTime}
                               active={active}
+                              isContinue={date > new Date()}
                               price={showHall.price}
                               time={date.toLocaleTimeString('ru', timeOptions)} />
                         }

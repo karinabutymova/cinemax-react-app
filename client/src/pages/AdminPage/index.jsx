@@ -280,7 +280,6 @@ const AdminPage = () => {
       try {
          const response = await axios.get('http://localhost:3001/getAllNews');
          setNews(response.data);
-         console.log(response.data);
       } catch (error) {
          if (error.response) {
             console.log(error.response);

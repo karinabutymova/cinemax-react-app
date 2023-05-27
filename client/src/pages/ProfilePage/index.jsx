@@ -16,11 +16,13 @@ import layersIcon from '../../assets/images/Icons/layers.svg';
 import hammerIcon from '../../assets/images/Icons/hammer.svg';
 import ReviewRateCard from '../../components/ReviewRateCard';
 import UserTickets from '../../components/UserTickets';
+import EditProfile from '../../components/EditProfile';
+import Popup from 'reactjs-popup';
+import 'reactjs-popup/dist/index.css';
 
 // TODO: редактирование профиля (и удаление!)
 // TODO: история бонусов
 // TODO: модальное окно (уверены что ходите вернуть билеты) 
-// TODO: модальное окно (уверены что хотите выйти) 
 // TODO: пагинация для билетов
 // TODO: состояние для билетов когда событие прошло (или удалено) + удаление таких билетов
 
@@ -45,6 +47,7 @@ const ProfilePage = () => {
    const [wishlistPagination, setWishlistPagination] = useState(false);
    const [reviewPagination, setReviewPagination] = useState(false);
 
+
    useEffect(() => {
       document.title = 'Мой профиль - Cinemax';
 
@@ -57,10 +60,6 @@ const ProfilePage = () => {
          setFilter();
          getUserBonuses();
       }
-      // if (userRole && userRole === 'admin') {
-      //    navigate('/adminPanel');
-      //    window.scrollTo(0, 0);
-      // }
 
    }, [activeTab, userId, userRole]);
 
@@ -338,6 +337,14 @@ const ProfilePage = () => {
       if (reviews.length <= reviewCount + 4) setReviewPagination(false);
    }
 
+   const editProfile = async () => {
+      setIsLoading(true);
+      searchParams.set('filter', 'editProfile');
+      setSearchParams(searchParams);
+      await timeout(400);
+      setIsLoading(false);
+   }
+
    return (
       <>
          <Header />
@@ -354,15 +361,42 @@ const ProfilePage = () => {
                      <Styled.UserInfoColumnDiv>
                         <Styled.UserName>{name}</Styled.UserName>
                         <Styled.BtnDiv>
-                           {/* <Styled.UserInfoBtn>Редактировать</Styled.UserInfoBtn> */}
-                           <Styled.UserInfoBtn onClick={Logout}>Выйти</Styled.UserInfoBtn>
+                           <Styled.UserInfoBtn onClick={editProfile}>Редактировать</Styled.UserInfoBtn>
+                           <Popup
+                              trigger={
+                                 <Styled.UserInfoBtn>Выйти</Styled.UserInfoBtn>}
+                              modal
+                              nested>
+                              {close => (
+                                 <Styled.ModalContainer>
+                                    <Styled.ModalHeader> Вы уверены, что хотите выйти?</Styled.ModalHeader>
+                                    <Styled.ModalBtnFlex>
+                                       <Styled.PrimaryButton
+                                          onClick={() => {
+                                             Logout();
+                                             close();
+                                          }}>
+                                          Выйти
+                                       </Styled.PrimaryButton>
+                                       <Styled.SecondaryButton
+                                          onClick={() => {
+                                             close();
+                                          }}>
+                                          Отмена
+                                       </Styled.SecondaryButton>
+                                    </Styled.ModalBtnFlex>
+                                 </Styled.ModalContainer>
+                              )}
+                           </Popup>
                         </Styled.BtnDiv>
                      </Styled.UserInfoColumnDiv>
                   </Styled.UserInfoDiv>
-                  <Styled.BonusHistoryDiv>
-                     <Styled.BonusHistoryIcon src={hammerIcon} />
-                     <Styled.BonusHistory onClick={() => navigate('/adminPanel')}>Панель администратора</Styled.BonusHistory>
-                  </Styled.BonusHistoryDiv>
+                  {userRole === 'admin' &&
+                     <Styled.BonusHistoryDiv>
+                        <Styled.BonusHistoryIcon src={hammerIcon} />
+                        <Styled.BonusHistory onClick={() => navigate('/adminPanel')}>Панель администратора</Styled.BonusHistory>
+                     </Styled.BonusHistoryDiv>
+                  }
                </Col>
                <Col xl="3" lg="3" md="6" sm="12">
                   <Styled.BonusDiv>
@@ -379,7 +413,11 @@ const ProfilePage = () => {
                </Col>
             </Row>
             {isLoading && <Preloader />}
-            {!isLoading &&
+            {(!isLoading && searchParams.get('filter') === 'editProfile') &&
+               <EditProfile userId={userId} setActiveTab={setActiveTab} />
+            }
+
+            {(!isLoading && searchParams.get('filter') !== 'editProfile') &&
                <Row>
                   <Col xl="6" lg="6" md="8" sm="12">
                      <Styled.FilterContainer>
@@ -402,7 +440,7 @@ const ProfilePage = () => {
                   </Col>
                </Row>
             }
-            {(!isLoading && activeTab === 'tickets') &&
+            {(!isLoading && activeTab === 'tickets' && searchParams.get('filter') === 'tickets') &&
                <>
                   {!ticketsCount.length &&
                      <Row>
@@ -419,49 +457,57 @@ const ProfilePage = () => {
                   }
                </>
             }
-            {(!isLoading && activeTab === 'wishlist') &&
-               <Row>
-                  {!userWishlist.length &&
-                     <Col col="12">
-                        <Styled.NullArrayText>Ваш список избранного пуст</Styled.NullArrayText>
-                     </Col>
+            {(!isLoading && activeTab === 'wishlist' && searchParams.get('filter') === 'wishlist') &&
+               <>
+                  <Row>
+                     {!userWishlist.length &&
+                        <Col col="12">
+                           <Styled.NullArrayText>Ваш список избранного пуст</Styled.NullArrayText>
+                        </Col>
+                     }
+                     {userWishlist.length > 0 && userWishlist.map((poster, index) => {
+                        return index < wishlistCount ? <PosterCard key={poster.id} poster={poster}
+                           filter={activeTab} userId={userId}
+                           isWish={poster.isWish}
+                           setWishlist={setWishlist}
+                           deleteWishlist={deleteWishlist}
+                        /> : false
+                     })}
+                  </Row>
+                  {(!isLoading && userWishlist.length > 4 && wishlistPagination) &&
+                     <Row Row justifyContent='center'>
+                        <Styled.PaginationBtn onClick={showMoreWishlist}> Показать больше</Styled.PaginationBtn>
+                     </Row>
+
                   }
-                  {userWishlist.length > 0 && userWishlist.map((poster, index) => {
-                     return index < wishlistCount ? <PosterCard key={poster.id} poster={poster}
-                        filter={activeTab} userId={userId}
-                        isWish={poster.isWish}
-                        setWishlist={setWishlist}
-                        deleteWishlist={deleteWishlist}
-                     /> : false
-                  })}
-               </Row>
+               </>
             }
-            {(!isLoading && userWishlist.length > 4 && wishlistPagination) &&
-               <Row Row justifyContent='center'>
-                  <Styled.PaginationBtn onClick={showMoreWishlist}> Показать больше</Styled.PaginationBtn>
-               </Row>
-            }
-            {(!isLoading && activeTab === 'reviews') &&
-               <Row>
-                  {!reviews.length &&
-                     <Col col="12">
-                        <Styled.NullArrayText>Список ваших отзывов и оценок пуст</Styled.NullArrayText>
-                     </Col>
+
+            {(!isLoading && activeTab === 'reviews' && searchParams.get('filter') === 'reviews') &&
+               <>
+
+                  <Row>
+                     {!reviews.length &&
+                        <Col col="12">
+                           <Styled.NullArrayText>Список ваших отзывов и оценок пуст</Styled.NullArrayText>
+                        </Col>
+                     }
+                     {reviews.length > 0 &&
+                        <Col xl="8" lg="8" md="12" sm="12" style={{ marginTop: '48px' }}>
+                           {reviews.length > 0 && reviews.map((review, index) => {
+                              return index < reviewCount ? <ReviewRateCard key={review.id} review={review} /> : false
+                           })}
+                        </Col>
+                     }
+                  </Row>
+                  {(!isLoading && reviews.length > 4 && reviewPagination) &&
+                     <Row Row justifyContent='center'>
+                        <Styled.PaginationBtn onClick={showMoreReviews}> Показать больше</Styled.PaginationBtn>
+                     </Row>
                   }
-                  {reviews.length > 0 &&
-                     <Col xl="8" lg="8" md="12" sm="12" style={{ marginTop: '48px' }}>
-                        {reviews.length > 0 && reviews.map((review, index) => {
-                           return index < reviewCount ? <ReviewRateCard key={review.id} review={review} /> : false
-                        })}
-                     </Col>
-                  }
-               </Row>
+               </>
             }
-            {(!isLoading && reviews.length > 4 && reviewPagination) &&
-               <Row Row justifyContent='center'>
-                  <Styled.PaginationBtn onClick={showMoreReviews}> Показать больше</Styled.PaginationBtn>
-               </Row>
-            }
+
          </Container >
          <Footer />
       </>

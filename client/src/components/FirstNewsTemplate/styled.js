@@ -67,4 +67,9 @@ export const NewsBody = styled.div`
 
    margin-top: 32px;
    margin-bottom: 48px;
+
+   & *{
+      background: transparent !important;
+      color: #FFFFFF !important;
+   }
 `;

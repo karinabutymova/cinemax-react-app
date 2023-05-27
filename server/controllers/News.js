@@ -86,6 +86,21 @@ export const GetNewsById = async (req, res) => {
    }
 }
 
+export const AddNews = async (req, res) => {
+   try {
+      const news = await News.create({
+         news_title: req.body.newNews.news_title,
+         news_body: req.body.newNews.news_body,
+         news_template: req.body.newNews.news_template,
+         news_images: req.body.newNews.news_images,
+         created_at: req.body.newNews.created_at
+      });
+      res.json(news);
+   } catch (error) {
+      console.log(error);
+   }
+}
+
 export const DeleteNewsById = async (req, res) => {
    try {
       await News.destroy({

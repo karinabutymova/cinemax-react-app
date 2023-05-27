@@ -1,5 +1,42 @@
 import styled from "styled-components";
 import { Button } from "../../components/PrimaryButton/styled";
+import { ModalContainer as ModalCon, ModalHeader as ModalHead, ModalBtnFlex as ModalButtons } from "../../components/ReviewCard/styled";
+import { SecondaryButton as SecondBtn } from "../../components/SeatsChoice/styled";
+
+
+export const ModalContainer = styled(ModalCon)`
+   padding: 54px;
+
+   @media (max-width: 768px) {
+      padding: 48px;
+   }
+
+   @media (max-width: 576px) {
+      padding: 32px;
+   }
+`;
+export const ModalHeader = styled(ModalHead)`
+   font-weight: 700;
+   font-size: 26px;
+   line-height: 30px;
+
+   margin-bottom: 24px;
+`;
+
+export const ModalBtnFlex = styled(ModalButtons)``;
+
+export const PrimaryButton = styled(SecondBtn)`
+   background-color: #8D1BCD;
+   color: #FFFFFF !important;
+
+   &:hover{
+      background-color: #8D1BCD;
+   }
+`;
+
+export const SecondaryButton = styled(SecondBtn)`
+   color: #8D1BCD;
+`;
 
 export const PageTitle = styled.h1`
    font-style: normal;

@@ -58,4 +58,12 @@ export const FilmGenre = styled(Genre)`
 export const FilmTitle = styled(Title)`
 `;
 
-export const Rate = styled(Rating)``;
+export const Rate = styled(Rating)`
+   position: absolute;
+   top: 8px;
+   left: 8px;
+
+   min-width: 50px;
+
+   z-index: 999;
+`;

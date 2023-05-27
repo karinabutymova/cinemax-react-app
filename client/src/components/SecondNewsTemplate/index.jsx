@@ -31,7 +31,7 @@ const SecondNewsTemplate = ({ news }) => {
       <>
          <Container style={{ marginBottom: '72px' }}>
             <Row>
-               <Col xl="8" lg="8" md="12" sm="12" xs="12">
+               <Col xl="10" lg="10" md="12" sm="12" xs="12">
                   <Styled.BreadCrumbs>Новости</Styled.BreadCrumbs>
                   <Styled.PageTitle>{news.news_title}</Styled.PageTitle>
                </Col>
@@ -59,7 +59,7 @@ const SecondNewsTemplate = ({ news }) => {
                </Col>
             </Row>
             <Row>
-               <Col xl="8" lg="8" md="12" sm="12" xs="12">
+               <Col xl="9" lg="9" md="12" sm="12" xs="12">
                   <Styled.NewsBody dangerouslySetInnerHTML={{ __html: news.news_body }} />
                </Col>
             </Row>

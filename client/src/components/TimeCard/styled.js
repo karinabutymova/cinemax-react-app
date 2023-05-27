@@ -37,12 +37,10 @@ export const TimeDiv = styled.div`
 
    color: #FFFFFF;
 
-   &:hover{
-      cursor: pointer;
-   }
+   cursor: ${props => !props.isContinue ? 'default' : 'pointer'};
+ 
      
    &:hover ${Price}{
-
       display: block;
    }
 `;

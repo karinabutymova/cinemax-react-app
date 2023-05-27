@@ -190,17 +190,47 @@ export const DeleteUser = async (req, res) => {
    }
 }
 
-// export const updateUser = async (req, res) => {
-//    try {
-//        await User.update(req.body, {
-//            where: {
-//                id: req.params.id
-//            }
-//        });
-//        res.json({
-//            "message": "User Updated"
-//        });
-//    } catch (error) {
-//        res.json({ message: error.message });
-//    }
-// }
+export const UpdateUser = async (req, res) => {
+   try {
+      await User.update({ lastname: req.body.lastname, firstname: req.body.firstname }, {
+         where: {
+            id: req.body.userId
+         }
+      });
+      res.json({
+         "message": "User Updated"
+      });
+   } catch (error) {
+      res.json({ message: error.message });
+   }
+}
+
+export const userChangePassword = async (req, res) => {
+   let { userId, password, confPassword } = req.body;
+   let user = await User.findOne({
+      where: {
+         id: userId
+      }
+   });
+
+   if (user == null) {
+      return res.status(403).json({ token_error: 'Ссылка на сброс пароля недействительна' });
+   } else {
+      // Валидация пароля
+      let validPassword = checkPassword(password);
+      if (validPassword) return res.status(400).json({ error_password: validPassword });
+      if (password !== confPassword) return res.status(400).json({ password_do_not_match: "Пароли не совпадают" });
+      const salt = await bcrypt.genSalt();
+      const hashPassword = await bcrypt.hash(password, salt);
+
+      await User.update({ password: hashPassword, refresh_token: null }, {
+         where: {
+            id: user.id
+         }
+      })
+         .then(() => {
+            res.status(200).json({ done: 'Пароль обновлён!' });
+         });
+
+   }
+}

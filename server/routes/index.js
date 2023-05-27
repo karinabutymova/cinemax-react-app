@@ -1,5 +1,5 @@
 import express from "express";
-import { GetUsers, Register, Login, Logout, DeleteUser, GetUserById, UpdateUserRole } from "../controllers/Users.js";
+import { GetUsers, Register, Login, Logout, DeleteUser, GetUserById, UpdateUserRole, UpdateUser, userChangePassword } from "../controllers/Users.js";
 import {
    GetFilms,
    FindFilms,
@@ -24,7 +24,7 @@ import {
 } from "../controllers/FilmsWishlist.js";
 import { GetUserBonuses, SetUserBonus } from "../controllers/UserBonuses.js";
 import { SetNewSeats } from "../controllers/Seats.js";
-import { FindNews, GetLastNews, GetAllNews, GetNewsById, GetOtherLastNews, DeleteNewsById } from "../controllers/News.js";
+import { FindNews, GetLastNews, GetAllNews, GetNewsById, GetOtherLastNews, DeleteNewsById, AddNews } from "../controllers/News.js";
 import { GetUnavailableSeats, SetNewTickets, GetUserTicketsCount, GetUserShowTickets } from "../controllers/Tickets.js";
 import { GetAllFilmShows, GetShowHalls, GetAllFilmsShowsAdmin, DeleteFilmShowById } from "../controllers/FilmsShows.js";
 import { verifyToken } from "../middleware/VerifyToken.js";
@@ -43,6 +43,8 @@ userRouter.post('/users', Register);
 userRouter.get('/getUserById', GetUserById);
 userRouter.post('/login', Login);
 userRouter.get('/token', refreshToken);
+userRouter.post('/editUserName', UpdateUser);
+userRouter.post('/userChangePassword', userChangePassword);
 userRouter.delete('/logout', Logout);
 
 const forgotPasswordRouter = express.Router();
@@ -90,6 +92,7 @@ newsRouter.get('/getAllNews', GetAllNews);
 newsRouter.get('/getNewsById', GetNewsById);
 newsRouter.get('/getOtherLastNews', GetOtherLastNews);
 newsRouter.get('/deleteNews', DeleteNewsById);
+newsRouter.post('/addNews', AddNews);
 
 const filmsShowsRouter = express.Router();
 filmsShowsRouter.get('/getAllFilmShows', GetAllFilmShows);
