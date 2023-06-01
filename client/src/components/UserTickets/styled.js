@@ -16,12 +16,16 @@ export const TicketsIntro = styled.div`
    align-items: center;
 
    background-color: #FFFFFF;
+   background-color: ${props => props.isOver ? '#424242' : '#FFFFFF'};
+
    padding: 24px;
    border-radius: 16px;
    gap: 16px;
 
    position:relative;
    z-index: 0;
+
+   cursor: pointer;
 
    @media (max-width: 576px) {
       flex-wrap: wrap;
@@ -43,7 +47,7 @@ export const FilmTitle = styled.h3`
    line-height: 24px;
    font-feature-settings: 'pnum' on, 'lnum' on;
 
-   color: #2D2B35;
+   color: ${props => props.isOver ? '#FFFFFF' : '#2D2B35'};
 
    &:hover{
       cursor: pointer;
@@ -70,7 +74,7 @@ export const OptionValue = styled.p`
    line-height: 19px;
    font-feature-settings: 'pnum' on, 'lnum' on;
 
-   color: #2D2B35;
+   color: ${props => props.isOver ? '#FFFFFF' : '#2D2B35'};
 `;
 
 export const BonusCount = styled(OptionValue)`
@@ -79,7 +83,7 @@ export const BonusCount = styled(OptionValue)`
 
 export const BtnDiv = styled(OptionDiv)`
    justify-content: center;
-   gap: 20px;
+   gap: 16px;
 `;
 
 export const ShowHideBtn = styled.div`
@@ -94,9 +98,22 @@ export const ShowHideBtn = styled.div`
    font-feature-settings: 'pnum' on, 'lnum' on;
 
    color: #8D1BCD;
+   cursor: pointer;
 
-   &:hover{
-      cursor: pointer;
+`;
+
+export const ReturnTicketsBtn = styled(ShowHideBtn)`
+   font-size: 14px;
+   line-height: 16px;
+
+   color: #000000;
+
+   opacity: 0.3;
+
+   transition: opacity 0.2s;
+
+   &:hover,&:focus {
+      opacity: 0.6;
    }
 `;
 

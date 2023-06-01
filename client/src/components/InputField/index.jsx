@@ -8,7 +8,12 @@ const InputField = ({ ...props }) => {
 
    useEffect(() => {
       setTextError(props.error);
+      if (props.value) setTextInput(props.value);
    }, [props.error]);
+
+   useEffect(() => {
+      if (props.value) setTextInput(props.value);
+   }, [props.value]);
 
    // обработка изменений поля ввода
    const handleOnChange = (e) => {

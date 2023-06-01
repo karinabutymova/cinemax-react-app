@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import PrimaryButton from "../../components/PrimaryButton";
 import iconSuccess from "../../assets/images/Icons/success.svg";
 
-// TODO: ограничить доступ к этой странице
 const EmailSend = () => {
    const navigate = useNavigate();
 

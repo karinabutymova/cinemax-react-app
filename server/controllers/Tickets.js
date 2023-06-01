@@ -1,6 +1,7 @@
 import Tickets from "../models/ticketsModel.js";
 import db from "../config/database.js";
 import Seats from "../models/seatsModel.js";
+import Order from "../models/orderModel.js";
 
 export const GetUnavailableSeats = async (req, res) => {
    let { showHall } = req.query;
@@ -13,6 +14,37 @@ export const GetUnavailableSeats = async (req, res) => {
             WHERE tickets.film_show_id = ${showHall}`
       );
       res.json(unavailableSeats);
+
+   } catch (error) {
+      console.log(error);
+   }
+}
+export const ReturnUserTicket = async (req, res) => {
+   let { order_number } = req.query;
+   console.log(order_number)
+   try {
+      const response = await Order.findAll({
+         where: {
+            order_number: order_number
+         }
+      });
+
+      let tickets = [];
+      response.forEach(element => {
+         console.log(element.dataValues.ticket_id)
+         tickets.push(element.dataValues.ticket_id)
+      });
+
+      console.log(tickets)
+
+      await Tickets.destroy({
+         where: {
+            id: tickets
+         }
+      });
+      res.json({
+         "message": "Билет удален"
+      });
 
    } catch (error) {
       console.log(error);

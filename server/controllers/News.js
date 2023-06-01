@@ -101,6 +101,24 @@ export const AddNews = async (req, res) => {
    }
 }
 
+export const EditNews = async (req, res) => {
+   try {
+      const response = await News.update({
+         news_title: req.body.newNews.news_title,
+         news_body: req.body.newNews.news_body,
+         news_template: req.body.newNews.news_template,
+         news_images: req.body.newNews.news_images
+      }, {
+         where: {
+            id: req.body.newsId
+         }
+      });
+      res.json(response);
+   } catch (error) {
+      console.log(error);
+   }
+}
+
 export const DeleteNewsById = async (req, res) => {
    try {
       await News.destroy({

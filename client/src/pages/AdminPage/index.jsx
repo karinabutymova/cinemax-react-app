@@ -15,6 +15,7 @@ import TableFilmShows from '../../components/TableFilmShows';
 import EditUserForm from '../../components/EditUserForm';
 import TableNews from '../../components/TableNews';
 import AddNewsForm from '../../components/AddNewsForm';
+import EditNewsForm from '../../components/EditNewsForm';
 
 
 const AdminPage = () => {
@@ -465,7 +466,20 @@ const AdminPage = () => {
                   </Col>
                </Row>
             }
-            {(activeTab === 'news' && !isLoading && news.length > 0) &&
+            {(activeTab === 'news' && searchParams.get('editNews') > 0 && !isLoading && userId > 0) &&
+
+               <>
+                  <Row>
+                     <Col col="12">
+                        <Styled.Title>Редактирование новости</Styled.Title>
+                     </Col>
+                  </Row>
+                  <Row>
+                     <EditNewsForm news={searchParams.get('editNews')} getAllNews={getAllNews} />
+                  </Row>
+               </>
+            }
+            {(activeTab === 'news' && !searchParams.get('editNews') && !isLoading && news.length > 0) &&
                <>
                   {(news.length > 0 && !isAddNews) &&
                      <>
@@ -481,7 +495,7 @@ const AdminPage = () => {
                         </Row>
                      </>
                   }
-                  {isAddNews &&
+                  {(isAddNews && !searchParams.get('editNews')) &&
                      <>
                         <Row>
                            <Col col="12">

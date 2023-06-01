@@ -3,7 +3,7 @@ import * as Styled from './styled';
 import { useNavigate } from 'react-router-dom';
 import QRCodeCanvas from 'qrcode.react';
 
-const Ticket = ({ ticket }) => {
+const Ticket = ({ ticket, isOver }) => {
    const navigate = useNavigate();
 
    const [date, setDate] = useState('');
@@ -29,47 +29,50 @@ const Ticket = ({ ticket }) => {
 
    return (
       <>
-         <Styled.ShowTicketsConatainer>
-            <Styled.SingleTicketContainer>
+         <Styled.ShowTicketsConatainer isOver={isOver}>
+            <Styled.SingleTicketContainer isOver={isOver}>
                <Styled.PosterContainer>
                   <Styled.PosterLink>
-                     <Styled.ImgLink src={require(`../../assets/images/Posters/${ticket.photo_path}`)} />
+                     {isOver && <Styled.IsOverMark>Событие прошло</Styled.IsOverMark>}
+                     <Styled.ImgLink isOver={isOver} src={require(`../../assets/images/Posters/${ticket.photo_path}`)} />
                   </Styled.PosterLink>
                </Styled.PosterContainer>
                <Styled.FilmInfoDiv>
-                  <Styled.FilmTitle onClick={() => goToPage(`/film/${ticket.film_id}`)}>{ticket.film_title}</Styled.FilmTitle>
+                  <Styled.FilmTitle isOver={isOver} onClick={() => goToPage(`/film/${ticket.film_id}`)}>{ticket.film_title}</Styled.FilmTitle>
                   <Styled.FlexDiv>
                      <Styled.OptionDiv>
                         <Styled.OptionTitle>Дата</Styled.OptionTitle>
-                        <Styled.OptionValue>{date}</Styled.OptionValue>
+                        <Styled.OptionValue isOver={isOver}>{date}</Styled.OptionValue>
                      </Styled.OptionDiv>
                      <Styled.OptionDiv>
                         <Styled.OptionTitle>Время</Styled.OptionTitle>
-                        <Styled.OptionValue>{time}</Styled.OptionValue>
+                        <Styled.OptionValue isOver={isOver}>{time}</Styled.OptionValue>
                      </Styled.OptionDiv>
                   </Styled.FlexDiv>
                   <Styled.FlexDiv>
                      <Styled.OptionDiv>
                         <Styled.OptionTitle>Зал</Styled.OptionTitle>
-                        <Styled.OptionValue>{ticket.hall_title}</Styled.OptionValue>
+                        <Styled.OptionValue isOver={isOver}>{ticket.hall_title}</Styled.OptionValue>
                      </Styled.OptionDiv>
                      <Styled.OptionDiv>
                         <Styled.OptionTitle>Место</Styled.OptionTitle>
-                        <Styled.OptionValue>{ticket.row_number} ряд, {ticket.seat_number} место</Styled.OptionValue>
+                        <Styled.OptionValue isOver={isOver}>{ticket.row_number} ряд, {ticket.seat_number} место</Styled.OptionValue>
                      </Styled.OptionDiv>
                   </Styled.FlexDiv>
                   <Styled.FlexDiv>
                      <Styled.OptionDiv>
                         <Styled.OptionTitle>Стоимость</Styled.OptionTitle>
-                        <Styled.OptionValue>
+                        <Styled.OptionValue isOver={isOver}>
                            {(ticket.price % 1) === 0 ? ticket.price.toFixed(1) : ticket.price.toFixed(2)} BYN
                         </Styled.OptionValue>
                      </Styled.OptionDiv>
                   </Styled.FlexDiv>
                </Styled.FilmInfoDiv>
-               <Styled.QRContainer>
-                  <QRCodeCanvas value={JSON.stringify(ticket)} />
-               </Styled.QRContainer>
+               {!isOver &&
+                  <Styled.QRContainer>
+                     <QRCodeCanvas value={JSON.stringify(ticket)} />
+                  </Styled.QRContainer>
+               }
             </Styled.SingleTicketContainer>
          </Styled.ShowTicketsConatainer>
       </>

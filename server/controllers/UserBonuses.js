@@ -63,3 +63,21 @@ export const SetUserBonus = async (req, res) => {
       console.log(error);
    }
 }
+
+export const ReturnBonus = async (req, res) => {
+   let { order_number } = req.query;
+
+   try {
+      await UserBonuses.destroy({
+         where: {
+            order_number: order_number
+         }
+      });
+      res.json({
+         "message": "Бонусы удалены"
+      });
+
+   } catch (error) {
+      console.log(error);
+   }
+}

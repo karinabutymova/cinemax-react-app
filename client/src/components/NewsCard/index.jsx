@@ -24,7 +24,6 @@ const NewsCard = ({ news }) => {
          setImagePath(null);
       }
 
-
       let options = { year: 'numeric', month: 'long', day: 'numeric' };
       let date = new Date(news.created_at);
       setCreatedDate(date.toLocaleDateString("ru", options).replace(/г.$/, ''));

@@ -17,7 +17,7 @@ export const ShowTicketsConatainer = styled.div`
 
    margin-top: -50px;
 
-   background: #E7E7E7;
+   background: ${props => props.isOver ? '#353439' : '#E7E7E7'};
    border-radius: 16px;
 
    @media (max-width: 992px) {
@@ -32,8 +32,11 @@ export const ShowTicketsConatainer = styled.div`
 export const SingleTicketContainer = styled.div`
    display: flex;
    gap: 24px;
+   min-width: 70%;
 
-   background: #FFFFFF;
+   justify-content: center;
+
+   background: ${props => props.isOver ? '#424242' : '#FFFFFF'};
    border-radius: 16px;
    padding: 32px;
 
@@ -65,6 +68,8 @@ export const ImgLink = styled.img`
    object-fit: cover;
    width: 100%;
    height: 288px;
+  
+   opacity: ${props => props.isOver ? '0.4' : '1'};
 `;
 
 export const FlexDiv = styled.div`
@@ -76,12 +81,16 @@ export const FilmInfoDiv = styled.div`
    display: flex;
    flex-direction: column;
 
+   width: 50%;
+
    gap: 24px;
 `;
 
 export const OptionTitle = styled(OTitle)` `;
 
-export const OptionValue = styled(OValue)``;
+export const OptionValue = styled(OValue)`
+   /* color: ${props => props.isOver ? '#FFFFFF' : '#2D2B35'} !important; */
+`;
 
 export const OptionDiv = styled(ODiv)``;
 
@@ -89,4 +98,22 @@ export const QRContainer = styled.div`
    display: flex;
    justify-content: center;
    align-items: center;
+`;
+
+export const IsOverMark = styled.p`
+   position: absolute;
+   top: 45%;
+   left: 15%;
+
+   font-style: normal;
+   font-weight: 700;
+   font-size: 20px;
+   line-height: 23px;
+   font-feature-settings: 'pnum' on, 'lnum' on;
+
+   color: #FFFFFF;
+
+   opacity: 1;
+
+   transform: rotate(-30deg);
 `;

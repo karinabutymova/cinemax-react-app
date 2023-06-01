@@ -29,9 +29,9 @@ const Footer = () => {
                         <Styled.SecondMainLink to="/search">Поиск</Styled.SecondMainLink>
                         <Styled.LinkContainer>
                            <Styled.MainLink to="/help">Помощь</Styled.MainLink>
-                           <Styled.SecondLink>Бонусная программа</Styled.SecondLink>
-                           <Styled.SecondLink>Возврат билетов</Styled.SecondLink>
-                           <Styled.SecondLink>Частые вопросы</Styled.SecondLink>
+                           <Styled.SecondLink to="/help#bonus">Бонусная программа</Styled.SecondLink>
+                           <Styled.SecondLink to="/help#tickets">Возврат билетов</Styled.SecondLink>
+                           <Styled.SecondLink to="/help#questions">Частые вопросы</Styled.SecondLink>
                         </Styled.LinkContainer>
                         <Styled.LinkContainer>
                            <Styled.ContactLink>Контакты</Styled.ContactLink>

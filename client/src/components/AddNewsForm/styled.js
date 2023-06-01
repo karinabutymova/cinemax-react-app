@@ -44,3 +44,33 @@ export const TemplateBtn = styled.button`
    font-size: 14px;
    font-weight: 500;
 `;
+
+export const ImgContainer = styled.div`
+   display: flex;
+   gap: 8px;
+
+   @media (max-width: 576px) {
+      flex-wrap: wrap;
+   }
+
+   background-color: transparent;
+`;
+
+export const ImgDiv = styled.div`
+   width: 200px;
+   height: 200px;
+
+   background-repeat:no-repeat;
+   background-position: center center;
+   background-size: contain;
+
+   & p{
+      text-align: right;
+      padding-right: 8px;
+
+      font-size: 32px;
+
+      cursor: pointer;
+   }
+`;
+

@@ -31,7 +31,7 @@ export const ModalContent = styled.p`
 
    text-align: center;
 
-   margin-bottom: 56px;
+   margin-bottom: 40px;
 `;
 export const ModalBtnFlex = styled(ModalButtons)``;
 

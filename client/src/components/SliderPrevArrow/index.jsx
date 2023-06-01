@@ -8,6 +8,7 @@ const SliderPrevArrow = (props) => {
 
    useLayoutEffect(() => {
       if (~window.location.href.indexOf("news")) setTop('50%');
+      if (~window.location.href.indexOf("about")) setTop('44%');
    }, [])
 
    return (

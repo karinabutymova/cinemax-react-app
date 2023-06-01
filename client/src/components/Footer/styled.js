@@ -1,8 +1,13 @@
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
+import { HashLink as Link } from 'react-router-hash-link';
 
 export const Footer = styled.div`
    margin-top: 180px;
+   background: transparent;
+   & *{
+      background: transparent;
+   }
 `;
 
 export const Logo = styled.h4`

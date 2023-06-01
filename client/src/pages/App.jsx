@@ -15,6 +15,8 @@ import AdminPage from './AdminPage';
 import MainPage from "./MainPage";
 import NewsPage from './NewsPage';
 import SingleNewsPage from './SingleNewsPage';
+import HelpPage from './HelpPage';
+import AboutPage from './AboutPage';
 
 const App = () => {
 
@@ -35,6 +37,8 @@ const App = () => {
                <Route exact path="/adminPanel" element={<AdminPage />} />
                <Route exact path="/emailsend" element={<EmailSend />} />
                <Route exact path="/news" element={<NewsPage />} />
+               <Route exact path="/help" element={<HelpPage />} />
+               <Route exact path="/about" element={<AboutPage />} />
                <Route exact path="/news/:newsId" element={<SingleNewsPage />} />
                <Route path="*" element={<Page404 />} status={404} />
             </Routes>

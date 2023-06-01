@@ -4,6 +4,43 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { checkPassword } from "./Users.js";
 
+export const SendFeedBackEmail = async (req, res) => {
+   // Валидация email
+   const { name, email, mess } = req.body;
+
+   try {
+
+      const transporter = nodemailer.createTransport({
+         service: 'gmail',
+         auth: {
+            user: `${process.env.EMAIL_ADDRESS}`,
+            pass: `${process.env.EMAIL_PASSWORD}`,
+         },
+      });
+
+      const mailOptions = {
+         from: 'Cinemax 🎞 <cinemax@gmail.com>',
+         to: `karina.butymova11@gmail.com`,
+         subject: 'Обратная свять от пользователя',
+         text:
+            `Пользователь: ${name}\n\n`
+            + `Email для ответа: ${email}\n\n`
+            + `Текст сообщения: ${mess}\n`,
+      };
+
+
+      transporter.sendMail(mailOptions, (err, response) => {
+         if (err) {
+            console.error('there was an error: ', err);
+         } else {
+            res.status(200).json({ success: 'Сообщение отправлено' });
+         }
+      });
+   } catch (error) {
+      console.log(error);
+   }
+}
+
 export const SendEmail = async (req, res) => {
    // Валидация email
    const { email } = req.body;
@@ -43,7 +80,7 @@ export const SendEmail = async (req, res) => {
          subject: 'Сброс пароля',
          text:
             'Вы получаете это сообщение, потому что вы (или кто-то другой) запросили сброс пароля для вашей учетной записи.\n\n'
-            + 'Пожалуйста, нажмите на следующую ссылку или вставьте ее в свой браузер, чтобы завершить процесс::\n\n'
+            + 'Пожалуйста, нажмите на следующую ссылку или вставьте ее в свой браузер, чтобы завершить процесс:\n\n'
             + `http://localhost:3000/resetPassword/${refreshToken}\n\n`
             + 'Если вы не запрашивали этого, пожалуйста, проигнорируйте это письмо, и ваш пароль останется неизменным.\n',
       };

@@ -20,11 +20,8 @@ import EditProfile from '../../components/EditProfile';
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 
-// TODO: редактирование профиля (и удаление!)
 // TODO: история бонусов
-// TODO: модальное окно (уверены что ходите вернуть билеты) 
-// TODO: пагинация для билетов
-// TODO: состояние для билетов когда событие прошло (или удалено) + удаление таких билетов
+// TODO: ???состояние для билетов когда событие или удалено
 
 const ProfilePage = () => {
    const navigate = useNavigate();
@@ -46,6 +43,9 @@ const ProfilePage = () => {
    const [reviewCount, setReviewCount] = useState(4);
    const [wishlistPagination, setWishlistPagination] = useState(false);
    const [reviewPagination, setReviewPagination] = useState(false);
+
+   const [ticketCount, setTicketCount] = useState(4);
+   const [ticketPagination, setTicketPagination] = useState(false);
 
 
    useEffect(() => {
@@ -89,7 +89,7 @@ const ProfilePage = () => {
          },
             { withCredentials: true }
          );
-         console.log(response.data);
+         if (response.data.length > 4 && ticketCount < response.data.length) setTicketPagination(true);
          setTicketsCount(response.data);
       } catch (error) {
          if (error.response) {
@@ -337,6 +337,11 @@ const ProfilePage = () => {
       if (reviews.length <= reviewCount + 4) setReviewPagination(false);
    }
 
+   const showMoreTickets = () => {
+      setTicketCount(ticketCount + 4);
+      if (ticketsCount.length <= ticketCount + 4) setTicketPagination(false);
+   }
+
    const editProfile = async () => {
       setIsLoading(true);
       searchParams.set('filter', 'editProfile');
@@ -452,8 +457,16 @@ const ProfilePage = () => {
                   }
                   {ticketsCount.length > 0 &&
                      <>
-                        {ticketsCount.map((tickets) => <UserTickets key={tickets.id} tickets={tickets} />)}
+                        {ticketsCount.length > 0 && ticketsCount.map((tickets, index) => {
+                           return index < ticketCount ? <UserTickets key={tickets.id} tickets={tickets} /> : false
+                        })}
                      </>
+                  }
+                  {(!isLoading && ticketsCount.length > 4 && ticketPagination) &&
+                     <Row Row justifyContent='center'>
+                        <Styled.PaginationBtn onClick={showMoreTickets}> Показать больше</Styled.PaginationBtn>
+                     </Row>
+
                   }
                </>
             }

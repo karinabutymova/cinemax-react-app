@@ -49,7 +49,6 @@ const SingleNewsPage = () => {
          console.log(response.data);
 
          document.title = response.data.news_title + ' - Cinemax';
-         // DateFormat(response.data, setToDateRent);
       } catch (error) {
          if (error.response) {
             console.log(error.response.data);
