@@ -12,7 +12,10 @@ const InputField = ({ ...props }) => {
    }, [props.error]);
 
    useEffect(() => {
-      if (props.value) setTextInput(props.value);
+      if (props.value) {
+         setTextInput(props.value);
+         props.onChange(props.value);
+      }
    }, [props.value]);
 
    // обработка изменений поля ввода
@@ -45,7 +48,8 @@ const InputField = ({ ...props }) => {
                   required
                   max={props.dateMax}
                   min={props.dateMin}
-                  onChange={handleOnChange} />
+                  onChange={handleOnChange}
+               />
             }
 
             {(() => {
@@ -60,6 +64,8 @@ const InputField = ({ ...props }) => {
 
             {textError && <ErrorText>{textError}</ErrorText>}
          </InputContainer>
+
+
       </>
    );
 

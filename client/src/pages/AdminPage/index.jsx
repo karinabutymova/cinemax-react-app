@@ -16,6 +16,8 @@ import EditUserForm from '../../components/EditUserForm';
 import TableNews from '../../components/TableNews';
 import AddNewsForm from '../../components/AddNewsForm';
 import EditNewsForm from '../../components/EditNewsForm';
+import EditFilmForm from '../../components/EditFilmForm';
+import EditFilmShowForm from '../../components/EditFilmShowForm';
 
 
 const AdminPage = () => {
@@ -61,6 +63,12 @@ const AdminPage = () => {
       setIsAddFilmShow(false);
    }, [activeTab, userId]);
 
+
+   useEffect(() => {
+      if (!isAddFilmShow) {
+         setFilter();
+      }
+   }, [isAddFilmShow]);
 
    useEffect(() => {
       if (deleteUser) {
@@ -378,7 +386,20 @@ const AdminPage = () => {
                   </Col>
                </Row>
             }
-            {(activeTab === 'films' && !isLoading && films.length > 0) &&
+
+            {(activeTab === 'films' && searchParams.get('editFilm') > 0 && !isLoading && userId > 0) &&
+               <>
+                  <Row>
+                     <Col col="12">
+                        <Styled.Title>Редактирование фильма</Styled.Title>
+                     </Col>
+                  </Row>
+                  <Row>
+                     <EditFilmForm filmId={searchParams.get('editFilm')} setIsAddFilm={setIsAddFilm} setFilter={setFilter} />
+                  </Row>
+               </>
+            }
+            {(activeTab === 'films' && !isLoading && films.length > 0 && !searchParams.get('editFilm')) &&
                <>
                   {(films.length > 0 && !isAddFilm) &&
                      <>
@@ -426,7 +447,7 @@ const AdminPage = () => {
                   </Col>
                </Row>
             }
-            {(activeTab === 'filmShows' && !isLoading && filmShows.length > 0) &&
+            {(activeTab === 'filmShows' && !searchParams.get('editFilmShow') > 0 && !isLoading && filmShows.length > 0) &&
                <>
                   {(filmShows.length > 0 && !isAddFilmShow) &&
                      <>
@@ -451,11 +472,24 @@ const AdminPage = () => {
                            </Col>
                         </Row>
                         <Row>
-                           <AddFilmShowForm setIsAddFilmShow={setIsAddFilmShow} />
+                           <AddFilmShowForm setIsAddFilmShow={setIsAddFilmShow} setFilter={setFilter} />
                         </Row>
                      </>
                   }
 
+               </>
+            }
+            {(activeTab === 'filmShows' && searchParams.get('editFilmShow') > 0 && !isLoading && userId > 0) &&
+
+               <>
+                  <Row>
+                     <Col col="12">
+                        <Styled.Title>Редактирование сеанса</Styled.Title>
+                     </Col>
+                  </Row>
+                  <Row>
+                     <EditFilmShowForm showId={searchParams.get('editFilmShow')} setFilter={setFilter} />
+                  </Row>
                </>
             }
 
@@ -475,7 +509,7 @@ const AdminPage = () => {
                      </Col>
                   </Row>
                   <Row>
-                     <EditNewsForm news={searchParams.get('editNews')} getAllNews={getAllNews} />
+                     <EditNewsForm news={searchParams.get('editNews')} setFilter={setFilter} />
                   </Row>
                </>
             }

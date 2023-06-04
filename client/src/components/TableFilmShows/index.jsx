@@ -20,7 +20,7 @@ const TableFilmShows = ({ data, setDeleteFilmShow }) => {
       setSearchParams(searchParams);
    }
 
-   const timeOptions = { hour: 'numeric', minute: 'numeric', month: 'long', day: 'numeric' };
+   const timeOptions = { hour: 'numeric', minute: 'numeric', month: 'long', day: 'numeric', year: 'numeric' };
    const columns = useMemo(
       () => [
 

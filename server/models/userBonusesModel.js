@@ -21,6 +21,9 @@ const UserBonuses = db.define('user_bonuses', {
    },
    version: {
       type: DataTypes.INTEGER(10)
+   },
+   date_time: {
+      type: DataTypes.DATE
    }
 }, {
    freezeTableName: true,

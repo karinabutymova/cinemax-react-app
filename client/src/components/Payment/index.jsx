@@ -154,41 +154,41 @@ const Payment = ({ showHall, selectedSeats, step, userId, userName }) => {
 
    return (
       <>
+         <Popup
+            open={open}
+            modal
+            nested
+            onClose={() => { if (~window.location.href.indexOf("film")) window.location.reload() }}
+         >
+            {close => (
+               <Styled.ModalContainer>
+                  <Styled.ModalHeader>Спасибо за бронирование!</Styled.ModalHeader>
+                  <Styled.ModalContent>Информация о&nbsp;купленных билетах находится в&nbsp;профиле</Styled.ModalContent>
+                  <Styled.ModalBtnFlex>
+                     <Styled.SecondaryButton
+                        onClick={() => {
+                           goToPage('/');
+                           close();
+                        }}>
+                        На главную
+                     </Styled.SecondaryButton>
+                     <Styled.PrimaryButton active={true}
+                        onClick={() => {
+                           goToPage('/profile');
+                           close();
+                        }}>
+                        Перейти в профиль
+                     </Styled.PrimaryButton>
+                  </Styled.ModalBtnFlex>
+               </Styled.ModalContainer>
+            )}
+         </Popup>
          <Row justifyContent='start' mdJustifyContent='center'>
             <Col xl="6" lg="6" md="8" xs="12">
                {userId > 0 &&
                   <Styled.BonusDiv>
                      {userBonuses > 0 &&
                         <>
-                           <Popup
-                              open={open}
-                              modal
-                              nested
-                              onClose={() => { if (~window.location.href.indexOf("film")) window.location.reload() }}
-                           >
-                              {close => (
-                                 <Styled.ModalContainer>
-                                    <Styled.ModalHeader>Спасибо за бронирование!</Styled.ModalHeader>
-                                    <Styled.ModalContent>Информация о&nbsp;купленных билетах находится в&nbsp;профиле</Styled.ModalContent>
-                                    <Styled.ModalBtnFlex>
-                                       <Styled.SecondaryButton
-                                          onClick={() => {
-                                             goToPage('/');
-                                             close();
-                                          }}>
-                                          На главную
-                                       </Styled.SecondaryButton>
-                                       <Styled.PrimaryButton active={true}
-                                          onClick={() => {
-                                             goToPage('/profile');
-                                             close();
-                                          }}>
-                                          Перейти в профиль
-                                       </Styled.PrimaryButton>
-                                    </Styled.ModalBtnFlex>
-                                 </Styled.ModalContainer>
-                              )}
-                           </Popup>
                            <Styled.BonusTitle>Оплата бонусами</Styled.BonusTitle>
                            <Styled.BonusCountP>Доступное количество:
                               <Styled.BonusCount>{userBonuses}</Styled.BonusCount>

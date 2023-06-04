@@ -7,21 +7,22 @@ import InputField from '../InputField';
 import Select from 'react-select';
 import { Store } from 'react-notifications-component';
 
-const AddFilmShowForm = ({ setIsAddFilmShow, setFilter }) => {
+const EditFilmShowForm = ({ showId, setFilter }) => {
 
    const dateOption = { month: '2-digit' };
    const dateMin = new Date().getFullYear() + '-' + new Date().toLocaleDateString('ru', dateOption) + '-' + new Date().getDate();
 
    const [film, setFilm] = useState(null);
-   const [filmsOptions, setFilmsOptions] = useState([]);
    const [hallsOptions, setHallsOptions] = useState([]);
    const [hall, setHall] = useState('');
    const [date, setDate] = useState('');
    const [time, setTime] = useState('');
    const [busyTime, setBusyTime] = useState('');
-   const [price, setPrice] = useState('');
    const [endTime, setEndTime] = useState('');
    const [intervals, setIntervals] = useState([]);
+
+   const [oldDate, setOldDate] = useState('');
+   const [oldTime, setOldTime] = useState('');
 
    const [errors, setErrors] = useState({});
 
@@ -43,16 +44,37 @@ const AddFilmShowForm = ({ setIsAddFilmShow, setFilter }) => {
          onScreen: true
       },
       onRemoval: (id, removedBy) => {
-         setIsAddFilmShow(false);
          setFilter();
          goBack('/adminPanel?filter=filmShows');
       }
    });
 
    useLayoutEffect(() => {
-      getFilms();
       getHalls();
+      getFilmsShowsById();
    }, [])
+
+   useEffect(() => {
+      if (film) {
+         let dateTime = new Date(new Date(film.film_datetime).getTime() - 3 * 60 * 60 * 1000);
+         let month = dateTime.getMonth() + 1;
+         month = month <= 9 ? '0' + month : month;
+         setOldDate(dateTime.getDate() + '.' + month + '.' + dateTime.getFullYear());
+
+         let hour = dateTime.getHours();
+         let min = dateTime.getMinutes();
+         hour = hour < 10 ? '0' + hour : hour;
+         min = min < 10 ? '0' + min : min;
+
+         let showEnd = new Date(new Date().setHours(hour, min, 0, 0)).getTime() + (film.film_runtime + 20) * 60000;
+         let ms = 1000 * 60 * 5;
+         let roundedDate = new Date(Math.ceil(new Date(showEnd).getTime() / ms) * ms);
+         let endHours = roundedDate.getHours();
+         let endMinutes = roundedDate.getMinutes();
+         endMinutes = endMinutes < 10 ? '0' + endMinutes : endMinutes;
+         setOldTime(hour + ':' + min + ' - ' + endHours + ':' + endMinutes)
+      }
+   }, [film])
 
    useEffect(() => {
       if (date && hall) {
@@ -60,7 +82,6 @@ const AddFilmShowForm = ({ setIsAddFilmShow, setFilter }) => {
          setBusyTime([]);
          setIntervals([]);
       }
-
    }, [hall, date])
 
    useEffect(() => {
@@ -77,7 +98,7 @@ const AddFilmShowForm = ({ setIsAddFilmShow, setFilter }) => {
          hour = hour[0] === '0' ? hour[1] : hour;
          ti = ti[0] === '0' ? ti[1] : ti;
 
-         let showEnd = new Date(new Date().setHours(hour, ti, 0, 0)).getTime() + (film.runtime + 20) * 60000;
+         let showEnd = new Date(new Date().setHours(hour, ti, 0, 0)).getTime() + (film.film_runtime + 20) * 60000;
          let ms = 1000 * 60 * 5;
          let roundedDate = new Date(Math.ceil(new Date(showEnd).getTime() / ms) * ms);
          let endHours = roundedDate.getHours();
@@ -88,31 +109,19 @@ const AddFilmShowForm = ({ setIsAddFilmShow, setFilter }) => {
 
    }, [time, film])
 
-
-   const getFilms = async () => {
+   const getFilmsShowsById = async () => {
       try {
-         const response = await axios.get('http://localhost:3001/getFilmTitles', {
-
+         const response = await axios.get('http://localhost:3001/getFilmsShowsById', {
+            params: {
+               showId: showId
+            }
          },
             { withCredentials: true }
          );
 
          if (response.data) {
-            let films = [];
-            response.data.forEach(film => {
-               films.push({
-                  value: film.id,
-                  label: film.film_title,
-                  fromRent: film.from_rent_date,
-                  toRent: film.to_rent_date,
-                  runtime: film.film_runtime
-               })
-            });
-            setFilmsOptions(films);
-         } else {
-            setFilmsOptions([]);
+            setFilm(response.data[0]);
          }
-
       } catch (error) {
          if (error.response) {
             console.log(error.response.data);
@@ -137,10 +146,7 @@ const AddFilmShowForm = ({ setIsAddFilmShow, setFilter }) => {
                })
             });
             setHallsOptions(halls);
-         } else {
-            setFilmsOptions([]);
          }
-
       } catch (error) {
          if (error.response) {
             console.log(error.response.data);
@@ -160,22 +166,27 @@ const AddFilmShowForm = ({ setIsAddFilmShow, setFilter }) => {
          );
 
          if (response.data) {
-            setBusyTime(response.data);
+            setBusyTime(response.data.filter((time) => {
+               return time.film_datetime !== film.film_datetime
+            }))
 
             let inter = [];
             response.data.map((time) => {
-               let startTime = new Date(new Date(time.film_datetime).getTime() - 3 * 60 * 60 * 1000);
-               let startHours = startTime.getHours();
-               let startMinutes = startTime.getMinutes();
-               startMinutes = startMinutes < 10 ? '0' + startMinutes : startMinutes;
+               if (time.film_datetime !== film.film_datetime) {
+                  let startTime = new Date(new Date(time.film_datetime).getTime() - 3 * 60 * 60 * 1000);
+                  let startHours = startTime.getHours();
+                  let startMinutes = startTime.getMinutes();
+                  startMinutes = startMinutes < 10 ? '0' + startMinutes : startMinutes;
 
-               let endTime = new Date(new Date(time.film_datetime).getTime() - 3 * 60 * 60 * 1000 + (time.film_runtime + 20) * 60000);
-               let ms = 1000 * 60 * 5;
-               let roundedDate = new Date(Math.ceil(endTime.getTime() / ms) * ms);
-               let endHours = roundedDate.getHours();
-               let endMinutes = roundedDate.getMinutes();
-               endMinutes = endMinutes < 10 ? '0' + endMinutes : endMinutes;
-               inter.push({ start: `${startHours}:${startMinutes}`, end: `${endHours}:${endMinutes}` })
+                  let endTime = new Date(new Date(time.film_datetime).getTime() - 3 * 60 * 60 * 1000 + (time.film_runtime + 20) * 60000);
+                  let ms = 1000 * 60 * 5;
+                  let roundedDate = new Date(Math.ceil(endTime.getTime() / ms) * ms);
+                  let endHours = roundedDate.getHours();
+                  let endMinutes = roundedDate.getMinutes();
+                  endMinutes = endMinutes < 10 ? '0' + endMinutes : endMinutes;
+
+                  inter.push({ start: `${startHours}:${startMinutes}`, end: `${endHours}:${endMinutes}` })
+               }
             })
 
             if (inter.length > 0) setIntervals(inter);
@@ -195,10 +206,8 @@ const AddFilmShowForm = ({ setIsAddFilmShow, setFilter }) => {
       setErrors({});
       let allErrors = {};
 
-      if (!film) allErrors.film = 'Не выбран фильм';
-      if (!hall) allErrors.hall = 'Не выбран зал';
+      if (!hall.value) allErrors.hall = 'Не выбран зал';
       if (time.split(':')[1][1] !== '0' && time.split(':')[1][1] !== '5') allErrors.time = 'Значение минут должно быть кратно 5';
-      if (price <= 0) allErrors.price = 'Цена не может быть меньше или равна нулю';
 
       // проверка нового времени
       if (intervals.length > 0) {
@@ -248,33 +257,21 @@ const AddFilmShowForm = ({ setIsAddFilmShow, setFilter }) => {
          ti = ti[0] === '0' ? ti[1] : ti;
 
          let startDateCurrent = new Date(new Date(date).setHours(hour, ti, 0, 0));
-         console.log(startDateCurrent)
 
          try {
-            const response = await axios.post('http://localhost:3001/addFilmShow', {
+            const response = await axios.post('http://localhost:3001/editFilmShow', {
                hall: hall.value,
-               film: film.value,
                date: startDateCurrent,
-               price: price
+               showId: showId
             },
                { withCredentials: true }
             );
-            notification('Сеанс успешно добавлен');
+            notification('Сеанс успешно изменён');
          } catch (error) {
             if (error.response) {
                console.log(error.response.data);
             }
          }
-      }
-   }
-
-   const onChangeFilm = (e) => {
-      if (e) {
-         setFilm(e);
-
-         console.log(e)
-      } else {
-         setFilm(null);
       }
    }
 
@@ -294,39 +291,21 @@ const AddFilmShowForm = ({ setIsAddFilmShow, setFilter }) => {
    return (
       <>
          <Col col="12">
-            <Styled.Form onSubmit={addFilmShowForm}>
+            {film &&
+               <Styled.Form onSubmit={addFilmShowForm}>
+                  <Styled.Label>Фильм:</Styled.Label>
+                  <Styled.Label style={{ fontWeight: '600', fontSize: '18px' }}>{film.film_title}</Styled.Label>
+                  <Styled.Label>Цена:</Styled.Label>
+                  <Styled.Label style={{ fontWeight: '600', fontSize: '18px' }}>{film.price} BYN</Styled.Label>
+                  <Styled.Label>Зал:</Styled.Label>
+                  <Styled.Label style={{ fontWeight: '600', fontSize: '18px' }}>{film.hall_title}</Styled.Label>
+                  <Styled.Label>Дата:</Styled.Label>
+                  <Styled.Label style={{ fontWeight: '600', fontSize: '18px' }}>{oldDate}</Styled.Label>
+                  <Styled.Label>Время:</Styled.Label>
+                  {oldTime && <Styled.Label style={{ fontWeight: '600', fontSize: '18px' }}>{oldTime}</Styled.Label>}
 
-               <Styled.SelectContainer>
-                  <Styled.Label>Фильмы</Styled.Label>
-                  <Select
-                     name="films"
-                     noOptionsMessage={({ inputValue }) => "Ничего не найдено"}
-                     placeholder="Выберите фильм"
-                     isClearable="true"
-                     isSearchable="false"
-                     options={filmsOptions}
-                     onChange={onChangeFilm}
-                     styles={Styled.SelectStyle} />
-                  {(errors.film && errors.film.length > 0) && <Styled.ErrorTextGenres>{errors.film}</Styled.ErrorTextGenres>}
-                  {(film && film.runtime > 0) &&
-                     <Styled.ErrorTextGenres style={{ color: '#000000', opacity: '0.5' }}>
-                        Продолжительность (мин): {film.runtime}
-                     </Styled.ErrorTextGenres>}
-
-               </Styled.SelectContainer>
-
-               {film &&
-                  <InputField
-                     inputType="number"
-                     pattern="\d*"
-                     placeholder="Введите цену"
-                     label="Цена за билет"
-                     onChange={setPrice}
-                     error={errors.price}
-                  />
-               }
-
-               {film &&
+                  <Styled.Label>  </Styled.Label>
+                  <Styled.Label style={{ fontSize: '24px' }}>Изменения:</Styled.Label>
                   <Styled.SelectContainer>
                      <Styled.Label>Зал</Styled.Label>
                      <Select
@@ -341,9 +320,6 @@ const AddFilmShowForm = ({ setIsAddFilmShow, setFilter }) => {
                      {(errors.hall && errors.hall.length > 0) && <Styled.ErrorTextGenres>{errors.hall}</Styled.ErrorTextGenres>}
 
                   </Styled.SelectContainer>
-               }
-
-               {film &&
                   <InputField
                      inputType="date"
                      dateMin={dateMin}
@@ -352,65 +328,66 @@ const AddFilmShowForm = ({ setIsAddFilmShow, setFilter }) => {
                      onChange={setDate}
                      error={errors.date}
                   />
-               }
-               {(busyTime.length > 0 && film) &&
-                  <>
-                     <Styled.BusyTimeDIv>
-                        <Styled.BusyTimeTitle>Занятые промежутки времени:</Styled.BusyTimeTitle>
-                        {busyTime.map((time, index) => {
-                           let startTime = new Date(new Date(time.film_datetime).getTime() - 3 * 60 * 60 * 1000);
-                           let startHours = startTime.getHours();
-                           let startMinutes = startTime.getMinutes();
-                           startMinutes = startMinutes < 10 ? '0' + startMinutes : startMinutes;
+                  {(busyTime.length > 0 && film) &&
+                     <>
+                        <Styled.BusyTimeDIv>
+                           <Styled.BusyTimeTitle>Занятые промежутки времени:</Styled.BusyTimeTitle>
+                           {busyTime.map((time, index) => {
+                              let startTime = new Date(new Date(time.film_datetime).getTime() - 3 * 60 * 60 * 1000);
+                              let startHours = startTime.getHours();
+                              let startMinutes = startTime.getMinutes();
+                              startMinutes = startMinutes < 10 ? '0' + startMinutes : startMinutes;
 
-                           let endTime = new Date(new Date(time.film_datetime).getTime() - 3 * 60 * 60 * 1000 + (time.film_runtime + 20) * 60000);
-                           let ms = 1000 * 60 * 5;
-                           let roundedDate = new Date(Math.ceil(endTime.getTime() / ms) * ms);
-                           let endHours = roundedDate.getHours();
-                           let endMinutes = roundedDate.getMinutes();
-                           endMinutes = endMinutes < 10 ? '0' + endMinutes : endMinutes;
-                           return <Styled.BusyTime key={index}>{startHours}:{startMinutes} - {endHours}:{endMinutes}</Styled.BusyTime>
-                        })}
-                     </Styled.BusyTimeDIv>
-                     <Styled.ErrorTextGenres style={{ color: '#000000', opacity: '0.5' }}>*Время рассчитано с учётом перерыва между сеансами (20 - 25 минут)</Styled.ErrorTextGenres>
-                  </>
-               }
+                              let endTime = new Date(new Date(time.film_datetime).getTime() - 3 * 60 * 60 * 1000 + (time.film_runtime + 20) * 60000);
+                              let ms = 1000 * 60 * 5;
+                              let roundedDate = new Date(Math.ceil(endTime.getTime() / ms) * ms);
+                              let endHours = roundedDate.getHours();
+                              let endMinutes = roundedDate.getMinutes();
+                              endMinutes = endMinutes < 10 ? '0' + endMinutes : endMinutes;
+                              return <Styled.BusyTime key={index}>{startHours}:{startMinutes} - {endHours}:{endMinutes}</Styled.BusyTime>
+                           })}
+                        </Styled.BusyTimeDIv>
+                        <Styled.ErrorTextGenres style={{ color: '#000000', opacity: '0.5' }}>*Время рассчитано с учётом перерыва между сеансами (20 - 25 минут)</Styled.ErrorTextGenres>
+                     </>
+                  }
 
-               {(film && hall && date && !busyTime.length > 0) &&
-                  <>
-                     <Styled.BusyTimeDIv>
-                        <Styled.BusyTimeTitle>В этот день ещё нет сеансов</Styled.BusyTimeTitle>
-                     </Styled.BusyTimeDIv>
+                  {(film && hall && date && !busyTime.length > 0) &&
+                     <>
+                        <Styled.BusyTimeDIv>
+                           <Styled.BusyTimeTitle>В этот день ещё нет сеансов</Styled.BusyTimeTitle>
+                        </Styled.BusyTimeDIv>
 
-                  </>
-               }
+                     </>
+                  }
 
-               {(film && hall && date) &&
-                  <>
+                  {(film && hall && date) &&
+                     <>
 
-                     <InputField
-                        inputType="time"
-                        dateMin={'09:00'}
-                        dateMax={'21:00'}
-                        label="Время начала сеанса"
-                        onChange={changeTime}
-                        error={errors.time}
-                     />
-                     {endTime &&
-                        <Styled.ErrorTextGenres style={{ color: '#000000', opacity: '0.5' }}>Время окончания: {
-                           endTime
+                        <InputField
+                           inputType="time"
+                           dateMin={'09:00'}
+                           dateMax={'21:00'}
+                           label="Время начала сеанса"
+                           onChange={changeTime}
+                           error={errors.time}
+                        />
+                        {endTime &&
+                           <Styled.ErrorTextGenres style={{ color: '#000000', opacity: '0.5' }}>Время окончания: {
+                              endTime
+                           }
+                           </Styled.ErrorTextGenres>
                         }
-                        </Styled.ErrorTextGenres>
-                     }
-                     <Styled.ErrorTextGenres style={{ color: '#000000', opacity: '0.5' }}>*Время начала должно быть между 09:00 и 21:00</Styled.ErrorTextGenres>
-                  </>
-               }
+                        <Styled.ErrorTextGenres style={{ color: '#000000', opacity: '0.5' }}>*Время начала должно быть между 09:00 и 21:00</Styled.ErrorTextGenres>
+                     </>
+                  }
 
-               <Styled.Flex>
-                  <Styled.PrimaryButton type="submit">Сохранить</Styled.PrimaryButton>
-                  <Styled.SecondaryButton onClick={() => setIsAddFilmShow(false)}>Отмена</Styled.SecondaryButton>
-               </Styled.Flex>
-            </Styled.Form>
+                  <Styled.Flex>
+                     <Styled.PrimaryButton type="submit">Сохранить</Styled.PrimaryButton>
+                     <Styled.SecondaryButton onClick={() => goBack('/adminPanel?filter=filmShows')}>Отмена</Styled.SecondaryButton>
+                  </Styled.Flex>
+               </Styled.Form>
+            }
+
          </Col>
 
       </>
@@ -418,4 +395,4 @@ const AddFilmShowForm = ({ setIsAddFilmShow, setFilter }) => {
 
 }
 
-export default AddFilmShowForm;
+export default EditFilmShowForm;

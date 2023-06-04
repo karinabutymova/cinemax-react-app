@@ -84,6 +84,7 @@ export const Label = styled.p`
    z-index: 1;
    pointer-events: none;
    margin-bottom: 16px;
+   font-feature-settings: 'pnum' on, 'lnum' on;
 
    font-weight: 500;
    
@@ -124,6 +125,57 @@ export const TextArea = styled.textarea`
       border: 1px solid #8D1BCD;
    }
 
+`;
+
+export const ActorsInputs = styled.div`
+   background: transparent;
+`;
+
+export const AddActorBtn = styled.button`
+   background-color: transparent;
+   color: #8D1BCD;
+
+   border: 1px solid #8D1BCD;
+   border-radius: 4px;
+   max-width: 200px;
+   width: 100%;
+
+   height: 40px;
+
+   font-size: 14px;
+
+   cursor: pointer;
+
+   transition: all 0.2s;
+
+   &:hover{
+      color: #2D2B35;
+      border: 1px solid #2D2B35;
+   }
+
+margin-bottom: 16px;
+`;
+
+export const ActorInput = styled.input`
+   width: 386px;
+   height: 48px;
+   padding: 16px;
+
+   background-color: #FFFFFF;
+   color: #2D2B35;
+
+   border: 1px solid #BDBDBD;
+   border-radius: 4px;
+
+   font-style: normal;
+   font-weight: 500;
+   font-size: 16px;
+   line-height: 19px;
+   outline: none;
+   transition: all 0.25s;
+   
+   font-feature-settings: 'pnum' on, 'lnum' on;
+   margin-bottom: 8px;
 `;
 
 export const SelectStyle = {
@@ -204,3 +256,25 @@ export const SelectStyle = {
       }
    }),
 }
+
+
+
+export const BusyTimeDIv = styled.div`
+   background: transparent;
+
+margin-bottom: 16px;
+
+   & *{
+      background: transparent;
+      color: #000000;
+   }
+   
+`;
+export const BusyTimeTitle = styled.p`
+   font-weight: 600;
+   margin-bottom: 8px;
+`;
+
+export const BusyTime = styled.p`
+   font-feature-settings: 'pnum' on, 'lnum' on;
+`;

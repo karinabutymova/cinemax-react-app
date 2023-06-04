@@ -9,7 +9,7 @@ import 'react-quill/dist/quill.snow.css';
 import { Store } from 'react-notifications-component';
 
 
-const EditNewsForm = ({ news }) => {
+const EditNewsForm = ({ news, setFilter }) => {
    const navigate = useNavigate();
    const [title, setTitle] = useState('');
    const [body, setBody] = useState('');
@@ -19,7 +19,7 @@ const EditNewsForm = ({ news }) => {
    const [errors, setErrors] = useState({});
 
    const goBack = (link) => {
-      navigate('/adminPanel?filter=news');
+      navigate(link);
       window.scrollTo(0, 0);
    }
 
@@ -39,8 +39,8 @@ const EditNewsForm = ({ news }) => {
          onScreen: true
       },
       onRemoval: (id, removedBy) => {
-         navigate('');
-         window.scrollTo(0, 0);
+         setFilter();
+         goBack('/adminPanel?filter=news');
       }
    });
 

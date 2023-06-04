@@ -21,6 +21,8 @@ const FilmPage = () => {
    const reviewForm = useRef(null);
    const bookingForm = useRef(null);
    const navigate = useNavigate();
+
+   const [imagePath, setImagePath] = useState();
    const [film, setFilm] = useState([]);
    const [filmReviews, setFilmReviews] = useState([]);
    const [ratingValue, setRatingValue] = useState(0);
@@ -91,7 +93,20 @@ const FilmPage = () => {
       refreshToken();
       GetFilmById(filmId);
       GetFilmReviews(filmId);
+
    }, []);
+
+   useEffect(() => {
+      if (film) {
+         try {
+            setImagePath(require(`../../assets/images/Posters/${film.photo_path}`));
+         } catch (error) {
+            setImagePath(null);
+         }
+      }
+
+   }, [film]);
+
 
    useEffect(() => {
       if (Object.keys(reviewToEdit).length !== 0) {
@@ -425,10 +440,19 @@ const FilmPage = () => {
 
    return (
       <>
-         {(!isLoading && film.id) &&
-            <Styled.Section
-               style={{ backgroundImage: 'url(' + require(`../../assets/images/Posters/${film.photo_path}`) + ')' }}>
-            </Styled.Section>
+         {(!isLoading && film.id) && <>
+            {imagePath !== null &&
+               <Styled.Section
+                  style={{ backgroundImage: 'url(' + imagePath + ')' }}>
+               </Styled.Section>
+            }
+            {imagePath === null &&
+               <Styled.Section
+                  style={{ backgroundImage: 'url(' + require(`../../assets/images/NoImage/noImage.jpg`) + ')' }}>
+               </Styled.Section>
+            }
+
+         </>
          }
          <Header />
          <Container>

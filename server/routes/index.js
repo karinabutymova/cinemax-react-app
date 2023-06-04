@@ -10,7 +10,8 @@ import {
    GetFilmTitles,
    GetPopularFilm,
    GetBestRateFilms,
-   GetSoonFilms
+   GetSoonFilms,
+   EditFilm,
 } from "../controllers/Films.js";
 import { SetFilmReview, GetAllFilmReviews, GetAllUserReviews, DeteleReview, EditReview } from "../controllers/FilmsReviews.js";
 import { SetRatingByUser, GetRatingByUser, GetAllRatingByUser, DeleteRatingByUser } from "../controllers/FilmRating.js";
@@ -22,11 +23,14 @@ import {
    DeleteWishlistByUser,
    GetUserAllWishlist
 } from "../controllers/FilmsWishlist.js";
-import { GetUserBonuses, SetUserBonus, ReturnBonus } from "../controllers/UserBonuses.js";
+import { GetUserBonuses, SetUserBonus, ReturnBonus, GetUserBonusHistory } from "../controllers/UserBonuses.js";
 import { SetNewSeats } from "../controllers/Seats.js";
 import { FindNews, GetLastNews, GetAllNews, GetNewsById, GetOtherLastNews, DeleteNewsById, AddNews, EditNews } from "../controllers/News.js";
 import { GetUnavailableSeats, SetNewTickets, GetUserTicketsCount, GetUserShowTickets, ReturnUserTicket } from "../controllers/Tickets.js";
-import { GetAllFilmShows, GetShowHalls, GetAllFilmsShowsAdmin, DeleteFilmShowById } from "../controllers/FilmsShows.js";
+import {
+   GetAllFilmShows, GetShowHalls, GetAllFilmsShowsAdmin, DeleteFilmShowById,
+   GetFilmShowsForDate, AddFilmShow, GetFilmsShowsById, EditFilmShow
+} from "../controllers/FilmsShows.js";
 import { verifyToken } from "../middleware/VerifyToken.js";
 import { refreshToken } from "../controllers/RefreshToken.js";
 import { SendEmail, resetPassword, changePassword, SendFeedBackEmail } from "../controllers/RessetPassword.js";
@@ -61,6 +65,7 @@ filmsRouter.get('/findfilms', FindFilms);
 filmsRouter.get('/getfilm', GetFilmById);
 filmsRouter.get('/films', verifyToken, GetAllFilms);
 filmsRouter.post('/addFilm', AddFilm);
+filmsRouter.post('/editFilm', EditFilm);
 filmsRouter.get('/getPopularFilm', GetPopularFilm);
 filmsRouter.get('/getBestRateFilms', GetBestRateFilms);
 filmsRouter.get('/getSoonFilms', GetSoonFilms);
@@ -99,7 +104,11 @@ newsRouter.post('/editNews', EditNews);
 const filmsShowsRouter = express.Router();
 filmsShowsRouter.get('/getAllFilmShows', GetAllFilmShows);
 filmsShowsRouter.get('/getShowHalls', GetShowHalls);
+filmsShowsRouter.post('/addFilmShow', AddFilmShow);
+filmsShowsRouter.post('/editFilmShow', EditFilmShow);
+filmsShowsRouter.get('/getFilmsShowsById', GetFilmsShowsById);
 filmsShowsRouter.get('/getAllFilmsShows', GetAllFilmsShowsAdmin);
+filmsShowsRouter.get('/getFilmShowsForDate', GetFilmShowsForDate);
 filmsShowsRouter.get('/deleteFilmShow', verifyToken, DeleteFilmShowById);
 
 const ticketsRouter = express.Router();
@@ -112,6 +121,7 @@ ticketsRouter.get('/returnUserTicket', ReturnUserTicket);
 const userBonusesRouter = express.Router();
 userBonusesRouter.get('/getUserBonuses', GetUserBonuses);
 userBonusesRouter.get('/returnBonus', ReturnBonus);
+userBonusesRouter.get('/getUserBonusHistory', GetUserBonusHistory);
 userBonusesRouter.post('/setUserBonus', SetUserBonus);
 
 const seatsRouter = express.Router();

@@ -38,6 +38,7 @@ export const GetPopularFilm = async (req, res) => {
    }
 }
 
+
 export const GetFilmTitles = async (req, res) => {
    try {
       const films = await Film.findAll({
@@ -90,6 +91,48 @@ export const GetSoonFilms = async (req, res) => {
    }
 }
 
+export const EditFilm = async (req, res) => {
+   let { filmId,
+      title,
+      poster,
+      description,
+      actors,
+      creators,
+      year,
+      genres,
+      country,
+      runtime,
+      age,
+      fromRent,
+      toRent,
+      trailer
+   } = req.body.newFilm;
+   try {
+      const film = await Film.update({
+         film_title: title,
+         photo_path: poster,
+         description: description,
+         film_runtime: runtime,
+         creators: creators,
+         actors: actors,
+         year: year,
+         genres: genres,
+         country: country,
+         from_rent_date: fromRent,
+         to_rent_date: toRent,
+         age_limit: age,
+         trailer_link: trailer
+      }, {
+         where: {
+            id: filmId
+         }
+      }
+      );
+      res.json(film);
+   } catch (error) {
+      console.log(error);
+   }
+}
 export const AddFilm = async (req, res) => {
    let { title,
       poster,
@@ -182,14 +225,22 @@ export const GetFilms = async (req, res) => {
       default: break;
    }
    try {
-      const [films] = await db.query(
-         `SELECT *, AVG(films_rating.rating) AS rate FROM films_rating 
-            RIGHT JOIN films ON films_rating.film_id = films.id
-            WHERE ${where}
-            GROUP BY films_rating.film_id`
-      );
+      if (filter == 'now') {
+         const [films] = await db.query(
+            `SELECT *, AVG(films_rating.rating) AS rate FROM films_rating 
+               RIGHT JOIN films ON films_rating.film_id = films.id
+               WHERE ${where}
+               GROUP BY films_rating.film_id`
+         );
+         res.json(films);
+      } else {
+         const [films] = await db.query(
+            `SELECT * FROM films WHERE ${where}`
+         );
+         res.json(films);
+      }
 
-      res.json(films);
+
    } catch (error) {
       console.log(error);
    }

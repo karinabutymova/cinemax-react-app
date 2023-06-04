@@ -9,7 +9,7 @@ import 'reactjs-popup/dist/index.css';
 import { Store } from 'react-notifications-component';
 import { ModalBtnFlex, PrimaryButton, ModalHeader, ModalContainer, SecondaryButton } from '../../pages/ProfilePage/styled';
 
-const UserTickets = ({ tickets }) => {
+const UserTickets = ({ tickets, userId }) => {
    const navigate = useNavigate();
    const [show, setShow] = useState(false);
    const [ticketsShow, setTicketsShow] = useState([]);
@@ -82,6 +82,7 @@ const UserTickets = ({ tickets }) => {
          await axios.get('http://localhost:3001/returnBonus', {
             params: {
                order_number: tickets.order_number,
+               userId: userId
             },
          });
          notification('Возврат билетов завершён успешно');

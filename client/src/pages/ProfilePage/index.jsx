@@ -19,9 +19,10 @@ import UserTickets from '../../components/UserTickets';
 import EditProfile from '../../components/EditProfile';
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
+import BonusHistory from '../../components/BonusHistory';
 
 // TODO: история бонусов
-// TODO: ???состояние для билетов когда событие или удалено
+// TODO: ???состояние для билетов когда событие или удалено (отправлять сообщение у кого были билеты)
 
 const ProfilePage = () => {
    const navigate = useNavigate();
@@ -56,7 +57,7 @@ const ProfilePage = () => {
 
 
    useEffect(() => {
-      if (userRole && userRole === 'user') {
+      if (userRole) {
          setFilter();
          getUserBonuses();
       }
@@ -346,7 +347,15 @@ const ProfilePage = () => {
       setIsLoading(true);
       searchParams.set('filter', 'editProfile');
       setSearchParams(searchParams);
-      await timeout(400);
+      await timeout(300);
+      setIsLoading(false);
+   }
+
+   const bonusHistory = async () => {
+      setIsLoading(true);
+      searchParams.set('filter', 'bonusHistory');
+      setSearchParams(searchParams);
+      await timeout(300);
       setIsLoading(false);
    }
 
@@ -413,7 +422,7 @@ const ProfilePage = () => {
                   </Styled.BonusDiv>
                   <Styled.BonusHistoryDiv>
                      <Styled.BonusHistoryIcon src={layersIcon} />
-                     <Styled.BonusHistory>История накопления</Styled.BonusHistory>
+                     <Styled.BonusHistory onClick={bonusHistory}>История накопления</Styled.BonusHistory>
                   </Styled.BonusHistoryDiv>
                </Col>
             </Row>
@@ -422,7 +431,11 @@ const ProfilePage = () => {
                <EditProfile userId={userId} setActiveTab={setActiveTab} />
             }
 
-            {(!isLoading && searchParams.get('filter') !== 'editProfile') &&
+            {(!isLoading && searchParams.get('filter') === 'bonusHistory') &&
+               <BonusHistory userId={userId} setActiveTab={setActiveTab} />
+            }
+
+            {(!isLoading && searchParams.get('filter') !== 'editProfile' && searchParams.get('filter') !== 'bonusHistory') &&
                <Row>
                   <Col xl="6" lg="6" md="8" sm="12">
                      <Styled.FilterContainer>
@@ -458,7 +471,7 @@ const ProfilePage = () => {
                   {ticketsCount.length > 0 &&
                      <>
                         {ticketsCount.length > 0 && ticketsCount.map((tickets, index) => {
-                           return index < ticketCount ? <UserTickets key={tickets.id} tickets={tickets} /> : false
+                           return index < ticketCount ? <UserTickets key={tickets.id} tickets={tickets} userId={userId} /> : false
                         })}
                      </>
                   }
@@ -514,7 +527,7 @@ const ProfilePage = () => {
                      }
                   </Row>
                   {(!isLoading && reviews.length > 4 && reviewPagination) &&
-                     <Row Row justifyContent='center'>
+                     <Row justifyContent='center'>
                         <Styled.PaginationBtn onClick={showMoreReviews}> Показать больше</Styled.PaginationBtn>
                      </Row>
                   }
